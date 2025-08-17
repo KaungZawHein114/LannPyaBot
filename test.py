@@ -1,33 +1,23 @@
-# import openai
-# import os
-# from dotenv import load_dotenv
+import json
 
-# load_dotenv()
-# openai.api_key = os.getenv("OPENAI_API_KEY")
+# Load your current knowledge base
+with open("knowledge_base.json", "r", encoding="utf-8") as f:
+    data = json.load(f)
 
-# print("=== OpenAI Library Version ===")
-# print(openai.__version__)
+# Prepare new data structure with IDs
+new_data = {}
 
-# print("\n=== Checking API Key and Available Models ===")
-# try:
-#     # List models using the new API
-#     models = openai.models.list()
-#     print("✅ API key is valid!")
-#     print("\n=== Available Models ===")
-#     for m in models.data:
-#         print("-", m.id)
-# except Exception as e:
-#     print("❌ Error:", e)
+for category, texts in data.items():
+    new_data[category] = []
+    for i, text in enumerate(texts, start=1):
+        entry = {
+            "id": f"{category[:3].upper()}-{i}",  # Example: PHI-1, PHI-2, etc.
+            "text": text
+        }
+        new_data[category].append(entry)
 
-import pinecone
-import os
-from dotenv import load_dotenv
+# Save the new JSON
+with open("knowledge_base_with_ids.json", "w", encoding="utf-8") as f:
+    json.dump(new_data, f, ensure_ascii=False, indent=2)
 
-load_dotenv()
-pinecone.init(
-    api_key=os.getenv("PINECONE_API_KEY"),
-    environment=os.getenv("PINECONE_ENVIRONMENT")
-)
-
-index = pinecone.Index(os.getenv("PINECONE_INDEX"))
-
+print("✅ New knowledge base created with manual IDs!")

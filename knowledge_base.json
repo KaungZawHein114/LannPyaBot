@@ -1,5 +1,69 @@
-[
-  {"id": "1", "text": "URL ကို click မလုပ်မီ စစ်ဆေးပါ။ (Check URLs before clicking.)"},
-  {"id": "2", "text": "Password မပေးရပါဘူး။ အဲဒီ message ကို scams လို့ ထားပါ။ (Do NOT share passwords.)"},
-  {"id": "3", "text": "Suspicious app ကို install မလုပ်ပါ။ ဖျက်ပစ်ပါ။ (Do not install suspicious apps.)"}
-]
+{
+  "Phishing": [
+    "Phishing ဆိုတာ လူတွေကို လိမ်လည်ပြီး password သို့မဟုတ် bank info ယူဖို့ ကြိုးစားတဲ့ အကြမ်းဖက် attack တစ်မျိုး ဖြစ်ပါတယ်။",
+    "Phishing email တွေထဲမှာ အစစ်မဟုတ်တဲ့ link တွေ၊ spelling အမှားများ၊ တိုးတက်စွာလုပ်ပါဆိုတဲ့ စကားများ ရှိတတ်ပါတယ်။",
+    "Phishing SMS (Smishing) တွေမှာ mobile banking account ခိုးယူတာများ ဖြစ်တတ်ပါတယ်။",
+    "မမှန်တဲ့ Link / Email ကို ဖွင့်ရင် အကောင့်ပျက်မယ်။",
+    "Sender name, URL, Grammar error တွေ စစ်ပြီးမှဖွင့်။"
+  ],
+  "Passwords & 2FA": [
+    "Strong password တစ်ခုမှာ စာလုံးကြီး၊ စာလုံးသေး၊ နံပါတ်၊ သင်္ကေတ ပါဝင်သင့်ပြီး အနည်းဆုံး 12 လုံးထက်မနည်း။",
+    "တစ်ခုတည်းသော password ကို အားလုံး account တွေမှာ မသုံးသင့်ပါ။",
+    "Password ကို စာအုပ်ထဲ၊ note app ထဲ တိုက်ရိုက်မသိမ်းပါနဲ့။ Password manager အသုံးပြုပါ။",
+    "Password တစ်ခုပဲ သုံးနေရင် အလွယ်တကူ Hack ချနိုင်။",
+    "Password ခပ်ရှည်ပြီး အက္ခရာ, နံပါတ်, သင်္ကေတ တွေဖျော်ဖြေရ။ 2FA ကို On ထား။"
+  ],
+  "Social Media Safety": [
+    "မိမိ profile ကို အများဆိုင်မထားဘဲ friends only လို privacy setting သုံးပါ။",
+    "မချင်းစိပ်တဲ့ friend request တွေကို မလက်ခံပါနဲ့။",
+    "Social media မှာ မိမိ location ကို တိုက်ရိုက်မမျှဝေပါနဲ့။",
+    "Personal Info များများ မတင်သင့်။ Fake account တွေက အချက်အလက် လှိမ့်ယူနိုင်။",
+    "Privacy setting ထိန်း၊ Stranger ကို မ Accept လို့ရ။"
+  ],
+  "Device & Network Security": [
+    "Device တွေမှာ antivirus သုံးပြီး အချိန်မီ update လုပ်ပါ။",
+    "Mobile တွေမှာ unknown sources က app မထည့်ပါနဲ့။",
+    "Public Wi-Fi တွေမှာ banking မလုပ်ပါနဲ့။",
+    "Free Wi-Fi တွေက Sniffing attack ဖြစ်နိုင်။",
+    "Bank app / Payment app ကို မဖွင့်ပါနဲ့။"
+  ],
+  "Personal Data & Privacy": [
+    "အွန်လိုင်းတွင် ကိုယ်ရေးအချက်အလက်များကို သာမန်အထက်မထုတ်ပြန်ခြင်း၊ လိုအပ်သလောက်သာ မျှဝေခြင်းဖြင့် ကိုယ်ရေးလုံခြုံမှုကို ထိန်းသိမ်းနိုင်သည်။",
+    "ကိုယ်ရေးအချက်အလက်များကို မျှဝေချိန်၌ အသေးစိတ်စဉ်းစားပါ။",
+    "အသုံးထည့်ရန်လိုအပ်သမျှသာပဲ ပေးပါ။",
+    "အကယ်၍ ဖိုင်/စာရွက်တောင်းလာပါက တရားဝင်နေကြောင်း အတည်ပြုပါ။",
+    "NRC, အိမ်လိပ်စာ၊ ဘဏ်အချက်အလက်များကို public အဖြစ် မမျှဝေပါနဲ့။",
+    "မသိသူများကို တိုက်ရိုက် မေးမြန်းလိုက်ပါနှင့်။",
+    "အက်ပ်များတွင် permission နှင့် privacy settings များကို မှန်ကန်စွာပြုလုပ်ခြင်းဖြင့် ကိုယ်ရေးအချက်အလက် မလိုအပ်စွာ မမျှဝေဘဲ ထိန်းသိမ်းနိုင်သည်။",
+    "App permission များကို သင့်လိုအပ်ချက်အရသာပဲ ခွင့်ပြုပါ (ဥပမာ တယ်လီဖုန်းအတွက် ကင်မရာ မလိုလျှင် မပေးပါ။)",
+    "App update များကို အမြဲတင်ပါ။",
+    "Privacy settings တွင် data sharing options ကို သေးငယ်အောင်ပြင်ပါ။",
+    "မလိုအပ်သော permission (SMS, Contacts) မပေးပါနဲ့။",
+    "App သုံးတဲ့အခါ အားလုံးကို auto-sync မဖြစ်အောင် မထားပါနဲ့။"
+  ],
+  "How to Spot Fake Websites/Apps": [
+    "အတုဆိုဒ်များသည် အမှန်တကယ် ဝက်ဘ်ဆိုဒ်နှင့် တူပေါက်လွှားပြထားကာ ကိုယ်ရေးအချက်အလက်/စကားဝှက် ဆွဲယူရန် ကြိုးပမ်းသည်။",
+    "URL ကို အစစ်/တိကျစွာ စစ်ပါ (https:// နှင့် padlock သင်္ကေတရှိ/မရှိစစ်ပါ။)",
+    "App သည် official store (Play Store / App Store) မှာ ရှိသလား စစ်ပါ။",
+    "Publisher name, rating, comment များကို ကြည့်ပါ။",
+    "မသေချာသော link မှာ login credentials ထည့်မရပါနှင့်။",
+    "Unknown source ကနေ apk မဒေါင်းမိပါနဲ့။"
+  ],
+  "Safe Online Shopping": [
+    "အွန်လိုင်းဆိုင်က from trusted sellers ဝယ်ယူရန်၊ ငွေပေးချေမှုလုံခြုံမှုကို အရေးယူ၍ မတရားသော ငွေလွှဲမှု/အချက်အလက် ဆုတ်ခွာမှုမှ ကာကွယ်ရမည်။",
+    "Trusted marketplace/official seller မှသာဝယ်ပါ။",
+    "Payment ကိစ္စတွင် secure payment methods (card + bank OTP, trusted payment gateway) ကိုသာသုံးပါ။",
+    "Order confirmation/return policy ရှိ/မရှိ စစ်ပါ။",
+    "သိပ္ပံမပြည့်စုံသော payment link ကိုမနှိပ်ပါနဲ့။",
+    "Unknown sellers ကို ကြာရှည်စွာ မလက်ခံပါနဲ့။"
+  ],
+  "VPN & Encryption Basics": [
+    "VPN သည် သင့်ကွန်ရက်ချိတ်ဆက်မှုကို ကာကွယ်ပေး၍ public Wi-Fi တို့တွင် သင့် ဒေတာကို အဝေးမှ လှုံ့ဆော်ခြင်းမှ ကာကွယ်ပေးသည်။",
+    "Encryption ဆိုသည်မှာ သင့်ဒေတာကို ဖတ်ရှုခွင့်မဲ့သူများ မဖတ်နိုင်အောင် ဖုံးကွယ်ပေးခြင်းဖြစ်သည်။",
+    "Public Wi-Fi သုံးတိုင်း VPN သုံးပါ။",
+    "Trusted VPN provider ရွေးပါ (free မဟုတ်လျှင် ပိုလုံခြုံနိုင်သည်။)",
+    "အချက်အလက်ကိုအပ်တွက် မျှဝေပုံစံတွင် HTTPS ဆိုင်သာလျှင်သာ ဖြတ်သွားပါ။",
+    "သတင်းအချက်အလက်များကို unencrypted channel များတွင် မပို့ပါ။",
+    "မသိသူ့ VPN အက်ပကို သက်ဆိုင်မစစ်ပါက မသုံးပါနဲ့။"
+  ]
+}
