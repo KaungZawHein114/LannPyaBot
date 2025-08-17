@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LannPya Bot</title>
+    <!-- Remove style.css if deleted -->
+</head>
+<body>
+    <h1>LannPya Bot</h1>
+    <div id="chatbox"></div>
+    <input type="text" id="userInput" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+
+    <!-- Load JS from static folder -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
