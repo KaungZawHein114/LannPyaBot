@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-from rag import ask_bot
-from suspicious_checker import check_suspicious
+from rag import ask_bot, ask_bot_content_checker
 import json
 import random
 
@@ -22,11 +21,18 @@ def chat():
     bot_response = ask_bot(user_input)
     return jsonify({"reply": bot_response})
 
-@app.route("/check-suspicious", methods=["POST"])
-def check_content():
-    text = request.json.get("text", "")
-    result = check_suspicious(text)
+@app.route("/content-check", methods=["POST"])
+def content_check():
+    data = request.json
+    content = data.get("content", "")
+    poster = data.get("poster", "")
+    date = data.get("date", "")
+    platform = data.get("platform", "")
+
+    # call your rag function and pass metadata
+    result = ask_bot_content_checker(content, poster, date, platform)
     return jsonify({"result": result})
+
 
 @app.route("/daily-tip", methods=["GET"])
 def daily_tip():

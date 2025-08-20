@@ -2,15 +2,72 @@
 <html>
 <head>
     <title>LannPya Bot</title>
-    <!-- Remove style.css if deleted -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #chatbox {
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 400px;
+            height: 200px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        textarea {
+            width: 400px;
+            height: 100px;
+            margin-top: 10px;
+            display: block;
+        }
+        #result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .trusted { color: green; }
+        .fake { color: red; }
+        .unclear { color: orange; }
+    </style>
 </head>
 <body>
     <h1>LannPya Bot</h1>
+
+    <!-- Chat Section -->
     <div id="chatbox"></div>
     <input type="text" id="userInput" placeholder="Type your message...">
     <button onclick="sendMessage()">Send</button>
 
-    <!-- Load JS from static folder -->
+    <hr>
+
+    <!-- Content Checker Section -->
+    <h2>Content Checker</h2>
+    <textarea id="contentInput" placeholder="Paste the content here..." rows="8" cols="80"></textarea>
+
+    <label for="poster">Who posted it:</label>
+    <select id="poster">
+        <option value="person">Person</option>
+        <option value="news_org">News Organization</option>
+        <option value="gov">Government</option>
+        <option value="celebrity">Celebrity</option>
+    </select>
+
+    <label for="date">When was it posted:</label>
+    <input type="date" id="date">
+
+    <label for="platform">Platform:</label>
+    <select id="platform">
+        <option value="facebook">Facebook</option>
+        <option value="twitter">Twitter</option>
+        <option value="news_site">News Website</option>
+        <option value="telegram">Telegram</option>
+        <option value="other">Other</option>
+    </select>
+
+    <button onclick="checkContent()">Check Content</button>
+    <div id="checkerResult"></div>
+
+
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

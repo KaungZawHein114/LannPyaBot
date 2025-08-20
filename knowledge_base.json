@@ -65,5 +65,22 @@
     "အချက်အလက်ကိုအပ်တွက် မျှဝေပုံစံတွင် HTTPS ဆိုင်သာလျှင်သာ ဖြတ်သွားပါ။",
     "သတင်းအချက်အလက်များကို unencrypted channel များတွင် မပို့ပါ။",
     "မသိသူ့ VPN အက်ပကို သက်ဆိုင်မစစ်ပါက မသုံးပါနဲ့။"
-  ]
+  ],
+  "Content Checker": [
+    "❌ အဆိုးမြှောက်ထားသော မမှန်တဲ့ News - ဥပမာ: 'Bank က ချက်ချင်းအကောင့် ပိတ်မယ်ဆိုပြီး login ပြန်လုပ်စေတဲ့ Post' ။ ဒီလို Content တွေကို မယုံပါနဲ့။",
+    "❌ မမှန်တဲ့ သတင်းကြော်ငြာ - 'အခမဲ့ Data 10GB ရမယ်' လို့ ခေါ်ပြီး အမှား Website ကို ဦးတည်စေတဲ့ Link ။",
+    "❌ လူထုထဲမှာ ကြောက်ရွံ့မှုဖြစ်စေဖို့ Fake News - ဥပမာ: 'တစ်နေ့ထဲမှာ မီးပျက်မယ့်အတွက် သတိထားပါ' ဆိုပြီး အစိုးရမထုတ်သော Post ။",
+    "❌ အလွန် အမင်း ကုန်ပစ္စည်း/ဆေးဝါး ကြော်ငြာ - ဥပမာ: 'ဒီဆေးသောက်ရုံနဲ့ Covid တိုက်နိုင်းနိုင်တယ်' လို့ Claim လုပ်တဲ့ Ads ။",
+    "❌ Unverified Celebrity/Influencer Post - လူကြိုက်များသော်လည်း ဘယ်သူမှ စစ်ဆေးမထားသော Opinion Post ။",
+    "❌ Social Media Rumor - Facebook, Telegram, Viber တို့မှာ လှိုင်းထိုးဖြန်ဖြစ်ပြီး Fact-check မထားသော အကြောင်းအရာများ ။",
+    "✅ အစိုးရတရားဝင် အဖွဲ့အစည်းတွေထုတ်တဲ့ သတင်းတွေ (ဥပမာ: mohs.gov.mm, MOI Myanmar) ကိုယုံနိုင်ပါတယ်။",
+    "✅ Verified Page (Blue Tick) တွေက ထုတ်တဲ့ News/Post တွေမှာ အများအားဖြင့် ယုံနိုင်စိတ်ရှိတယ်။",
+    "✅ Fact-check website များ (ဥပမာ: Myanmar Fact Check, BOOM FactCheck) မှာ စစ်ဆေးထားတဲ့ အကြောင်းအရာတွေက ယုံကြည်စိတ်ရှိတယ်။",
+    "✅ လူထုအသိပညာတိုးပွားအောင် အစိုးရ၊ NGO, IT community က သတင်းပေးတဲ့ Content တွေက အကျိုးရှိတယ်။",
+    "📌 Metadata Guide: \n- Poster: Person, News Organization, Government, Celebrity\n- Date: ရက်စွဲ/Time Context\n- Platform: Facebook, Twitter, Telegram, News Website, Other\nOpenAI should consider these when evaluating content reliability.",
+    "✅ Example: Poster=News Organization, Date=Today, Platform=News Website → Generally reliable, trustable news.",
+    "❌ Example: Poster=Person, Date=Yesterday, Platform=Facebook → Needs verification, likely rumor or opinion.",
+    "✅ Example: Poster=Government, Date=Recent, Platform=Official Website → Trustworthy, official announcement.",
+    "❌ Example: Poster=Celebrity, Date=Last Week, Platform=Instagram → Could be misleading, check facts before sharing."
+]
 }
