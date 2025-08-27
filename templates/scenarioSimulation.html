@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scenario Simulation</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/bot.png') }}" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { darkMode: "class" };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      body { font-family: "Inter", sans-serif; transition: background-color 0.5s, color 0.5s; }
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 3px; }
+      .risk { color: #dc2626; font-weight: bold; }
+      .solution { color: #16a34a; font-weight: bold; }
+      .preformatted { white-space: pre-line; }
+      
+      /* Dark mode improvements for AI analysis results */
+      .dark .preformatted {
+        color: #e5e7eb; /* light gray text for better visibility */
+      }
+      
+      /* Ensure strong tags are visible in dark mode */
+      .dark .preformatted strong {
+        color: #f3f4f6; /* lighter text for strong elements */
+      }
+      
+      /* Mobile-friendly improvements */
+      @media (max-width: 640px) {
+        .preformatted {
+          font-size: 0.875rem; /* slightly smaller text on mobile */
+          line-height: 1.5;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-200 dark:bg-gray-900 flex flex-col h-screen transition-colors duration-300">
+    <!-- Header -->
+    <header class="bg-indigo-900 dark:bg-indigo-700 text-white p-4 flex items-center justify-between relative transition-colors duration-300 shadow">
+      <button id="menu-btn" class="focus:outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+      <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
+        <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" />
+        <h1 class="text-lg font-bold">LannPya Bot</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="{{ url_for('home') }}" class="text-sm bg-white text-indigo-900 font-semibold px-3 py-1 rounded hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-600 transition-colors">Back</a>
+      </div>
+    </header>
+
+    <!-- Side Nav -->
+    <div id="side-nav" class="fixed top-0 left-0 h-full w-64 bg-indigo-800 dark:bg-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-50">
+      <div class="p-4 text-xl font-bold border-b border-indigo-600 dark:border-indigo-700">Menu</div>
+      <nav class="flex flex-col p-4 space-y-4">
+        <a href="{{ url_for('home') }}" class="hover:text-gray-300">Home</a>
+        <a href="{{ url_for('chat_page') }}" class="hover:text-gray-300">Chat</a>
+        <a href="{{ url_for('content_checker_page') }}" class="hover:text-gray-300">Content Checker</a>
+        <a href="{{ url_for('interactive_quiz_page') }}" class="hover:text-gray-300">Interactive Quiz</a>
+        
+                 <!-- Theme Toggle Section -->
+         <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
+           <div class="flex items-center justify-between">
+             <span class="text-sm text-gray-300">Theme</span>
+             <button
+               id="theme-toggle"
+               class="relative inline-flex h-8 w-16 items-center rounded-full bg-indigo-600 dark:bg-indigo-400 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-800 dark:focus:ring-offset-indigo-900"
+             >
+               <span
+                 class="inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-300 ease-in-out translate-x-1 dark:translate-x-9"
+               ></span>
+               <span class="absolute left-1 text-xs">🌙</span>
+               <span class="absolute right-1 text-xs">☀️</span>
+             </button>
+           </div>
+         </div>
+
+         <!-- Developer Credits -->
+          <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
+            <div class="text-center">
+              <p class="text-xs text-gray-300 font-medium">
+                Developed by <span class="text-indigo-300 font-semibold">GUSTO College Team</span>
+              </p>
+              <p class="text-xs text-gray-400 mt-1 leading-tight">
+                <span class="text-indigo-300 font-medium"><br>LannPya Bot</span><br><br>
+                Kaung Zaw Hein <br><br>Aung Min Myat<br><br>Zin Zin Pwint Han
+              </p>
+            </div>
+          </div>
+      </nav>
+    </div>
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
+
+    <main class="flex-1 p-6 overflow-y-auto transition-colors duration-300">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">Scenario Simulation</h2>
+        <p class="text-gray-600 dark:text-gray-300 mb-6" style="line-height: 2">မေးခွန်းအနည်းငယ်ဖြေပြီး အန္တရာယ်တွေကို ဆန်းစစ်ကြည့်ရှုကာ သင့်တော်တဲ့ အကြံပြုချက်တွေ ရယူပါ။</p>
+
+        <!-- Topic Selection -->
+        <div class="mb-6">
+          <label for="topicSelect" class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Select topic</label>
+          <select id="topicSelect" class="w-full p-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400 shadow-sm">
+            <option value="phishing">ဖြားယောင်းမှု</option>
+            <option value="scam">SCAM</option>
+            <option value="hack">ဟက်ခံရမှု</option>
+            <option value="fraud">လိမ်လည်မှု</option>
+            <option value="threat">ခြိမ်းခြောက်မှု</option>
+            <option value="malware">အန္တရာယ်ရှိ ဆော့ဖ်ဝဲ(ဗိုင်းရပ်စ်)</option>
+            <option value="others">အခြား</option>
+          </select>
+        </div>
+
+        <div class="flex items-center gap-3 mb-6">
+          <button id="startScenario" onclick="startScenario()" class="bg-indigo-900 dark:bg-indigo-700 text-white px-6 py-3 rounded-lg hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors">စတင် ဆန်းစစ်ပါ</button>
+          <button id="anotherScenario" onclick="restartScenario()" style="display:none;" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 px-6 py-3 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">အသစ် လုပ်ပါ</button>
+        </div>
+        <div id="errorBanner" class="hidden mb-4 p-3 rounded-lg border-2 border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-900/30 dark:text-red-200">ကျေးဇူးပြု၍ အနီရောင်မေးခွန်းအားလုံးဖြေဆိုပေးပါ။</div>
+        <div id="scenarioQuestions" class="space-y-4 mb-6"></div>
+        <div class="flex items-center gap-3">
+          <button id="submitScenario" style="display:none;" onclick="submitScenario()" class="bg-green-600 dark:bg-green-700 text-white px-6 py-3 rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors">ဆန်းစစ်ပါ</button>
+          <div id="loading-spinner" class="hidden text-center">
+            <svg class="animate-spin h-6 w-6 text-indigo-600 dark:text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
+        </div>
+        <div id="scenarioResult" class="mt-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow hidden preformatted"></div>
+      </div>
+    </main>
+
+    <script>
+      let scenarioAnswers = {}, scenarioQuestions = [], currentStage = 1, currentTopic = "";
+      let othersHistory = [], othersStep = 0, lastQuestion = "";
+
+      const menuBtn = document.getElementById("menu-btn");
+      const sideNav = document.getElementById("side-nav");
+      const overlay = document.getElementById("overlay");
+
+      menuBtn.addEventListener("click", () => { sideNav.classList.toggle("-translate-x-full"); overlay.classList.toggle("hidden"); });
+      overlay.addEventListener("click", () => { sideNav.classList.add("-translate-x-full"); overlay.classList.add("hidden"); });
+
+      // Helper: Convert **bold** to <strong>
+      function markdownToHTML(text) {
+        return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      }
+
+      async function startScenario() {
+        currentTopic = document.getElementById("topicSelect").value;
+        scenarioAnswers = {}; currentStage = 1;
+        if (currentTopic === "others") { othersHistory=[]; othersStep=0; document.getElementById("scenarioResult").innerText=""; askOthers(""); }
+        else {
+          try {
+            const res = await fetch("/scenario/start", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({topic:currentTopic}) });
+            const data = await res.json(); scenarioQuestions = data.questions; renderQuestions();
+          } catch(e){ console.error(e); alert('Error starting scenario.'); }
+        }
+      }
+
+      function restartScenario(){
+        // Clear UI and state, then start again with current topic
+        scenarioAnswers = {}; scenarioQuestions = []; currentStage = 1;
+        document.getElementById("scenarioQuestions").innerHTML = "";
+        const resultEl = document.getElementById("scenarioResult");
+        resultEl.innerHTML = ""; resultEl.classList.add("hidden");
+        document.getElementById("submitScenario").style.display = "none";
+        startScenario();
+      }
+
+      function renderQuestions() {
+        const container = document.getElementById("scenarioQuestions"); container.innerHTML = "";
+        scenarioQuestions.forEach((qObj,idx)=>{
+          if(qObj.type==="mcq_text") container.innerHTML += `
+            <div class=\"p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm\">
+              <label class=\"block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3\">${qObj.question}</label>
+              <div class=\"grid grid-cols-1 md:grid-cols-2 gap-3\">
+                <div class=\"relative\">
+                  <select id=\"answer_${idx}\" class=\"appearance-none w-full p-3 pr-10 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400\">
+                    <option value=\"\" disabled selected hidden>Choose an answer…</option>
+                    <option value=\"Yes\">ဟုတ်ပါတယ်</option>
+                    <option value=\"No\">မဟုတ်ပါ</option>
+                    <option value=\"Not Sure\">မသေချာဘူး</option>
+                  </select>
+                  <svg class=\"pointer-events-none w-5 h-5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 20 20\" fill=\"currentColor\"><path fill-rule=\"evenodd\" d=\"M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z\" clip-rule=\"evenodd\"/></svg>
+                </div>
+                <input type=\"text\" id=\"extra_${idx}\" placeholder=\"အသေးစိတ်ဖြေဆိုရန် (optional)\" class=\"w-full p-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400 min-w-0\" />
+              </div>
+            </div>`;
+          else container.innerHTML += `
+            <div class=\"p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm\">
+              <label class=\"block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3\">${qObj.question} <span class=\"text-gray-400 dark:text-gray-500 font-normal\">(optional)</span></label>
+              <input type=\"text\" id=\"answer_${idx}\" class=\"w-full p-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400\" />
+            </div>`;
+        });
+        document.getElementById("submitScenario").style.display="inline-block";
+        document.getElementById("scenarioResult").innerText="";
+      }
+
+      async function submitScenario() {
+        // Validate all fields before proceeding
+        let missing = [];
+        const errorBanner = document.getElementById("errorBanner");
+        // clear previous error highlights
+        scenarioQuestions.forEach((_, idx) => {
+          const el = document.getElementById(`answer_${idx}`);
+          if (el) el.classList.remove("ring-2","ring-red-500","border-red-400");
+        });
+        scenarioAnswers = {};
+        scenarioQuestions.forEach((qObj,idx)=>{
+          const sel = document.getElementById(`answer_${idx}`);
+          const ans = (sel && sel.value ? sel.value.trim() : "");
+          if(qObj.type==="mcq_text"){
+            if(!ans) missing.push(idx); // required
+            scenarioAnswers[qObj.question] = ans;
+          } else {
+            // optional text
+            scenarioAnswers[qObj.question] = ans; // may be empty
+          }
+        });
+        if(missing.length){
+          missing.forEach(i=>{ const el=document.getElementById(`answer_${i}`); if(el){ el.classList.add("ring-2","ring-red-500","border-red-400"); } });
+          errorBanner.classList.remove("hidden");
+          errorBanner.textContent = "ကျေးဇူးပြု၍ အနီရောင်မေးခွန်းအားလုံးဖြေဆိုပေးပါ။";
+          errorBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        } else {
+          errorBanner.classList.add("hidden");
+        }
+        const spinner = document.getElementById("loading-spinner");
+        spinner.classList.remove("hidden");
+
+        if(currentStage===1 && currentTopic!=="others"){
+          try {
+            const res = await fetch("/scenario/next",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({topic:currentTopic,answers:scenarioAnswers})});
+            const data = await res.json(); scenarioQuestions=data.questions; currentStage=2; renderQuestions();
+          } catch(e){ console.error(e); alert('Error getting next questions.'); }
+        } else {
+          try {
+            const res = await fetch("/scenario/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({topic:currentTopic,answers:scenarioAnswers})});
+            const data = await res.json();
+            // convert **bold** to <strong>
+            document.getElementById("scenarioResult").innerHTML = markdownToHTML(data.result);
+            document.getElementById("scenarioResult").classList.remove("hidden");
+            document.getElementById("submitScenario").style.display="none";
+            document.getElementById("anotherScenario").style.display = "inline-block";
+          } catch(e){ console.error(e); alert('Error analyzing scenario.'); }
+        }
+        spinner.classList.add("hidden");
+      }
+
+      async function askOthers(answer) {
+        if(answer && othersHistory.length<othersStep) othersHistory.push({q:lastQuestion,a:answer});
+        try {
+          const res = await fetch("/scenario/others",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({history:othersHistory,step:othersStep})});
+          const data = await res.json(); othersStep=data.step; lastQuestion=data.question; othersHistory=data.history;
+          const container=document.getElementById("scenarioQuestions");
+
+          if(data.done){
+            let historyHTML = othersHistory.map(h=>`<div class="p-3 bg-gray-100 dark:bg-gray-700 rounded mb-2 break-words"><strong class="text-gray-800 dark:text-gray-200">${h.q}</strong><br><span class="text-gray-700 dark:text-gray-300">${h.a}</span></div>`).join("");
+            container.innerHTML = historyHTML + "<div class='p-4 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 rounded-lg'><strong>✅ မေးခွန်း (၁၀)ခုလုံး ဖြေပြီးပါပြီ</strong></div>";
+            
+            // Show loading spinner while waiting for AI analysis
+            const spinner = document.getElementById("loading-spinner");
+            spinner.classList.remove("hidden");
+            
+            // Wait a moment to show the completion message, then get AI analysis
+            setTimeout(async () => {
+              try {
+                const res = await fetch("/scenario/analyze", {
+                  method: "POST",
+                  headers: {"Content-Type": "application/json"},
+                  body: JSON.stringify({topic: currentTopic, answers: othersHistory.reduce((acc, h) => { acc[h.q] = h.a; return acc; }, {})})
+                });
+                const data = await res.json();
+                document.getElementById("scenarioResult").innerHTML = markdownToHTML(data.result);
+                document.getElementById("scenarioResult").classList.remove("hidden");
+                document.getElementById("submitScenario").style.display = "none";
+                document.getElementById("anotherScenario").style.display = "inline-block";
+                spinner.classList.add("hidden");
+              } catch(e) {
+                console.error(e);
+                alert('Error analyzing scenario.');
+                spinner.classList.add("hidden");
+              }
+            }, 1500);
+            return;
+          }
+
+          let historyHTML = othersHistory.map(h=>`<div class="p-3 bg-gray-100 dark:bg-gray-700 rounded mb-2 break-words"><strong class="text-gray-800 dark:text-gray-200">${h.q}</strong><br><span class="text-gray-700 dark:text-gray-300">${h.a}</span></div>`).join("");
+          container.innerHTML = `
+            ${historyHTML}
+            <div class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 break-words">${data.question}</label>
+              <div class="flex flex-col sm:flex-row gap-2">
+                <input type="text" id="others-answer" placeholder="သင့်အဖြေကို ရိုက်ထည့်ပါ..." class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400 min-w-0" />
+                <button onclick="submitOthers()" class="bg-indigo-900 dark:bg-indigo-700 text-white px-6 py-3 rounded-lg hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors whitespace-nowrap">ဖြေဆိုပါ</button>
+              </div>
+            </div>
+          `;
+        } catch(e){ console.error(e); alert('Error asking others.'); }
+      }
+
+      function submitOthers() {
+        const answer=document.getElementById("others-answer").value;
+        if(!answer.trim()){ alert('Please provide an answer.'); return; }
+        askOthers(answer);
+      }
+
+      // Theme toggle
+      const themeToggle = document.getElementById("theme-toggle");
+      const html = document.documentElement;
+      const toggleSlider = themeToggle.querySelector('span');
+      
+      if(localStorage.getItem("theme")==="light"){ 
+        html.classList.remove("dark"); 
+        toggleSlider.style.transform = "translateX(0.25rem)"; 
+      }
+      else{ 
+        html.classList.add("dark"); 
+        toggleSlider.style.transform = "translateX(2.25rem)"; 
+      }
+
+      themeToggle.addEventListener("click", ()=>{
+        if(html.classList.contains("dark")){ 
+          html.classList.remove("dark"); 
+          localStorage.setItem("theme","light"); 
+          toggleSlider.style.transform = "translateX(0.25rem)"; 
+        }
+        else{ 
+          html.classList.add("dark"); 
+          localStorage.setItem("theme","dark"); 
+          toggleSlider.style.transform = "translateX(2.25rem)"; 
+        }
+      });
+    </script>
+  </body>
+</html>

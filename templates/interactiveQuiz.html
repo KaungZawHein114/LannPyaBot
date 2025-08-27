@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Cybersecurity Quiz</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/bot.png') }}" />
+
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+      };
+    </script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        transition: background-color 0.5s, color 0.5s;
+      }
+      .hidden-section {
+        display: none;
+      }
+      .answer-option {
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+      }
+      .correct-answer {
+        background-color: #dcfce7; /* green-100 */
+        border-color: #22c55e; /* green-500 */
+        color: #166534; /* green-800 */
+      }
+      .incorrect-answer {
+        background-color: #fee2e2; /* red-100 */
+        border-color: #ef4444; /* red-500 */
+        color: #991b1b; /* red-800 */
+      }
+      /* Make containers take full height and center content */
+      .view-container {
+        width: 100vw;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-200 dark:bg-gray-900 flex flex-col h-screen transition-colors duration-300">
+    <!-- Header -->
+    <header class="bg-indigo-900 dark:bg-indigo-700 text-white p-4 flex items-center justify-between relative transition-colors duration-300">
+      <button id="menu-btn" class="focus:outline-none">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+      </button>
+
+      <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
+        <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" />
+        <h1 class="text-lg font-bold">LannPya Bot</h1>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a
+          href="{{ url_for('home') }}"
+          class="text-sm bg-white text-indigo-900 font-semibold px-3 py-1 rounded hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-600 transition-colors"
+        >
+          Back
+        </a>
+      </div>
+    </header>
+
+    <!-- Side Nav -->
+    <div
+      id="side-nav"
+      class="fixed top-0 left-0 h-full w-64 bg-indigo-800 dark:bg-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-50"
+    >
+      <div class="p-4 text-xl font-bold border-b border-indigo-600 dark:border-indigo-700">
+        Menu
+      </div>
+      <nav class="flex flex-col p-4 space-y-4">
+        <a href="{{ url_for('home') }}" class="hover:text-gray-300">Home</a>
+        <a href="{{ url_for('chat_page') }}" class="hover:text-gray-300">Chat</a>
+        <a href="{{ url_for('content_checker_page') }}" class="hover:text-gray-300">Content Checker</a>
+        <a href="{{ url_for('scenario_simulation_page') }}" class="hover:text-gray-300">Scenario Simulation</a>
+        
+        <!-- Theme Toggle Section -->
+        <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-300">Theme</span>
+            <button
+              id="theme-toggle"
+              class="relative inline-flex h-8 w-16 items-center rounded-full bg-indigo-600 dark:bg-indigo-400 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-800 dark:focus:ring-offset-indigo-900"
+            >
+              <span
+                class="inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-300 ease-in-out translate-x-1 dark:translate-x-9"
+              ></span>
+              <span class="absolute left-1 text-xs">🌙</span>
+              <span class="absolute right-1">☀️</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Developer Credits -->
+        <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
+          <div class="text-center">
+            <p class="text-xs text-gray-300 font-medium">
+              Developed by <span class="text-indigo-300 font-semibold">GUSTO College Team</span>
+            </p>
+            <p class="text-xs text-gray-400 mt-1 leading-tight">
+              <span class="text-indigo-300 font-medium"><br>LannPya Bot</span><br><br>
+              Kaung Zaw Hein <br><br>Aung Min Myat<br><br>Zin Zin Pwint Han
+            </p>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Overlay -->
+    <div
+      id="overlay"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"
+    ></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto transition-colors duration-300">
+      <!-- Quiz View Container -->
+      <div id="quiz-view" class="view-container">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-4xl rounded-2xl shadow-xl overflow-hidden m-4 p-8 md:p-12 transition-colors duration-300">
+          <!-- Topic Selection -->
+          <div id="topic-selection">
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Interactive Quiz</h2>
+            <p class="text-gray-600 dark:text-gray-300 mt-1 mb-6" style="line-height:2.0" >
+              ဉာဏ်စမ်းအတွက် ဆိုက်ဘာလုံခြုံရေးနှင့် ကိုယ်ရေးကိုယ်တာ ကာကွယ်မှု ခေါင်းစဉ်တစ်ခုကို ရွေးပါ။
+            </p>
+            <div
+              id="topic-grid"
+              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+            ></div>
+          </div>
+
+          <!-- Difficulty Selection -->
+          <div id="difficulty-selection" class="hidden-section">
+            <div class="flex items-center gap-4 mb-6">
+              <button
+                id="back-to-topics"
+                class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-semibold flex items-center gap-2"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Back to Topics
+              </button>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Select Difficulty</h2>
+            <p class="text-gray-600 dark:text-gray-300 mt-1 mb-6">
+              Chosen Topic: <span id="chosen-topic" class="font-semibold text-indigo-600 dark:text-indigo-400"></span>
+            </p>
+            <div class="space-y-4">
+              <button
+                data-difficulty="easy"
+                class="difficulty-btn w-full text-lg font-semibold p-4 rounded-xl border-2 border-green-500 text-green-600 hover:bg-green-500 hover:text-white transition-colors dark:border-green-400 dark:text-green-400 dark:hover:bg-green-400 dark:hover:text-green-900"
+              >
+                Easy
+              </button>
+              <button
+                data-difficulty="medium"
+                class="difficulty-btn w-full text-lg font-semibold p-4 rounded-xl border-2 border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors dark:border-yellow-400 dark:text-yellow-400 dark:hover:bg-yellow-400 dark:hover:text-yellow-900"
+              >
+                Medium
+              </button>
+              <button
+                data-difficulty="hard"
+                class="difficulty-btn w-full text-lg font-semibold p-4 rounded-xl border-2 border-red-500 text-red-600 hover:bg-red-500 hover:text-white transition-colors dark:border-red-400 dark:text-red-400 dark:hover:bg-red-400 dark:hover:text-red-900"
+              >
+                Hard
+              </button>
+            </div>
+          </div>
+
+          <!-- Quiz Area -->
+          <div id="quiz-area" class="hidden-section">
+            <div class="flex items-center justify-between mb-6">
+              <button
+                id="back-to-difficulty"
+                class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-semibold flex items-center gap-2"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Back to Difficulty
+              </button>
+            </div>
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
+                Question <span id="question-number"></span>/10
+              </h2>
+              <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">
+                Score: <span id="score" class="text-indigo-600 dark:text-indigo-400">0</span>
+              </p>
+            </div>
+            <div id="question-container" class="mt-6">
+              <p id="question-text" class="text-xl text-gray-700 dark:text-gray-300 mb-6"></p>
+              <div id="answer-options" class="space-y-3"></div>
+            </div>
+            <button
+              id="next-question-btn"
+              class="hidden-section mt-6 w-full bg-indigo-600 dark:bg-indigo-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+            >
+              Next Question
+            </button>
+          </div>
+
+          <!-- Loading Spinner -->
+          <div id="loading-spinner" class="hidden-section text-center py-10">
+            <svg
+              class="animate-spin h-10 w-10 text-indigo-600 dark:text-indigo-400 mx-auto"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            <p class="mt-4 text-lg font-semibold text-gray-700 dark:text-gray-300" style="line-height:2.0">
+              AI အသုံးပြု၍ သင့်အတွက် ဉာဏ်စမ်းမေးခွန်းများကို ဖန်တီးနေသည်...
+            </p>
+          </div>
+
+          <!-- Feedback/Results -->
+          <div id="results-screen" class="hidden-section text-center">
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">ဉာဏ်စမ်းပြီးဆုံးပါပြီ</h2>
+            <p class="text-xl mt-2 text-gray-700 dark:text-gray-300">မိတ်ဆွေရဲ့ စုစုပေါင်းရမှတ်ကတော့</p>
+            <p
+              id="final-score"
+              class="text-6xl font-bold my-4 text-indigo-600 dark:text-indigo-400"
+            ></p>
+            <p id="feedback-message" class="text-lg text-gray-600 dark:text-gray-400 mb-8"></p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                id="play-again-btn"
+                class="bg-indigo-600 dark:bg-indigo-500 text-white font-bold py-3 px-8 rounded-full hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+              >
+                ထပ်ကစားမည်
+              </button>
+              <button
+                id="back-to-topics-from-results"
+                class="bg-gray-600 dark:bg-gray-500 text-white font-bold py-3 px-8 rounded-full hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
+              >
+                ခေါင်းစဉ်အသစ်
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md mx-4 transition-colors duration-300">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Confirm Quiz Start</h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
+          Are you ready to start the <span id="modal-topic" class="font-semibold"></span> quiz on <span id="modal-difficulty" class="font-semibold"></span> difficulty?
+        </p>
+        <div class="flex gap-3 justify-end">
+          <button
+            id="cancel-quiz"
+            class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium"
+          >
+            Cancel
+          </button>
+          <button
+            id="confirm-quiz"
+            class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded hover:bg-indigo-700 dark:hover:bg-indigo-600 font-medium"
+          >
+            Start Quiz
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // --- DOM Elements ---
+      const topicSelection = document.getElementById("topic-selection");
+      const difficultySelection = document.getElementById("difficulty-selection");
+      const quizArea = document.getElementById("quiz-area");
+      const resultsScreen = document.getElementById("results-screen");
+      const loadingSpinner = document.getElementById("loading-spinner");
+      const confirmationModal = document.getElementById("confirmation-modal");
+    
+      const topicGrid = document.getElementById("topic-grid");
+      const chosenTopicEl = document.getElementById("chosen-topic");
+      const difficultyBtns = document.querySelectorAll(".difficulty-btn");
+    
+      const questionNumberEl = document.getElementById("question-number");
+      const scoreEl = document.getElementById("score");
+      const questionTextEl = document.getElementById("question-text");
+      const answerOptionsEl = document.getElementById("answer-options");
+      const nextQuestionBtn = document.getElementById("next-question-btn");
+    
+      const finalScoreEl = document.getElementById("final-score");
+      const feedbackMessageEl = document.getElementById("feedback-message");
+      const playAgainBtn = document.getElementById("play-again-btn");
+      
+      // Back buttons
+      const backToTopicsBtn = document.getElementById("back-to-topics");
+      const backToDifficultyBtn = document.getElementById("back-to-difficulty");
+      const backToTopicsFromResultsBtn = document.getElementById("back-to-topics-from-results");
+      
+      // Modal elements
+      const modalTopic = document.getElementById("modal-topic");
+      const modalDifficulty = document.getElementById("modal-difficulty");
+      const cancelQuizBtn = document.getElementById("cancel-quiz");
+      const confirmQuizBtn = document.getElementById("confirm-quiz");
+      
+      // Sidebar elements
+      const menuBtn = document.getElementById("menu-btn");
+      const sideNav = document.getElementById("side-nav");
+      const overlay = document.getElementById("overlay");
+      const themeToggle = document.getElementById("theme-toggle");
+    
+      // --- Quiz State ---
+      let currentTopic = "";
+      let currentDifficulty = "";
+      let questions = [];
+      let currentQuestionIndex = 0;
+      let score = 0;
+      let answerSelected = false;
+    
+      const cybersecurityTopics = [
+        {
+          display: "Phishing\n\n(ဖြားယောင်းမှု)",
+          key: "Phishing"
+        },
+        {
+          display: "Passwords & 2FA\n\n(စကားဝှက်များနှင့် နှစ်ဆင့်ခွင့်ပြုချက်)",
+          key: "Passwords & 2FA"
+        },
+        {
+          display: "Social Media Safety\n\n(ဆိုရှယ်မီဒီယာ လုံခြုံရေး)",
+          key: "Social Media Safety"
+        },
+        {
+          display: "Device & Network Security\n\n(စက်ပစ္စည်းနှင့် ကွန်ရက် လုံခြုံရေး)",
+          key: "Device & Network Security"
+        },
+        {
+          display: "Personal Data & Privacy\n\n(ကိုယ်ရေးကိုယ်တာ အချက်အလက်နှင့် လုံခြုံမှု)",
+          key: "Personal Data & Privacy"
+        },
+        {
+          display: "How to Spot Fake Websites/Apps\n\n(အင်တာနက်စာမျက်နှာ/အက်ပ်အစစ်အမှန်း ခွဲခြားနည်း)",
+          key: "How to Spot Fake Websites/Apps"
+        },
+        {
+          display: "VPN & Encryption Basics\n\n(VPN နှင့် စာဝှက်ကုဒ်ပြုလုပ်ခြင်း အခြေခံ)",
+          key: "VPN & Encryption Basics"
+        },
+        {
+          display: "Wi-Fi Safety\n\n(ဝိုင်ဖိုင်လုံခြုံရေး)",
+          key: "Wi-Fi Safety"
+        },
+        {
+          display: "App & Device Safety\n\n(အက်ပ်နှင့် စက်ပစ္စည်း လုံခြုံရေး)",
+          key: "App & Device Safety"
+        },
+        {
+          display: "Fake Accounts\n\n(အကောင့်အတု)",
+          key: "Fake Accounts"
+        },
+        {
+          display: "Fake News & Misinformation\n\n(သတင်းအတုနှင့် မှားယွင်းသတင်း)",
+          key: "Fake News & Misinformation"
+        },
+        {
+          display: "Oversharing & Privacy Risks\n\n(အချက်အလက် အလွန်အကျွံမျှဝေခြင်းနှင့် ကိုယ်ရေးကိုယ်တာ အန္တရာယ်များ)",
+          key: "Oversharing & Privacy Risks"
+        },
+        {
+          display: "Mobile Banking & Wallet Safety\n\n(မိုဘိုင်းဘဏ်နှင့် ပိုက်ဆံအိတ် လုံခြုံရေး)",
+          key: "Mobile Banking & Wallet Safety"
+        },
+        {
+          display: "OTP & 2FA Code Protection\n\n(OTP နှင့် နှစ်ဆင့်ခွင့်ပြုချက် ကုဒ် ကာကွယ်ခြင်း)",
+          key: "OTP & 2FA Code Protection"
+        },
+        {
+          display: "Loan & Lottery Scams\n\n(ချေးငွေနှင့် ထီပေါက်ခြောက် လိမ်လည်မှုများ)",
+          key: "Loan & Lottery Scams"
+        },
+        {
+          display: "Phone Call & SMS Frauds\n\n(ဖုန်းခေါ်ဆိုမှုနှင့် SMS လိမ်လည်မှုများ)",
+          key: "Phone Call & SMS Frauds"
+        },
+        {
+          display: "Personal Data Protection\n\n(ကိုယ်ရေးကိုယ်တာ အချက်အလက် ကာကွယ်ခြင်း)",
+          key: "Personal Data Protection"
+        },
+        {
+          display: "Social Media Privacy\n\n(ဆိုရှယ်မီဒီယာ ကိုယ်ရေးကိုယ်တာ လုံခြုံမှု)",
+          key: "Social Media Privacy"
+        }
+      ];
+    
+      // --- Functions ---
+      function showQuizSection(section) {
+        topicSelection.classList.add("hidden-section");
+        difficultySelection.classList.add("hidden-section");
+        quizArea.classList.add("hidden-section");
+        resultsScreen.classList.add("hidden-section");
+        loadingSpinner.classList.add("hidden-section");
+        section.classList.remove("hidden-section");
+      }
+    
+      function populateTopics() {
+        topicGrid.innerHTML = "";
+        cybersecurityTopics.forEach((topicObj) => {
+          const button = document.createElement("button");
+          button.className =
+            "topic-btn p-4 bg-gray-100 dark:bg-gray-700 hover:bg-indigo-100 dark:hover:bg-indigo-700 rounded-xl font-semibold text-gray-800 dark:text-gray-200 transition-colors text-center text-sm leading-tight min-h-[80px] flex items-center justify-center";
+          button.textContent = topicObj.display;
+          button.addEventListener("click", () => selectTopic(topicObj));
+          topicGrid.appendChild(button);
+        });
+      }
+    
+      function selectTopic(topicObj) {
+        currentTopic = topicObj.key; // Use the English key for backend
+        chosenTopicEl.textContent = topicObj.display; // Show Burmese text to user
+        showQuizSection(difficultySelection);
+      }
+      
+      function showConfirmationModal(topic, difficulty) {
+        modalTopic.textContent = topic;
+        modalDifficulty.textContent = difficulty;
+        confirmationModal.classList.remove("hidden");
+      }
+      
+      function hideConfirmationModal() {
+        confirmationModal.classList.add("hidden");
+      }
+    
+      async function fetchQuizQuestions(topic, difficulty) {
+        hideConfirmationModal();
+        showQuizSection(loadingSpinner);
+    
+        try {
+            const response = await fetch("/generate-quiz", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ topic, difficulty }),
+            });
+    
+            if (!response.ok) throw new Error(`API error ${response.status}`);
+            const result = await response.json();
+            questions = result.questions;
+    
+            // Shuffle options
+            questions.forEach(q => q.options.sort(() => Math.random() - 0.5));
+            startQuiz();
+        } catch (err) {
+            console.error(err);
+            alert("Failed to generate quiz. Check console.");
+            showQuizSection(topicSelection);
+          }
+      }
+
+      function startQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        scoreEl.textContent = score;
+        showQuizSection(quizArea);
+        displayQuestion();
+      }
+    
+      function displayQuestion() {
+        answerSelected = false;
+        nextQuestionBtn.classList.add("hidden-section");
+        const question = questions[currentQuestionIndex];
+        questionNumberEl.textContent = currentQuestionIndex + 1;
+        questionTextEl.textContent = question.question;
+        answerOptionsEl.innerHTML = "";
+    
+        question.options.forEach((option) => {
+          const button = document.createElement("button");
+          button.className =
+            "answer-option w-full text-left p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 font-medium text-gray-700 dark:text-gray-300 transition-colors";
+          button.textContent = option;
+          button.addEventListener("click", () =>
+            selectAnswer(button, option, question.answer)
+          );
+          answerOptionsEl.appendChild(button);
+        });
+      }
+    
+      function selectAnswer(button, selectedOption, correctAnswer) {
+        if (answerSelected) return;
+        answerSelected = true;
+    
+        const allOptionButtons =
+          answerOptionsEl.querySelectorAll(".answer-option");
+        allOptionButtons.forEach((btn) => {
+          btn.disabled = true;
+          if (btn.textContent === correctAnswer) {
+            btn.classList.add("correct-answer");
+          }
+        });
+    
+        if (selectedOption === correctAnswer) {
+          score++;
+          scoreEl.textContent = score;
+        } else {
+          button.classList.add("incorrect-answer");
+        }
+    
+        nextQuestionBtn.classList.remove("hidden-section");
+      }
+    
+      function handleNextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+          displayQuestion();
+        } else {
+          showResults();
+        }
+      }
+    
+      function showResults() {
+        finalScoreEl.textContent = `${score} / ${questions.length}`;
+        const percentage = (score / questions.length) * 100;
+        let message = "";
+        if (percentage >= 80) {
+          message = "အထူးချွန်ဆုံးပါ! ဒီခေါင်းစဉ်ကို သင် ကောင်းကောင်းနားလည်သဘောပေါက်ထားပါတယ်။";
+        } else if (percentage >= 50) {
+          message = "အားရဖို့ကောင်းပါတယ်! နည်းနည်းလောက် ထပ်လေ့လာရင် ကျွမ်းကျင်သူတစ်ယောက် ဖြစ်လာမှာပါ။";
+        } else {
+          message = "ဆက်ကြိုးစားပါ! သင်ခန်းစာတွေကို ပြန်လည်လေ့လာခြင်းက သင့်ရဲ့အမှတ်တွေ တိုးတက်လာစေမှာပါ။";
+        }
+        feedbackMessageEl.textContent = message;
+        showQuizSection(resultsScreen);
+      }
+    
+      function resetQuiz() {
+        currentTopic = "";
+        currentDifficulty = "";
+        questions = [];
+        currentQuestionIndex = 0;
+        score = 0;
+        populateTopics();
+        showQuizSection(topicSelection);
+      }
+      
+      // --- Event Listeners ---
+      difficultyBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          currentDifficulty = btn.dataset.difficulty;
+          showConfirmationModal(currentTopic, currentDifficulty);
+        });
+      });
+      
+      // Back button handlers
+      backToTopicsBtn.addEventListener("click", () => {
+        showQuizSection(topicSelection);
+      });
+      
+      backToDifficultyBtn.addEventListener("click", () => {
+        showQuizSection(difficultySelection);
+      });
+      
+      backToTopicsFromResultsBtn.addEventListener("click", () => {
+        resetQuiz();
+      });
+      
+      // Modal handlers
+      cancelQuizBtn.addEventListener("click", hideConfirmationModal);
+      confirmQuizBtn.addEventListener("click", () => {
+        fetchQuizQuestions(currentTopic, currentDifficulty);
+      });
+    
+      nextQuestionBtn.addEventListener("click", handleNextQuestion);
+      playAgainBtn.addEventListener("click", resetQuiz);
+      
+      // Sidebar toggle
+      menuBtn.addEventListener("click", () => {
+        sideNav.classList.toggle("-translate-x-full");
+        overlay.classList.toggle("hidden");
+      });
+      
+      overlay.addEventListener("click", () => {
+        sideNav.classList.add("-translate-x-full");
+        overlay.classList.add("hidden");
+      });
+      
+             // Theme toggle
+       const html = document.documentElement;
+       const toggleSlider = themeToggle.querySelector('span');
+       
+       if (localStorage.getItem("theme") === "light") {
+         html.classList.remove("dark");
+         toggleSlider.style.transform = "translateX(0.25rem)";
+       } else {
+         html.classList.add("dark");
+         toggleSlider.style.transform = "translateX(2.25rem)";
+       }
+       
+       themeToggle.addEventListener("click", () => {
+         if (html.classList.contains("dark")) {
+           html.classList.remove("dark");
+           localStorage.setItem("theme", "light");
+           toggleSlider.style.transform = "translateX(0.25rem)";
+         } else {
+           html.classList.add("dark");
+           localStorage.setItem("theme", "dark");
+           toggleSlider.style.transform = "translateX(2.25rem)";
+         }
+       });
+    
+      // --- Initial Setup ---
+      populateTopics();
+    </script>
+  </body>
+</html>
+

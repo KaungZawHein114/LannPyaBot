@@ -1,73 +1,321 @@
+
 <!DOCTYPE html>
-<html>
-<head>
-    <title>LannPya Bot</title>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/bot.png') }}" />
+
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+      };
+    </script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #chatbox {
-            border: 1px solid #ccc;
-            padding: 10px;
-            width: 400px;
-            height: 200px;
-            overflow-y: auto;
-            margin-bottom: 10px;
-        }
-        textarea {
-            width: 400px;
-            height: 100px;
-            margin-top: 10px;
-            display: block;
-        }
-        #result {
-            margin-top: 10px;
-            font-weight: bold;
-        }
-        .trusted { color: green; }
-        .fake { color: red; }
-        .unclear { color: orange; }
+      /* Use the Inter font family */
+      body {
+        font-family: "Inter", sans-serif;
+        transition: background-color 0.5s, color 0.5s;
+      }
+
+      /* Base styles for the action buttons */
+      .action-button {
+        transition: transform 0.1s ease-in-out, background-color 0.2s ease,
+          color 0.2s ease;
+        /* To make the anchor tag behave like a block element */
+        text-decoration: none;
+        display: flex;
+      }
+
+      /* Custom class for the active button state */
+      .active-button {
+        background-color: #312e81; /* Equivalent to bg-indigo-800 for a slightly lighter feel */
+        color: white;
+        transform: scale(0.98); /* Adds a subtle press effect */
+      }
+      .active-button svg {
+        color: white;
+      }
     </style>
-</head>
-<body>
-    <h1>LannPya Bot</h1>
+  </head>
+  <body class="bg-gray-200 dark:bg-gray-900 flex flex-col min-h-screen p-4 transition-colors duration-300">
+    <!-- Theme toggle (global) -->
+    <button id="theme-toggle" class="fixed top-4 right-4 text-indigo-900 dark:text-indigo-100 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 px-3 py-1 rounded-md shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">🌙</button>
+    
+    <!-- Main Card Container -->
+    <div class="flex-1 flex items-center justify-center">
+      <div
+        class="bg-white dark:bg-gray-800 max-w-sm w-full rounded-3xl shadow-lg overflow-hidden md:max-w-3xl transition-colors duration-300"
+      >
+        <!-- Top Section -->
+        <div class="p-8">
+          <!-- Flex container for responsive layout -->
+          <div class="md:flex md:items-center md:gap-8">
+            <!-- Left side: Text and Buttons -->
+            <div class="md:w-1/2">
+              <!-- Greeting Text -->
+              <h1 class="text-4xl font-bold text-gray-800 dark:text-white">မင်္ဂလာပါ</h1>
+              <p class="text-xl text-gray-600 dark:text-gray-300 mt-2" style="line-height:2.0">
+                LannPya Bot (လမ်းပြဘော့) က ကြိုဆိုပါတယ်
+              </p>
 
-    <!-- Chat Section -->
-    <div id="chatbox"></div>
-    <input type="text" id="userInput" placeholder="Type your message...">
-    <button onclick="sendMessage()">Send</button>
+              <!-- Action Buttons -->
+              <div id="action-buttons-container" class="mt-8 space-y-4">
+                <!-- Chat Button -->
+                <a
+                  href="{{ url_for('chat_page') }}"
+                  class="action-button w-full justify-between items-center bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 transition-colors p-4 rounded-xl"
+                >
+                  <span class="font-semibold text-lg text-gray-800 dark:text-gray-200">ဆွေးနွေး (Chat)</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 text-gray-600 dark:text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
 
-    <hr>
+                <!-- Content Checking Button -->
+                <a
+                  href="{{ url_for('content_checker_page') }}"
+                  class="action-button w-full justify-between items-center bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 transition-colors p-4 rounded-xl"
+                >
+                  <span class="font-semibold text-lg text-gray-800 dark:text-gray-200"
+                    >စစ်ဆေး (Check)</span
+                  >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 text-gray-600 dark:text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
 
-    <!-- Content Checker Section -->
-    <h2>Content Checker</h2>
-    <textarea id="contentInput" placeholder="Paste the content here..." rows="8" cols="80"></textarea>
+                <!-- Scenario Simulation Button -->
+                <a
+                  href="{{ url_for('scenario_simulation_page') }}"
+                  class="action-button w-full justify-between items-center bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 transition-colors p-4 rounded-xl"
+                >
+                  <span class="font-semibold text-lg text-gray-800 dark:text-gray-200"
+                    >ဆန်းစစ် (Simulation)</span
+                  >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 text-gray-600 dark:text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
 
-    <label for="poster">Who posted it:</label>
-    <select id="poster">
-        <option value="person">Person</option>
-        <option value="news_org">News Organization</option>
-        <option value="gov">Government</option>
-        <option value="celebrity">Celebrity</option>
-    </select>
+                <!-- Interactive Quiz Button -->
+                <a
+                  href="{{ url_for('interactive_quiz_page') }}"
+                  class="action-button w-full justify-between items-center bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 transition-colors p-4 rounded-xl"
+                >
+                  <span class="font-semibold text-lg text-gray-800 dark:text-gray-200"
+                    >လေ့လာ (Quiz)</span
+                  >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 text-gray-600 dark:text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
 
-    <label for="date">When was it posted:</label>
-    <input type="date" id="date">
+            <!-- Right side: Robot Image and Tip -->
+            <div class="md:w-1/2">
+              <!-- Robot Image -->
+              <div class="flex justify-center mt-8 md:mt-0">
+                <img
+                  src="{{ url_for('static', filename='images/logo.jpg') }}"
+                  alt="Friendly Robot Mascot"
+                  class="h-48 w-auto"
+                  onerror="this.onerror=null;this.src='https://placehold.co/200x200/FFFFFF/333?text=🤖';"
+                />
+              </div>
 
-    <label for="platform">Platform:</label>
-    <select id="platform">
-        <option value="facebook">Facebook</option>
-        <option value="twitter">Twitter</option>
-        <option value="news_site">News Website</option>
-        <option value="telegram">Telegram</option>
-        <option value="other">Other</option>
-    </select>
+              <!-- Tip of the Day (moved from bottom) -->
+              <div class="bg-indigo-900 text-white p-6 text-center rounded-2xl mt-8">
+                <h2 class="text-xl font-bold">Tip of the day</h2>
+                <p id="tip-text" class="mt-2 text-indigo-200 text-sm"></p>
+                <!-- Updated button to link to the chat page with a pre-filled query -->
+                <a
+                  id="learnMoreButton"
+                  href="{{ url_for('chat_page') }}"
+                  class="mt-4 bg-white text-indigo-900 font-bold py-2 px-5 rounded-full flex items-center justify-center mx-auto hover:bg-gray-200 transition-colors text-sm"
+                >
+                  <span>Learn More</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 ml-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
+              </div>
 
-    <button onclick="checkContent()">Check Content</button>
-    <div id="checkerResult"></div>
+              <!-- Removed separate random tip box; integrated into the card above -->
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <!-- Developer Credits Footer -->
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
+    <footer class="mt-10 text-center">
+      <div class="pt-8 border-t border-gray-200 dark:border-gray-700">
+        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">
+          Developed by <span class="text-indigo-600 dark:text-indigo-400 font-semibold">GUSTO College Team</span>
+        </p>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+          <span class="text-indigo-500 dark:text-indigo-400 font-medium"><br>LannPya Bot<br><br></span> - 
+          Kaung Zaw Hein, Aung Min Myat, Zin Zin Pwint Han
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Get all the links with the 'action-button' class
+      const actionButtons = document.querySelectorAll("a.action-button");
+
+      // Function to reset all buttons to their default state
+      function resetButtonStyles() {
+        actionButtons.forEach((button) => {
+          button.classList.remove("active-button");
+        });
+      }
+
+      // Add a click event listener to each button
+      actionButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          // First, reset all buttons
+          resetButtonStyles();
+          // Then, add the active class to the clicked button
+          button.classList.add("active-button");
+        });
+      });
+
+      // --- New code for the "Learn More" button ---
+      // Get the tip text element
+      const tipTextElement = document.getElementById("tip-text");
+      // Get the learn more button element
+      const learnMoreButton = document.getElementById("learnMoreButton");
+
+      if (tipTextElement && learnMoreButton) {
+        // Get the text content from the tip
+        const tipContent = tipTextElement.textContent.trim();
+        // Construct the message to send to the chat page
+        const message = `Tell me more about ${tipContent}`;
+
+        // Encode the message to be safe for a URL
+        const encodedMessage = encodeURIComponent(message);
+
+        // Set the href of the learn more button with the encoded message
+        learnMoreButton.href = `{{ url_for('chat_page') }}?q=${encodedMessage}`;
+      }
+
+    async function loadRandomTip() {
+        try {
+            const res = await fetch("/random-tip");
+            const data = await res.json();
+            const tipEl = document.getElementById("tip-text");
+            tipEl.textContent = `${data.topic} Tip: ${data.tip}`;
+            // Update Learn More link with the fetched tip
+            const message = `Tell me more about ${tipEl.textContent.trim()}`;
+            const encodedMessage = encodeURIComponent(message);
+            document.getElementById("learnMoreButton").href = `{{ url_for('chat_page') }}?q=${encodedMessage}`;
+        } catch {
+            const tipEl = document.getElementById("tip-text");
+            tipEl.textContent = "Stay safe online! Use unique passwords and enable 2FA.";
+        }
+    }
+
+    // Theme toggle logic
+    (function(){
+      const html = document.documentElement;
+      const btn = document.getElementById("theme-toggle");
+      
+      // Check localStorage for saved theme preference or default to dark mode
+      if (localStorage.getItem("theme") === "light") {
+        html.classList.remove("dark");
+        btn.textContent = "🌙";
+      } else {
+        html.classList.add("dark");
+        btn.textContent = "☀️";
+      }
+      
+      btn.addEventListener("click", ()=>{
+        const isDark = html.classList.contains("dark");
+        if (isDark) {
+          html.classList.remove("dark");
+          localStorage.setItem("theme","light");
+          btn.textContent = "🌙";
+        } else {
+          html.classList.add("dark");
+          localStorage.setItem("theme","dark");
+          btn.textContent = "☀️";
+        }
+      });
+    })();
+
+    // Load tip on page load
+    loadRandomTip();
+    </script>
+  </body>
 </html>
