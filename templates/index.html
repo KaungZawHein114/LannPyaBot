@@ -7,6 +7,8 @@
     <title>Home</title>
     
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/bot.png') }}" />
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0f172a">
 
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -313,6 +315,12 @@
         }
       });
     })();
+
+    if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service-worker.js")
+      .then(reg => console.log("Service Worker registered!", reg))
+      .catch(err => console.log("Service Worker registration failed!", err));
+    }
 
     // Load tip on page load
     loadRandomTip();
