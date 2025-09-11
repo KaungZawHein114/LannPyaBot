@@ -106,161 +106,203 @@
         </div>
     </main>
 
-    <div class="fixed bottom-0 left-0 right-0 p-4 transition-colors duration-300 z-50" style="padding-bottom: calc(1rem + env(safe-area-inset-bottom));">
-        <form id="chat-form" class="flex items-end gap-2">
-            <textarea id="chat-input" placeholder="ဒီမှာစာရိုက်ပါ..." rows="1" class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-3xl resize-none overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"></textarea>
-            <button type="submit" class="bg-indigo-900 dark:bg-indigo-700 text-white px-4 py-2 mb-1 rounded-full hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors flex items-center justify-center">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                </svg>
-            </button>
-        </form>
-    </div>
+    <div id="chat-form-container" class="fixed bottom-0 left-0 right-0 p-4 transition-colors duration-300 z-50" style="padding-bottom: calc(1rem + env(safe-area-inset-bottom));">
+    <form id="chat-form" class="flex items-end gap-2">
+        <textarea id="chat-input" placeholder="ဒီမှာစာရိုက်ပါ..." rows="1" class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-3xl resize-none overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"></textarea>
+        <button type="submit" class="bg-indigo-900 dark:bg-indigo-700 text-white px-4 py-2 mb-1 rounded-full hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+            </svg>
+        </button>
+    </form>
+</div>
 
     <script>
-        const chatForm = document.getElementById("chat-form");
-        const chatInput = document.getElementById("chat-input");
-        const chatContainer = document.getElementById("chat-container");
-        const confirmationModal = document.getElementById("confirmation-modal");
-        const cancelLeaveBtn = document.getElementById("cancel-leave");
-        const confirmLeaveBtn = document.getElementById("confirm-leave");
+    // These are your existing variables.
+    const chatForm = document.getElementById("chat-form");
+    const chatInput = document.getElementById("chat-input");
+    const chatContainer = document.getElementById("chat-container");
+    const confirmationModal = document.getElementById("confirmation-modal");
+    const cancelLeaveBtn = document.getElementById("cancel-leave");
+    const confirmLeaveBtn = document.getElementById("confirm-leave");
 
-        function scrollToBottom() {
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-        chatInput.addEventListener("input", () => {
-            chatInput.style.height = "auto";
-            chatInput.style.height = `${chatInput.scrollHeight}px`;
-        });
-        function showConfirmationModal() {
-            confirmationModal.classList.remove("hidden");
-        }
-        function hideConfirmationModal() {
-            confirmationModal.classList.add("hidden");
-        }
-        cancelLeaveBtn.addEventListener("click", hideConfirmationModal);
-        confirmLeaveBtn.addEventListener("click", () => {
-            window.location.href = "{{ url_for('home') }}";
-        });
-        document.querySelector('a[href="{{ url_for("home") }}"]').addEventListener('click', (e) => {
-            e.preventDefault();
-            showConfirmationModal();
-        });
+    // These are the new variables needed to calculate heights.
+    const header = document.querySelector('header');
+    const chatFormContainer = document.querySelector('.fixed.bottom-0');
+
+    function scrollToBottom() {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // Function to adjust the chat container height to prevent it from jumping
+    function adjustChatContainerHeight() {
+        if (!header || !chatFormContainer) return; // Add a safety check
+
+        const headerHeight = header.offsetHeight;
+        const formHeight = chatFormContainer.offsetHeight;
+        const viewportHeight = window.innerHeight;
+
+        // Calculate the available height for the chat container.
+        const chatHeight = viewportHeight - headerHeight - formHeight;
+        chatContainer.style.height = `${chatHeight}px`;
+    }
+
+    // Call the height adjustment function on page load and whenever the window is resized.
+    window.addEventListener('load', adjustChatContainerHeight);
+    window.addEventListener('resize', adjustChatContainerHeight);
+
+    // Modern API to hint to the browser to prevent content from resizing
+    if ('virtualKeyboard' in navigator) {
+        navigator.virtualKeyboard.overlaysContent = true;
+    }
+
+    chatInput.addEventListener("input", () => {
+        chatInput.style.height = "auto";
+        chatInput.style.height = `${chatInput.scrollHeight}px`;
+    });
+    
+    function showConfirmationModal() {
+        confirmationModal.classList.remove("hidden");
+    }
+    
+    function hideConfirmationModal() {
+        confirmationModal.classList.add("hidden");
+    }
+    
+    cancelLeaveBtn.addEventListener("click", hideConfirmationModal);
+    
+    confirmLeaveBtn.addEventListener("click", () => {
+        window.location.href = "{{ url_for('home') }}";
+    });
+    
+    document.querySelector('a[href="{{ url_for("home") }}"]').addEventListener('click', (e) => {
+        e.preventDefault();
+        showConfirmationModal();
+    });
 
 
-        const menuBtn = document.getElementById("menu-btn");
-        const sideNav = document.getElementById("side-nav");
-        const overlay = document.getElementById("overlay");
-        const themeToggle = document.getElementById("theme-toggle");
-        menuBtn.addEventListener("click", () => {
-            sideNav.classList.toggle("-translate-x-full");
-            overlay.classList.toggle("hidden");
-        });
-        overlay.addEventListener("click", () => {
-            sideNav.classList.add("-translate-x-full");
-            overlay.classList.add("hidden");
-        });
-        const html = document.documentElement;
-        const toggleSlider = themeToggle.querySelector('span');
-        if (localStorage.getItem("theme") === "light") {
+    const menuBtn = document.getElementById("menu-btn");
+    const sideNav = document.getElementById("side-nav");
+    const overlay = document.getElementById("overlay");
+    const themeToggle = document.getElementById("theme-toggle");
+    
+    menuBtn.addEventListener("click", () => {
+        sideNav.classList.toggle("-translate-x-full");
+        overlay.classList.toggle("hidden");
+    });
+    
+    overlay.addEventListener("click", () => {
+        sideNav.classList.add("-translate-x-full");
+        overlay.classList.add("hidden");
+    });
+    
+    const html = document.documentElement;
+    const toggleSlider = themeToggle.querySelector('span');
+    
+    if (localStorage.getItem("theme") === "light") {
+        html.classList.remove("dark");
+        toggleSlider.style.transform = "translateX(0.25rem)";
+    } else {
+        html.classList.add("dark");
+        toggleSlider.style.transform = "translateX(2.25rem)";
+    }
+    
+    themeToggle.addEventListener("click", () => {
+        if (html.classList.contains("dark")) {
             html.classList.remove("dark");
+            localStorage.setItem("theme", "light");
             toggleSlider.style.transform = "translateX(0.25rem)";
         } else {
             html.classList.add("dark");
+            localStorage.setItem("theme", "dark");
             toggleSlider.style.transform = "translateX(2.25rem)";
         }
-        themeToggle.addEventListener("click", () => {
-            if (html.classList.contains("dark")) {
-                html.classList.remove("dark");
-                localStorage.setItem("theme", "light");
-                toggleSlider.style.transform = "translateX(0.25rem)";
-            } else {
-                html.classList.add("dark");
-                localStorage.setItem("theme", "dark");
-                toggleSlider.style.transform = "translateX(2.25rem)";
-            }
-        });
-        window.onload = function () {
-            const queryString = window.location.search;
-            const urlParams = new URLSearchParams(queryString);
-            const message = urlParams.get("q");
-            if (message) {
-                chatInput.value = message;
-                chatInput.style.height = "auto";
-                chatInput.style.height = `${chatInput.scrollHeight}px`;
-            }
-        };
-        chatInput.addEventListener("keydown", function (e) {
-            if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                chatForm.dispatchEvent(new Event("submit", { cancelable: true }));
-            }
-        });
-
-        let conversation = [];
-        chatForm.addEventListener("submit", async function (e) {
-            e.preventDefault();
-            const message = chatInput.value.trim();
-            if (!message) return;
-
-            conversation.push({ role: "user", content: message });
-
-            const userMsg = document.createElement("div");
-            userMsg.className = "flex items-start justify-end space-x-2";
-            userMsg.innerHTML = `
-            <div class="bg-indigo-900 dark:bg-indigo-700 text-white p-3 rounded-2xl max-w-xs">${message}</div>
-            <img src="{{ url_for('static', filename='images/myanmarFlag.png') }}" class="w-10 h-10 rounded-full">
-            `;
-            chatContainer.appendChild(userMsg);
-            scrollToBottom();
-
-            chatInput.value = "";
+    });
+    
+    window.onload = function () {
+        adjustChatContainerHeight(); // Call this on load to set initial height
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const message = urlParams.get("q");
+        
+        if (message) {
+            chatInput.value = message;
             chatInput.style.height = "auto";
+            chatInput.style.height = `${chatInput.scrollHeight}px`;
+        }
+    };
+    
+    chatInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            chatForm.dispatchEvent(new Event("submit", { cancelable: true }));
+        }
+    });
 
-            const typingIndicator = document.createElement("div");
-            typingIndicator.className = "flex items-start space-x-2 bot-typing";
-            typingIndicator.innerHTML = `
+    let conversation = [];
+    chatForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        conversation.push({ role: "user", content: message });
+
+        const userMsg = document.createElement("div");
+        userMsg.className = "flex items-start justify-end space-x-2";
+        userMsg.innerHTML = `
+        <div class="bg-indigo-900 dark:bg-indigo-700 text-white p-3 rounded-2xl max-w-xs">${message}</div>
+        <img src="{{ url_for('static', filename='images/myanmarFlag.png') }}" class="w-10 h-10 rounded-full">
+        `;
+        chatContainer.appendChild(userMsg);
+        scrollToBottom();
+
+        chatInput.value = "";
+        chatInput.style.height = "auto";
+
+        const typingIndicator = document.createElement("div");
+        typingIndicator.className = "flex items-start space-x-2 bot-typing";
+        typingIndicator.innerHTML = `
+        <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6">
+        <div class="bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 p-3 rounded-2xl max-w-xs flex space-x-1 transition-colors duration-300">
+            <span class="dot">•</span><span class="dot">•</span><span class="dot">•</span>
+        </div>`;
+        chatContainer.appendChild(typingIndicator);
+        scrollToBottom();
+
+        try {
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: message })
+            });
+            const data = await response.json();
+
+            typingIndicator.remove();
+
+            const botMsg = document.createElement("div");
+            botMsg.className = "flex items-start space-x-2";
+            botMsg.innerHTML = `
             <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6">
-            <div class="bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 p-3 rounded-2xl max-w-xs flex space-x-1 transition-colors duration-300">
-                <span class="dot">•</span><span class="dot">•</span><span class="dot">•</span>
-            </div>`;
-            chatContainer.appendChild(typingIndicator);
+            <div class="bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 p-3 rounded-2xl max-w-xs transition-colors duration-300">
+            ${data.reply.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")}</div>`;
+            chatContainer.appendChild(botMsg);
             scrollToBottom();
 
-            try {
-                const response = await fetch("/chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: message })
-                });
-                const data = await response.json();
-
-                typingIndicator.remove();
-
-                const botMsg = document.createElement("div");
-                botMsg.className = "flex items-start space-x-2";
-                botMsg.innerHTML = `
-                <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6">
-                <div class="bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 p-3 rounded-2xl max-w-xs transition-colors duration-300">
-                ${data.reply.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")}</div>`;
-                chatContainer.appendChild(botMsg);
-                scrollToBottom();
-
-                conversation.push({ role: "assistant", content: data.reply });
-            } catch (error) {
-                typingIndicator.remove();
-                console.error(error);
-                const errorMsg = document.createElement("div");
-                errorMsg.className = "flex items-start space-x-2";
-                errorMsg.innerHTML = `
-                <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6">
-                <div class="bg-red-300 dark:bg-red-900 text-red-800 dark:text-red-200 p-3 rounded-2xl max-w-xs transition-colors duration-300">
-                    Sorry, I encountered an error. Please try again.
-                </div>`;
-                chatContainer.appendChild(errorMsg);
-                scrollToBottom();
-            }
-        });
-    </script>
+            conversation.push({ role: "assistant", content: data.reply });
+        } catch (error) {
+            typingIndicator.remove();
+            console.error(error);
+            const errorMsg = document.createElement("div");
+            errorMsg.className = "flex items-start space-x-2";
+            errorMsg.innerHTML = `
+            <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6">
+            <div class="bg-red-300 dark:bg-red-900 text-red-800 dark:text-red-200 p-3 rounded-2xl max-w-xs transition-colors duration-300">
+                Sorry, I encountered an error. Please try again.
+            </div>`;
+            chatContainer.appendChild(errorMsg);
+            scrollToBottom();
+        }
+    });
+</script>
 </body>
 </html>
