@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,25 +13,22 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-            rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <style>
         body {
             font-family: "Inter", sans-serif;
             transition: background-color 0.5s, color 0.5s;
         }
-
         html,
         body,
         #app {
             height: 100%;
         }
-
         #chat-main {
             flex-grow: 1;
             overflow-y: auto;
+            padding-bottom: calc(4rem + 16px); /* padding for the form height */
         }
-
         #chat-form-container {
             position: sticky;
             bottom: 0;
@@ -40,44 +36,35 @@
             width: 100%;
             z-index: 30;
         }
-
         ::-webkit-scrollbar {
             width: 6px;
         }
-
         ::-webkit-scrollbar-thumb {
             background: rgba(0, 0, 0, 0.2);
             border-radius: 3px;
         }
-
         /* Typing animation dots */
         .dot {
             animation: blink 1.4s infinite both;
         }
-
         .dot:nth-child(2) {
             animation-delay: 0.2s;
         }
-
         .dot:nth-child(3) {
             animation-delay: 0.4s;
         }
-
         @keyframes blink {
-
             0%,
             80%,
             100% {
                 opacity: 0;
             }
-
             40% {
                 opacity: 1;
             }
         }
     </style>
 </head>
-
 <body class="bg-gray-200 dark:bg-gray-900 flex flex-col h-screen transition-colors duration-300" id="app">
     <header
         class="bg-indigo-900 dark:bg-indigo-700 text-white p-4 flex items-center justify-between relative transition-colors duration-300">
@@ -98,7 +85,6 @@
             </a>
         </div>
     </header>
-
     <div id="side-nav"
         class="fixed top-0 left-0 h-full w-64 bg-indigo-800 dark:bg-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-50">
         <div class="p-4 text-xl font-bold border-b border-indigo-600 dark:border-indigo-700">Menu</div>
@@ -130,12 +116,11 @@
             </div>
         </nav>
     </div>
-
     <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
-
     <div id="confirmation-modal"
         class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md mx-4 transition-colors duration-300">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md mx-4 transition-colors duration-300">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">⚠️ သတိပေးချက်</h3>
             <p class="text-gray-600 dark:text-gray-300 mb-6" style="line-height:2.0">
                 ဤစာမျက်နှာမှ ထွက်ခွာရန် သေချာပါသလား? <strong>စကားပြောဆိုမှု မှတ်တမ်းအားလုံး အပြီးတိုင်ဖျက်ဆီးခံရမည်</strong>
@@ -153,22 +138,18 @@
             </div>
         </div>
     </div>
-
     <div id="chat-main" class="p-4 space-y-4 transition-colors duration-300">
         <div class="flex items-start space-x-2">
             <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" alt="Bot Icon" />
             <div
                 class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-4 rounded-3xl max-w-md shadow-md break-words leading-relaxed transition-colors duration-300">
-                <p>မင်္ဂလာပါ <b>LannPya Bot (လမ်းပြဘော့)</b> က ကြိုဆိုပါတယ်!</p>
-                <p class="mt-2">
-                    ဒီနေ့ <b>Cybersecurity (ဆိုက်ဘာလုံခြုံရေး)</b> နှင့် <b>Privacy
-                        (ကိုယ်ရေးကိုယ်တာလုံခြုံမှု)</b> နဲ့ပတ်သက်ပြီး
-                    ဘာများကူညီဆောင်ရွက်ပေးရမလဲ။
-                </p>
+                မင်္ဂလာပါ <b>LannPya Bot (လမ်းပြဘော့)</b> က ကြိုဆိုပါတယ်!<br><br>
+                ဒီနေ့ <b>Cybersecurity (ဆိုက်ဘာလုံခြုံရေး)</b> နှင့် <b>Privacy
+                    (ကိုယ်ရေးကိုယ်တာလုံခြုံမှု)</b> နဲ့ပတ်သက်ပြီး
+                ဘာများကူညီဆောင်ရွက်ပေးရမလဲ။
             </div>
         </div>
     </div>
-
     <div id="chat-form-container" class="bg-gray-200 dark:bg-gray-900">
         <form id="chat-form" class="p-4 flex items-end gap-2">
             <textarea id="chat-input" placeholder="ဒီမှာစာရိုက်ပါ..." rows="1"
@@ -189,85 +170,56 @@
         const cancelLeaveBtn = document.getElementById("cancel-leave");
         const confirmLeaveBtn = document.getElementById("confirm-leave");
         const chatContainer = document.getElementById("chat-main");
-
-        // FIX START
-        function updateChatLayout() {
-            const headerHeight = document.querySelector('header').offsetHeight;
-            const formContainerHeight = document.getElementById('chat-form-container').offsetHeight;
-            const totalOffset = headerHeight + formContainerHeight;
-            // Set the height of the chat area to fill the remaining space
-            chatContainer.style.height = `${window.innerHeight - totalOffset}px`;
-        }
-        // FIX END
-
         function scrollToBottom() {
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
-
         function showConfirmationModal() {
             confirmationModal.classList.remove("hidden");
         }
-
         function hideConfirmationModal() {
             confirmationModal.classList.add("hidden");
         }
-
         cancelLeaveBtn.addEventListener("click", hideConfirmationModal);
         confirmLeaveBtn.addEventListener("click", () => {
             window.location.href = "{{ url_for('home') }}";
         });
-
-        // Loop through all anchor tags with a 'home' URL to add the confirmation modal behavior
-        document.querySelectorAll('a[href="{{ url_for("home") }}"]').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                showConfirmationModal();
-            });
+        document.querySelector('a[href="{{ url_for("home") }}"]').addEventListener('click', (e) => {
+            e.preventDefault();
+            showConfirmationModal();
         });
-
         const menuBtn = document.getElementById("menu-btn");
         const sideNav = document.getElementById("side-nav");
         const overlay = document.getElementById("overlay");
         const themeToggle = document.getElementById("theme-toggle");
-
         menuBtn.addEventListener("click", () => {
             sideNav.classList.toggle("-translate-x-full");
             overlay.classList.toggle("hidden");
         });
-
         overlay.addEventListener("click", () => {
             sideNav.classList.add("-translate-x-full");
             overlay.classList.add("hidden");
         });
-
         const html = document.documentElement;
         const toggleSlider = themeToggle.querySelector('span');
-
-        function updateThemeUI() {
-            if (localStorage.getItem("theme") === "light") {
+        if (localStorage.getItem("theme") === "light") {
+            html.classList.remove("dark");
+            toggleSlider.style.transform = "translateX(0.25rem)";
+        } else {
+            html.classList.add("dark");
+            toggleSlider.style.transform = "translateX(2.25rem)";
+        }
+        themeToggle.addEventListener("click", () => {
+            if (html.classList.contains("dark")) {
                 html.classList.remove("dark");
+                localStorage.setItem("theme", "light");
                 toggleSlider.style.transform = "translateX(0.25rem)";
             } else {
                 html.classList.add("dark");
+                localStorage.setItem("theme", "dark");
                 toggleSlider.style.transform = "translateX(2.25rem)";
             }
-        }
-
-        updateThemeUI(); // Initial call to set the correct state
-
-        themeToggle.addEventListener("click", () => {
-            if (html.classList.contains("dark")) {
-                localStorage.setItem("theme", "light");
-            } else {
-                localStorage.setItem("theme", "dark");
-            }
-            updateThemeUI();
         });
-
         window.onload = function () {
-            // FIX START
-            updateChatLayout();
-            // FIX END
             scrollToBottom();
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
@@ -278,52 +230,33 @@
                 chatInput.style.height = `${chatInput.scrollHeight}px`;
             }
         };
-        
-        // FIX START
-        window.addEventListener('resize', updateChatLayout);
-        window.addEventListener('orientationchange', updateChatLayout);
-        // FIX END
-
         chatInput.addEventListener("keydown", function (e) {
             if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                chatForm.dispatchEvent(new Event("submit", {
-                    cancelable: true
-                }));
+                chatForm.dispatchEvent(new Event("submit", { cancelable: true }));
             }
         });
-
         let conversation = [];
-
         function sanitizeReply(text) {
-            // Replace Markdown-style bold (**text**) with HTML bold (<b>text</b>)
-            const boldedText = text.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
             const div = document.createElement("div");
-            div.innerText = boldedText;
-            return div.innerHTML.replace(/\n/g, "<br>");
+            div.innerText = text;
+            return div.innerHTML.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
         }
-
         chatForm.addEventListener("submit", async function (e) {
             e.preventDefault();
             const message = chatInput.value.trim();
             if (!message) return;
-
-            conversation.push({
-                role: "user",
-                content: message
-            });
-
+            conversation.push({ role: "user", content: message });
             const userMsg = document.createElement("div");
             userMsg.className = "flex items-start justify-end space-x-2";
             userMsg.innerHTML = `
-                <div class="bg-indigo-900 dark:bg-indigo-700 text-white p-3 rounded-2xl max-w-xs transition-colors duration-300">${message}</div>
+                <div class="bg-indigo-900 dark:bg-indigo-700 text-white p-3 rounded-2xl max-w-xs">${message}</div>
                 <img src="{{ url_for('static', filename='images/myanmarFlag.png') }}" class="w-10 h-10 rounded-full" alt="User Icon">
-            `;
+                `;
             chatContainer.appendChild(userMsg);
             scrollToBottom();
             chatInput.value = "";
             chatInput.style.height = "auto";
-
             const typingIndicator = document.createElement("div");
             typingIndicator.className = "flex items-start space-x-2 bot-typing";
             typingIndicator.innerHTML = `
@@ -333,16 +266,11 @@
                 </div>`;
             chatContainer.appendChild(typingIndicator);
             scrollToBottom();
-
             try {
                 const response = await fetch("/chat", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        message: message
-                    })
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: message })
                 });
                 const data = await response.json();
                 typingIndicator.remove();
@@ -355,10 +283,7 @@
                     </div>`;
                 chatContainer.appendChild(botMsg);
                 scrollToBottom();
-                conversation.push({
-                    role: "assistant",
-                    content: data.reply
-                });
+                conversation.push({ role: "assistant", content: data.reply });
             } catch (error) {
                 typingIndicator.remove();
                 console.error(error);
@@ -375,5 +300,4 @@
         });
     </script>
 </body>
-
 </html>
