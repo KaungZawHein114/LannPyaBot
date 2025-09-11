@@ -165,7 +165,7 @@
 
 
     <script>
-        //new
+        //new1
         const chatForm = document.getElementById("chat-form");
         const chatInput = document.getElementById("chat-input");
         const chatContainer = document.getElementById("chat-container");
@@ -184,17 +184,24 @@
     if (!header || !chatFormContainer) return;
 
     const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    const documentHeight = window.innerHeight;
     const headerHeight = header.offsetHeight;
     const formHeight = chatFormContainer.offsetHeight;
 
-    // Resize chat container dynamically
+    // Detect if keyboard is open
+    const keyboardOpen = viewportHeight < documentHeight - 100;
+    const keyboardHeight = keyboardOpen ? (documentHeight - viewportHeight) : 0;
+
+    // Move form up above the keyboard
+    chatFormContainer.style.transform = `translateY(-${keyboardHeight}px)`;
+
+    // Resize chat container so it fills remaining space
     const chatHeight = viewportHeight - headerHeight - formHeight;
     chatContainer.style.height = `${chatHeight}px`;
 
-    chatFormContainer.style.transform = "translateY(0)";
-
     scrollToBottom();
 }
+
 
 
         // Attach listeners
