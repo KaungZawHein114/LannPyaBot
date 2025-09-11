@@ -21,13 +21,10 @@
     }
     
     /* --- FIX: ADD PADDING FOR PWA SAFE AREAS --- */
-    header {
-        /* Add padding to the top to avoid the status bar/notch */
-        padding-top: calc(1rem + env(safe-area-inset-top));
-    }
-    #chat-form {
-        /* Add padding to the bottom to avoid the home bar/nav buttons */
-        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    /* Applying padding to the body is a more robust fix for PWA safe areas */
+    body {
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     ::-webkit-scrollbar {
@@ -155,8 +152,6 @@
       showConfirmationModal();
     });
     
-    // --- FIX: This script block was duplicated and has been removed. ---
-    // The single, correct event listener is below.
 
     const menuBtn = document.getElementById("menu-btn");
     const sideNav = document.getElementById("side-nav");
