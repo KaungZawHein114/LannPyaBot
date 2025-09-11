@@ -19,13 +19,6 @@
       font-family: "Inter", sans-serif;
       transition: background-color 0.5s, color 0.5s;
     }
-    
-    /* --- FIX: ADD PADDING FOR PWA SAFE AREAS --- */
-    /* Applying padding to the body is a more robust fix for PWA safe areas */
-    body {
-      padding-top: env(safe-area-inset-top);
-      padding-bottom: env(safe-area-inset-bottom);
-    }
 
     ::-webkit-scrollbar {
       width: 6px;
@@ -113,7 +106,7 @@
     </div>
   </main>
 
-  <form id="chat-form" class="p-4 flex items-end gap-2">
+  <form id="chat-form" class="p-4 flex items-end gap-2" style="padding-bottom: calc(1rem + env(safe-area-inset-bottom));">
     <textarea id="chat-input" placeholder="ဒီမှာစာရိုက်ပါ..." rows="1" class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-3xl resize-none overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"></textarea>
     <button type="submit" class="bg-indigo-900 dark:bg-indigo-700 text-white px-4 py-2 mb-1 rounded-full hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors flex items-center justify-center">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
