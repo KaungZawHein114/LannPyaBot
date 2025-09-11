@@ -96,7 +96,7 @@
     </div>
   </div>
 
-  <main id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 transition-colors duration-300">
+  <main id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 transition-colors duration-300" style="padding-bottom: 7rem;">
     <div class="flex items-start space-x-2">
       <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" />
       <div class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-4 rounded-3xl max-w-md shadow-md break-words leading-relaxed transition-colors duration-300">
@@ -106,14 +106,16 @@
     </div>
   </main>
 
-  <form id="chat-form" class="p-4 flex items-end gap-2" style="padding-bottom: calc(1rem + env(safe-area-inset-bottom));">
+  <div class="fixed bottom-0 left-0 right-0 p-4 transition-colors duration-300" style="padding-bottom: calc(1rem + env(safe-area-inset-bottom));">
+  <form id="chat-form" class="flex items-end gap-2">
     <textarea id="chat-input" placeholder="ဒီမှာစာရိုက်ပါ..." rows="1" class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-3xl resize-none overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"></textarea>
     <button type="submit" class="bg-indigo-900 dark:bg-indigo-700 text-white px-4 py-2 mb-1 rounded-full hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors flex items-center justify-center">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
       </svg>
     </button>
-  </form>
+  </form> 
+    </div>
 
   <script>
     const chatForm = document.getElementById("chat-form");
