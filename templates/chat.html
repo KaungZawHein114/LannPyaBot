@@ -141,8 +141,9 @@
         </div>
     </main>
 
-    <form id="chat-form-container"
-      class="p-4 flex items-end gap-2 transition-transform duration-300 bg-gray-200 dark:bg-gray-900">
+    <div id="chat-form-container" class="transition-transform duration-300">
+    <form id="chat-form" class="p-4 flex items-end gap-2 transition-transform duration-300 bg-gray-200 dark:bg-gray-900">
+
     <textarea id="chat-input" 
               placeholder="ဒီမှာစာရိုက်ပါ..." 
               rows="1"
@@ -156,9 +157,11 @@
         </svg>
     </button>
     </form>
+    </div>
 
 
     <script>
+        //new
         const chatForm = document.getElementById("chat-form");
         const chatInput = document.getElementById("chat-input");
         const chatContainer = document.getElementById("chat-container");
@@ -177,7 +180,7 @@
             if (!header || !chatFormContainer) return;
 
             const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-            const documentHeight = window.innerHeight;
+         const documentHeight = window.innerHeight;
             const headerHeight = header.offsetHeight;
             const formHeight = chatFormContainer.offsetHeight;
 
@@ -224,11 +227,6 @@
             confirmationModal.classList.add("hidden");
         }
         
-        chatInput.addEventListener("focus", () => {
-        setTimeout(() => {
-        chatInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }, 300); 
-        });
 
         cancelLeaveBtn.addEventListener("click", hideConfirmationModal);
         
