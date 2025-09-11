@@ -22,27 +22,22 @@
         }
 
         html, body {
-    height: 100dvh; 
-    display: flex;
-    flex-direction: column;
-    }
+  height: 100dvh;
+}
 
     #chat-container {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 1rem;
-    padding-bottom: 7rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     }
 
     #chat-form-container {
-    position: sticky;
+    position: fixed;
     bottom: 0;
+    left: 0;
     width: 100%;
-    background-color: var(--your-background-color); /* Use tailwind colors or variables */
-    }
-
-    #chat-form-container {
-        transform: none !important;
+    transition: transform 0.3s ease-in-out;
+    z-index: 30;
     }
 
 
@@ -172,7 +167,7 @@
      class="fixed bottom-0 left-0 w-full transition-transform duration-300 z-30">
 
     <form id="chat-form" 
-  class="fixed bottom-0 left-0 right-0 p-4 flex items-end gap-2 bg-gray-200 dark:bg-gray-900">
+  class="p-4 flex items-end gap-2 bg-gray-200 dark:bg-gray-900">
 
     <textarea id="chat-input" 
               placeholder="ဒီမှာစာရိုက်ပါ..." 
@@ -191,22 +186,54 @@
 
 
     <script>
-        //new6
+        //new7
         const chatForm = document.getElementById("chat-form");
         const chatInput = document.getElementById("chat-input");
-        const chatContainer = document.getElementById("chat-container");
         const confirmationModal = document.getElementById("confirmation-modal");
         const cancelLeaveBtn = document.getElementById("cancel-leave");
         const confirmLeaveBtn = document.getElementById("confirm-leave");
 
-        const header = document.querySelector("header");
         const chatFormContainer = document.getElementById("chat-form-container");
-        const input = document.querySelector('#chat-form textarea');
+        const chatContainer = document.getElementById("chat-container");
+        const header = document.querySelector("header");
 
+        function adjustLayoutForKeyboard() {
+        const visualViewportHeight = window.visualViewport.height;
+        const initialViewportHeight = window.innerHeight;
 
+        // The keyboard's height is the difference between the initial and visual viewport heights
+        const keyboardHeight = initialViewportHeight - visualViewportHeight;
+        
+        // Calculate the new height for the chat container to fit above the form
+        const chatFormHeight = chatFormContainer.offsetHeight;
+        const newChatContainerHeight = visualViewportHeight - header.offsetHeight;
+        
+        // Apply the styles
+        chatFormContainer.style.transform = `translateY(-${keyboardHeight}px)`;
+        chatContainer.style.height = `${newChatContainerHeight}px`;
+
+        // Always scroll to the bottom after layout change
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Add event listeners for the new function
+        if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", adjustLayoutForKeyboard);
+        }
+
+        // Ensure the layout is correct on initial load
+        window.addEventListener("load", adjustLayoutForKeyboard);
+        window.addEventListener("resize", adjustLayoutForKeyboard);
+
+        // Also re-add the listener for the input to adjust the layout when a new line is added
+        chatInput.addEventListener("input", () => {
+            chatInput.style.height = "auto";
+            chatInput.style.height = `${chatInput.scrollHeight}px`;
+            adjustLayoutForKeyboard(); // Call the new function
+        });
         function scrollToBottom() {
             chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
+         }
 
 
 
