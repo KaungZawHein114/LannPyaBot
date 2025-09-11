@@ -119,9 +119,7 @@
         </nav>
     </div>
 
-
     <script>
-    // These are your existing variables.
     const chatForm = document.getElementById("chat-form");
     const chatInput = document.getElementById("chat-input");
     const chatContainer = document.getElementById("chat-container");
@@ -129,7 +127,6 @@
     const cancelLeaveBtn = document.getElementById("cancel-leave");
     const confirmLeaveBtn = document.getElementById("confirm-leave");
 
-    // These are the new variables needed to calculate heights.
     const header = document.querySelector('header');
     const chatFormContainer = document.querySelector('.fixed.bottom-0');
 
@@ -137,36 +134,29 @@
         chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    // This is the NEW, unified function that handles all layout adjustments.
+    // This is the correct, unified function for all layout adjustments.
     function handleLayout() {
         if (!header || !chatFormContainer) return;
 
-        // Use window.visualViewport to get the accurate height of the visible area
         const viewportHeight = window.visualViewport.height;
         const documentHeight = window.innerHeight;
 
-        // A safe threshold to detect keyboard presence
         const keyboardOpen = viewportHeight < documentHeight - 100;
 
         const headerHeight = header.offsetHeight;
         const formHeight = chatFormContainer.offsetHeight;
 
         if (keyboardOpen) {
-            // Keyboard is open. Move the chat form up.
             const keyboardHeight = documentHeight - viewportHeight;
             chatFormContainer.style.transform = `translateY(-${keyboardHeight}px)`;
-            // Recalculate chat container height to prevent it from being hidden
             const chatHeight = viewportHeight - headerHeight - formHeight;
             chatContainer.style.height = `${chatHeight}px`;
         } else {
-            // Keyboard is closed. Revert the form's position.
             chatFormContainer.style.transform = 'translateY(0)';
-            // Set chat container height based on full window height
             const chatHeight = documentHeight - headerHeight - formHeight;
             chatContainer.style.height = `${chatHeight}px`;
         }
         
-        // Always scroll to the bottom after any layout change
         scrollToBottom();
     }
 
@@ -178,7 +168,6 @@
     window.addEventListener('resize', handleLayout);
     window.addEventListener('orientationchange', handleLayout);
 
-    // Modern API to hint to the browser to prevent content from resizing
     if ('virtualKeyboard' in navigator) {
         navigator.virtualKeyboard.overlaysContent = true;
     }
@@ -186,11 +175,9 @@
     chatInput.addEventListener("input", () => {
         chatInput.style.height = "auto";
         chatInput.style.height = `${chatInput.scrollHeight}px`;
-        // Recalculate layout after the input field size changes
         handleLayout();
     });
     
-    // ... (rest of your script for modals, theme toggle, etc.)
     function showConfirmationModal() {
         confirmationModal.classList.remove("hidden");
     }
@@ -202,14 +189,13 @@
     cancelLeaveBtn.addEventListener("click", hideConfirmationModal);
     
     confirmLeaveBtn.addEventListener("click", () => {
-        window.location.href = "{{ url_for('home') }}";
+        window.location.href = "/";
     });
     
-    document.querySelector('a[href="{{ url_for("home") }}"]').addEventListener('click', (e) => {
+    document.querySelector('a[href="/"]').addEventListener('click', (e) => {
         e.preventDefault();
         showConfirmationModal();
     });
-
 
     const menuBtn = document.getElementById("menu-btn");
     const sideNav = document.getElementById("side-nav");
@@ -250,7 +236,7 @@
     });
     
     window.onload = function () {
-        handleLayout(); // Call the unified function on load
+        handleLayout();
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const message = urlParams.get("q");
@@ -281,7 +267,7 @@
         userMsg.className = "flex items-start justify-end space-x-2";
         userMsg.innerHTML = `
         <div class="bg-indigo-900 dark:bg-indigo-700 text-white p-3 rounded-2xl max-w-xs">${message}</div>
-        <img src="{{ url_for('static', filename='images/myanmarFlag.png') }}" class="w-10 h-10 rounded-full">
+        <img src="/static/images/myanmarFlag.png" class="w-10 h-10 rounded-full">
         `;
         chatContainer.appendChild(userMsg);
         scrollToBottom();
@@ -292,7 +278,7 @@
         const typingIndicator = document.createElement("div");
         typingIndicator.className = "flex items-start space-x-2 bot-typing";
         typingIndicator.innerHTML = `
-        <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6">
+        <img src="/static/images/bot.png" class="w-6 h-6">
         <div class="bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 p-3 rounded-2xl max-w-xs flex space-x-1 transition-colors duration-300">
             <span class="dot">•</span><span class="dot">•</span><span class="dot">•</span>
         </div>`;
@@ -312,7 +298,7 @@
             const botMsg = document.createElement("div");
             botMsg.className = "flex items-start space-x-2";
             botMsg.innerHTML = `
-            <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6">
+            <img src="/static/images/bot.png" class="w-6 h-6">
             <div class="bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 p-3 rounded-2xl max-w-xs transition-colors duration-300">
             ${data.reply.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")}</div>`;
             chatContainer.appendChild(botMsg);
@@ -325,7 +311,7 @@
             const errorMsg = document.createElement("div");
             errorMsg.className = "flex items-start space-x-2";
             errorMsg.innerHTML = `
-            <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6">
+            <img src="/static/images/bot.png" class="w-6 h-6">
             <div class="bg-red-300 dark:bg-red-900 text-red-800 dark:text-red-200 p-3 rounded-2xl max-w-xs transition-colors duration-300">
                 Sorry, I encountered an error. Please try again.
             </div>`;
