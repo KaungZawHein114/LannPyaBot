@@ -167,59 +167,53 @@
         const confirmLeaveBtn = document.getElementById("confirm-leave");
 
         const header = document.querySelector("header");
-const chatFormContainer = document.getElementById("chat-form-container"); // use new ID, not chat-form
+        const chatFormContainer = document.getElementById("chat-form-container");
 
-function scrollToBottom() {
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-}
-
-function handleLayout() {
-    if (!header || !chatFormContainer) return;
-
-    const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-    const documentHeight = window.innerHeight;
-    const headerHeight = header.offsetHeight;
-    const formHeight = chatFormContainer.offsetHeight;
-
-    // Resize chat container dynamically
-    const chatHeight = viewportHeight - headerHeight - formHeight;
-    chatContainer.style.height = `${chatHeight}px`;
-
-    // If keyboard is open, move input up
-    if (window.visualViewport) {
-        const keyboardHeight = documentHeight - viewportHeight;
-        if (keyboardHeight > 100) {
-            chatFormContainer.style.transform = `translateY(-${keyboardHeight}px)`;
-        } else {
-            chatFormContainer.style.transform = "translateY(0)";
+        function scrollToBottom() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         }
-    }
 
-    scrollToBottom();
-    }
+        function handleLayout() {
+            if (!header || !chatFormContainer) return;
 
-    // Attach listeners
-    if (window.visualViewport) {
-        window.visualViewport.addEventListener("resize", handleLayout);
-        window.visualViewport.addEventListener("scroll", handleLayout); // iOS fix
-    }
-    window.addEventListener("orientationchange", handleLayout);
-    window.addEventListener("load", handleLayout);
-    window.addEventListener("resize", handleLayout);
+            const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+            const documentHeight = window.innerHeight;
+            const headerHeight = header.offsetHeight;
+            const formHeight = chatFormContainer.offsetHeight;
 
-    // Ensure input visible when typing
-    chatInput.addEventListener("input", () => {
-        chatInput.style.height = "auto";
-        chatInput.style.height = `${chatInput.scrollHeight}px`;
-        handleLayout();
-    });
+            // Resize chat container dynamically
+            const chatHeight = viewportHeight - headerHeight - formHeight;
+            chatContainer.style.height = `${chatHeight}px`;
 
-    // Ensure input visible when focused (iOS)
-    chatInput.addEventListener("focus", () => {
-        setTimeout(() => {
-            chatInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }, 300);
-    });
+            // If keyboard is open, move input up
+            if (window.visualViewport) {
+                const keyboardHeight = documentHeight - viewportHeight;
+                if (keyboardHeight > 100) {
+                    chatFormContainer.style.transform = `translateY(-${keyboardHeight}px)`;
+                } else {
+                    chatFormContainer.style.transform = "translateY(0)";
+                }
+            }
+
+            scrollToBottom();
+        }
+
+        // Attach listeners
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener("resize", handleLayout);
+            window.visualViewport.addEventListener("scroll", handleLayout); // iOS Safari
+        }
+        window.addEventListener("orientationchange", handleLayout);
+        window.addEventListener("load", handleLayout);
+        window.addEventListener("resize", handleLayout);
+
+        // Auto-resize textarea
+        chatInput.addEventListener("input", () => {
+            chatInput.style.height = "auto";
+            chatInput.style.height = `${chatInput.scrollHeight}px`;
+            handleLayout();
+        });
+
 
         
         function showConfirmationModal() {
