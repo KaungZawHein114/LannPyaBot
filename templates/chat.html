@@ -130,7 +130,9 @@
         </div>
     </div>
 
-    <main id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 transition-colors duration-300">
+        <main id="chat-container" 
+      class="flex-1 overflow-y-auto p-4 space-y-4 transition-colors duration-300 pb-28">
+
         <div class="flex items-start space-x-2">
             <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" />
             <div class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-4 rounded-3xl max-w-md shadow-md break-words leading-relaxed transition-colors duration-300">
@@ -141,7 +143,9 @@
         </div>
     </main>
 
-    <div id="chat-form-container" class="transition-transform duration-300">
+    <div id="chat-form-container" 
+     class="fixed bottom-0 left-0 w-full transition-transform duration-300 z-30">
+
     <form id="chat-form" class="p-4 flex items-end gap-2 transition-transform duration-300 bg-gray-200 dark:bg-gray-900">
 
     <textarea id="chat-input" 
@@ -177,29 +181,21 @@
         }
 
         function handleLayout() {
-            if (!header || !chatFormContainer) return;
+    if (!header || !chatFormContainer) return;
 
-            const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-         const documentHeight = window.innerHeight;
-            const headerHeight = header.offsetHeight;
-            const formHeight = chatFormContainer.offsetHeight;
+    const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    const headerHeight = header.offsetHeight;
+    const formHeight = chatFormContainer.offsetHeight;
 
-            // Resize chat container dynamically
-            const chatHeight = viewportHeight - headerHeight - formHeight;
-            chatContainer.style.height = `${chatHeight}px`;
+    // Resize chat container dynamically
+    const chatHeight = viewportHeight - headerHeight - formHeight;
+    chatContainer.style.height = `${chatHeight}px`;
 
-            // If keyboard is open, move input up
-            if (window.visualViewport) {
-                const keyboardHeight = documentHeight - viewportHeight;
-                if (keyboardHeight > 100) {
-                    chatFormContainer.style.transform = `translateY(-${keyboardHeight}px)`;
-                } else {
-                    chatFormContainer.style.transform = "translateY(0)";
-                }
-            }
+    chatFormContainer.style.transform = "translateY(0)";
 
-            scrollToBottom();
-        }
+    scrollToBottom();
+}
+
 
         // Attach listeners
         if (window.visualViewport) {
