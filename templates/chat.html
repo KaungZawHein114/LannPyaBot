@@ -121,6 +121,7 @@
 
 
     <script>
+    // These are your existing variables.
     const chatForm = document.getElementById("chat-form");
     const chatInput = document.getElementById("chat-input");
     const chatContainer = document.getElementById("chat-container");
@@ -136,11 +137,11 @@
         chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    // Function to handle the keyboard visibility change and container resizing
+    // This is the NEW, unified function that handles all layout adjustments.
     function handleLayout() {
         if (!header || !chatFormContainer) return;
 
-        // Get the visual viewport and the main layout viewport
+        // Use window.visualViewport to get the accurate height of the visible area
         const viewportHeight = window.visualViewport.height;
         const documentHeight = window.innerHeight;
 
@@ -151,28 +152,31 @@
         const formHeight = chatFormContainer.offsetHeight;
 
         if (keyboardOpen) {
+            // Keyboard is open. Move the chat form up.
             const keyboardHeight = documentHeight - viewportHeight;
-            // Adjust the form's position
             chatFormContainer.style.transform = `translateY(-${keyboardHeight}px)`;
-            // Recalculate the chat container height to account for the keyboard
+            // Recalculate chat container height to prevent it from being hidden
             const chatHeight = viewportHeight - headerHeight - formHeight;
             chatContainer.style.height = `${chatHeight}px`;
         } else {
-            // Keyboard is closed, revert to default state
+            // Keyboard is closed. Revert the form's position.
             chatFormContainer.style.transform = 'translateY(0)';
-            // Set height for the chat container based on full window height
+            // Set chat container height based on full window height
             const chatHeight = documentHeight - headerHeight - formHeight;
             chatContainer.style.height = `${chatHeight}px`;
         }
         
-        // Always scroll to the bottom after adjusting the layout
+        // Always scroll to the bottom after any layout change
         scrollToBottom();
     }
 
-    // Attach the event listeners to the unified layout function
-    window.visualViewport.addEventListener('resize', handleLayout);
+    // Attach the single function to all necessary events.
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', handleLayout);
+    }
     window.addEventListener('load', handleLayout);
-    window.addEventListener('resize', handleLayout); // To handle screen rotations, etc.
+    window.addEventListener('resize', handleLayout);
+    window.addEventListener('orientationchange', handleLayout);
 
     // Modern API to hint to the browser to prevent content from resizing
     if ('virtualKeyboard' in navigator) {
@@ -182,8 +186,11 @@
     chatInput.addEventListener("input", () => {
         chatInput.style.height = "auto";
         chatInput.style.height = `${chatInput.scrollHeight}px`;
+        // Recalculate layout after the input field size changes
+        handleLayout();
     });
     
+    // ... (rest of your script for modals, theme toggle, etc.)
     function showConfirmationModal() {
         confirmationModal.classList.remove("hidden");
     }
@@ -243,7 +250,7 @@
     });
     
     window.onload = function () {
-        adjustChatContainerHeight(); // Call this on load to set initial height
+        handleLayout(); // Call the unified function on load
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const message = urlParams.get("q");
@@ -261,41 +268,6 @@
             chatForm.dispatchEvent(new Event("submit", { cancelable: true }));
         }
     });
-
-            // Function to handle the keyboard visibility change
-        function handleKeyboard() {
-            // Get the visual viewport and the main layout viewport
-            const viewportHeight = window.visualViewport.height;
-            const documentHeight = window.innerHeight;
-
-            // Check if the keyboard is likely open by comparing the two
-            const keyboardOpen = viewportHeight < documentHeight - 100; // 100px is a safe threshold
-
-            const chatContainer = document.getElementById("chat-container");
-            const chatFormContainer = document.getElementById("chat-form-container");
-
-            if (keyboardOpen) {
-                // The keyboard is open, so we need to move the chat form up and resize the chat container.
-                const keyboardHeight = documentHeight - viewportHeight;
-                chatFormContainer.style.transform = `translateY(-${keyboardHeight}px)`;
-                // The chat container needs to be resized to fill the new space above the keyboard.
-                chatContainer.style.height = `calc(100vh - ${header.offsetHeight}px - ${chatFormContainer.offsetHeight}px - ${keyboardHeight}px)`;
-            } else {
-                // The keyboard is closed, so we can revert to the default state.
-                chatFormContainer.style.transform = 'translateY(0)';
-                // Revert the height calculation to the original logic
-                adjustChatContainerHeight();
-            }
-        }
-
-        // Listen for visual viewport resize events
-        if (window.visualViewport) {
-            window.visualViewport.addEventListener('resize', handleKeyboard);
-        }
-
-        // Also call the function initially to set the correct state
-        window.addEventListener('load', handleKeyboard);
-        window.addEventListener('resize', handleKeyboard);
 
     let conversation = [];
     chatForm.addEventListener("submit", async function (e) {
