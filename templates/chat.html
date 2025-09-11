@@ -141,15 +141,22 @@
         </div>
     </main>
 
-    <form id="chat-form" class="fixed bottom-0 left-0 right-0 p-4 flex items-end gap-2 transition-transform duration-300 bg-gray-200 dark:bg-gray-900">
-        <textarea id="chat-input" placeholder="ဒီမှာစာရိုက်ပါ..." rows="1" class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-3xl resize-none overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"></textarea>
+    <form id="chat-form-container"
+      class="p-4 flex items-end gap-2 transition-transform duration-300 bg-gray-200 dark:bg-gray-900">
+    <textarea id="chat-input" 
+              placeholder="ဒီမှာစာရိုက်ပါ..." 
+              rows="1"
+              class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-3xl resize-none overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"></textarea>
 
-        <button type="submit" class="bg-indigo-900 dark:bg-indigo-700 text-white px-4 py-2 mb-1 rounded-full hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors flex items-center justify-center">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-            </svg>
-        </button>
+    <button type="submit"
+            class="bg-indigo-900 dark:bg-indigo-700 text-white px-4 py-2 mb-1 rounded-full hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors flex items-center justify-center">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+        </svg>
+    </button>
     </form>
+
 
     <script>
         const chatForm = document.getElementById("chat-form");
@@ -159,54 +166,61 @@
         const cancelLeaveBtn = document.getElementById("cancel-leave");
         const confirmLeaveBtn = document.getElementById("confirm-leave");
 
-        const header = document.querySelector('header');
-        const chatFormContainer = document.querySelector('.fixed.bottom-0');
+        const header = document.querySelector("header");
+const chatFormContainer = document.getElementById("chat-form-container"); // use new ID, not chat-form
 
-        function scrollToBottom() {
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+function scrollToBottom() {
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function handleLayout() {
+    if (!header || !chatFormContainer) return;
+
+    const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    const documentHeight = window.innerHeight;
+    const headerHeight = header.offsetHeight;
+    const formHeight = chatFormContainer.offsetHeight;
+
+    // Resize chat container dynamically
+    const chatHeight = viewportHeight - headerHeight - formHeight;
+    chatContainer.style.height = `${chatHeight}px`;
+
+    // If keyboard is open, move input up
+    if (window.visualViewport) {
+        const keyboardHeight = documentHeight - viewportHeight;
+        if (keyboardHeight > 100) {
+            chatFormContainer.style.transform = `translateY(-${keyboardHeight}px)`;
+        } else {
+            chatFormContainer.style.transform = "translateY(0)";
         }
+    }
 
-        // This is the NEW, unified function that handles all layout adjustments.
-        function handleLayout() {
-            if (!header || !chatFormContainer) return;
+    scrollToBottom();
+    }
 
-            const viewportHeight = window.visualViewport.height;
-            const documentHeight = window.innerHeight;
-            const keyboardOpen = viewportHeight < documentHeight - 100;
+    // Attach listeners
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", handleLayout);
+        window.visualViewport.addEventListener("scroll", handleLayout); // iOS fix
+    }
+    window.addEventListener("orientationchange", handleLayout);
+    window.addEventListener("load", handleLayout);
+    window.addEventListener("resize", handleLayout);
 
-            const headerHeight = header.offsetHeight;
-            const formHeight = chatFormContainer.offsetHeight;
+    // Ensure input visible when typing
+    chatInput.addEventListener("input", () => {
+        chatInput.style.height = "auto";
+        chatInput.style.height = `${chatInput.scrollHeight}px`;
+        handleLayout();
+    });
 
-            if (keyboardOpen) {
-                const keyboardHeight = documentHeight - viewportHeight;
-                chatFormContainer.style.transform = `translateY(-${keyboardHeight}px)`;
-                const chatHeight = viewportHeight - headerHeight - formHeight;
-                chatContainer.style.height = `${chatHeight}px`;
-            } else {
-                chatFormContainer.style.transform = 'translateY(0)';
-                const chatHeight = documentHeight - headerHeight - formHeight;
-                chatContainer.style.height = `${chatHeight}px`;
-            }
-            scrollToBottom();
-        }
+    // Ensure input visible when focused (iOS)
+    chatInput.addEventListener("focus", () => {
+        setTimeout(() => {
+            chatInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 300);
+    });
 
-        // Attach the single function to all necessary events.
-        if (window.visualViewport) {
-            window.visualViewport.addEventListener('resize', handleLayout);
-        }
-        window.addEventListener('load', handleLayout);
-        window.addEventListener('resize', handleLayout);
-        window.addEventListener('orientationchange', handleLayout);
-
-        if ('virtualKeyboard' in navigator) {
-            navigator.virtualKeyboard.overlaysContent = true;
-        }
-
-        chatInput.addEventListener("input", () => {
-            chatInput.style.height = "auto";
-            chatInput.style.height = `${chatInput.scrollHeight}px`;
-            handleLayout();
-        });
         
         function showConfirmationModal() {
             confirmationModal.classList.remove("hidden");
@@ -216,6 +230,12 @@
             confirmationModal.classList.add("hidden");
         }
         
+        chatInput.addEventListener("focus", () => {
+        setTimeout(() => {
+        chatInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 300); 
+        });
+
         cancelLeaveBtn.addEventListener("click", hideConfirmationModal);
         
         confirmLeaveBtn.addEventListener("click", () => {
