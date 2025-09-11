@@ -62,7 +62,8 @@
         </div>
     </main>
 
-    <div id="chat-form-container" class="fixed bottom-0 left-0 right-0 p-4 transition-colors duration-300 z-50">        <form id="chat-form" class="flex items-end gap-2">
+    <div id="chat-form-container" class="fixed bottom-0 left-0 right-0 p-4 transition-colors duration-300 z-50">        
+        <form id="chat-form" class="flex items-end gap-2">
             <textarea id="chat-input" placeholder="ဒီမှာစာရိုက်ပါ..." rows="1" class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-3xl resize-none overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"></textarea>
             <button type="submit" class="bg-indigo-900 dark:bg-indigo-700 text-white px-4 py-2 mb-1 rounded-full hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors flex items-center justify-center">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,7 +121,6 @@
 
 
     <script>
-    // These are your existing variables.
     const chatForm = document.getElementById("chat-form");
     const chatInput = document.getElementById("chat-input");
     const chatContainer = document.getElementById("chat-container");
@@ -136,22 +136,43 @@
         chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    // Function to adjust the chat container height to prevent it from jumping
-    function adjustChatContainerHeight() {
-        if (!header || !chatFormContainer) return; // Add a safety check
+    // Function to handle the keyboard visibility change and container resizing
+    function handleLayout() {
+        if (!header || !chatFormContainer) return;
+
+        // Get the visual viewport and the main layout viewport
+        const viewportHeight = window.visualViewport.height;
+        const documentHeight = window.innerHeight;
+
+        // A safe threshold to detect keyboard presence
+        const keyboardOpen = viewportHeight < documentHeight - 100;
 
         const headerHeight = header.offsetHeight;
         const formHeight = chatFormContainer.offsetHeight;
-        const viewportHeight = window.innerHeight;
 
-        // Calculate the available height for the chat container.
-        const chatHeight = viewportHeight - headerHeight - formHeight;
-        chatContainer.style.height = `${chatHeight}px`;
+        if (keyboardOpen) {
+            const keyboardHeight = documentHeight - viewportHeight;
+            // Adjust the form's position
+            chatFormContainer.style.transform = `translateY(-${keyboardHeight}px)`;
+            // Recalculate the chat container height to account for the keyboard
+            const chatHeight = viewportHeight - headerHeight - formHeight;
+            chatContainer.style.height = `${chatHeight}px`;
+        } else {
+            // Keyboard is closed, revert to default state
+            chatFormContainer.style.transform = 'translateY(0)';
+            // Set height for the chat container based on full window height
+            const chatHeight = documentHeight - headerHeight - formHeight;
+            chatContainer.style.height = `${chatHeight}px`;
+        }
+        
+        // Always scroll to the bottom after adjusting the layout
+        scrollToBottom();
     }
 
-    // Call the height adjustment function on page load and whenever the window is resized.
-    window.addEventListener('load', adjustChatContainerHeight);
-    window.addEventListener('resize', adjustChatContainerHeight);
+    // Attach the event listeners to the unified layout function
+    window.visualViewport.addEventListener('resize', handleLayout);
+    window.addEventListener('load', handleLayout);
+    window.addEventListener('resize', handleLayout); // To handle screen rotations, etc.
 
     // Modern API to hint to the browser to prevent content from resizing
     if ('virtualKeyboard' in navigator) {
