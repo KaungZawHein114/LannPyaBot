@@ -27,17 +27,6 @@
       padding-bottom: env(safe-area-inset-bottom);
     }
 
-    html, body {
-    height: 100%;
-    }
-    #chat-container {
-      flex: 1 1 auto;
-      overflow-y: auto;
-      padding-top: env(safe-area-inset-top);
-      padding-bottom: calc(4rem + env(safe-area-inset-bottom)); /* space for input */
-    }
-
-
     ::-webkit-scrollbar {
       width: 6px;
     }
@@ -52,7 +41,7 @@
   </style>
 </head>
 
-<body class="bg-gray-200 dark:bg-gray-900 flex flex-col transition-colors duration-300">
+<body class="bg-gray-200 dark:bg-gray-900 flex flex-col h-dvh transition-colors duration-300">
  <header class="fixed top-0 left-0 w-full bg-indigo-900 dark:bg-indigo-900 text-white p-4 flex items-center justify-between z-50 transition-colors duration-300">
     <button id="menu-btn" class="focus:outline-none">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -124,19 +113,15 @@
     </div>
   </main>
 
-  <div id="chat-footer" class="sticky bottom-0 left-0 w-full bg-gray-200 dark:bg-gray-900 p-4 safe-area-bottom flex items-end gap-2 z-40">
-  <form id="chat-form" class="flex items-end gap-2 w-full">
-    <textarea id="chat-input" placeholder="ဒီမှာစာရိုက်ပါ..." rows="1"
-      class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-3xl resize-none overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"></textarea>
+  <form id="chat-form" class="fixed bottom-0 left-0 w-full p-4 flex items-end gap-2 bg-gray-200 dark:bg-gray-900 z-40 safe-area-bottom">
+  <textarea id="chat-input" placeholder="ဒီမှာစာရိုက်ပါ..." rows="1"
+    class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-3xl resize-none overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"></textarea>
     <button type="submit" class="bg-indigo-900 dark:bg-indigo-700 text-white px-4 py-2 rounded-full hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors flex items-center justify-center">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
       </svg>
     </button>
   </form>
-</div>
-
-
 
 
   <script>
@@ -202,37 +187,22 @@
         toggleSlider.style.transform = "translateX(2.25rem)";
       }
     });
-    window.onload = function() {
-    chatInput.focus();
-    setTimeout(() => chatInput.focus(), 500);
-
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const message = urlParams.get("q");
-    if (message) {
-      chatInput.value = message;
-      chatInput.style.height = "auto";
-      chatInput.style.height = `${chatInput.scrollHeight}px`;
-    }
-  };
-
+    window.onload = function () {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const message = urlParams.get("q");
+      if (message) {
+        chatInput.value = message;
+        chatInput.style.height = "auto";
+        chatInput.style.height = `${chatInput.scrollHeight}px`;
+      }
+    };
     chatInput.addEventListener("keydown", function (e) {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         chatForm.dispatchEvent(new Event("submit", { cancelable: true }));
       }
     });
-
-    const chatFooter = document.getElementById("chat-footer");
-
-    chatInput.addEventListener("focus", () => {
-      setTimeout(scrollToBottom, 300); // wait for keyboard animation
-    });
-
-    window.addEventListener("resize", () => {
-      scrollToBottom(); // keep messages above keyboard
-    });
-
 
     let conversation = [];
     chatForm.addEventListener("submit", async function (e) {
@@ -297,6 +267,18 @@
         chatContainer.appendChild(errorMsg);
         scrollToBottom();
       }
+    });
+
+    window.onload = function () {
+  chatInput.focus(); // will focus input
+  setTimeout(() => {
+    chatInput.focus(); // helps mobile browsers actually trigger keyboard
+  }, 500);
+    };
+
+    // Keep chat scroll above keyboard
+    window.addEventListener("resize", () => {
+      scrollToBottom();
     });
 
 
