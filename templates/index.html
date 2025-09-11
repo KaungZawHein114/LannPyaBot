@@ -1,83 +1,109 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <title>Home</title>
-    
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/bot.png') }}" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/bot.png') }}"
+    />
+    <link
+      rel="manifest"
+      href="{{ url_for('static', filename='manifest.json') }}"
+    />
+    <meta name="theme-color" content="#0f172a" />
 
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         darkMode: "class",
       };
     </script>
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+
     <style>
       /* Use the Inter font family */
       body {
         font-family: "Inter", sans-serif;
         transition: background-color 0.5s, color 0.5s;
+        padding: 1.5rem;
+        padding-top: calc(1.5rem + env(safe-area-inset-top));
+        padding-right: calc(1.5rem + env(safe-area-inset-right));
+        padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+        padding-left: calc(1.5rem + env(safe-area-inset-left));
+      }
+
+      @media (min-width: 768px) {
+        /* md breakpoint */
+        body {
+          padding: 3rem; /* Equivalent to p-12 */
+        }
       }
 
       /* Base styles for the action buttons */
       .action-button {
         transition: transform 0.1s ease-in-out, background-color 0.2s ease,
           color 0.2s ease;
-        /* To make the anchor tag behave like a block element */
         text-decoration: none;
         display: flex;
       }
 
       /* Custom class for the active button state */
       .active-button {
-        background-color: #312e81; /* Equivalent to bg-indigo-800 for a slightly lighter feel */
+        background-color: #312e81;
         color: white;
-        transform: scale(0.98); /* Adds a subtle press effect */
+        transform: scale(0.98);
       }
       .active-button svg {
         color: white;
       }
     </style>
   </head>
-  <body class="bg-gray-200 dark:bg-gray-900 flex flex-col min-h-screen p-4 transition-colors duration-300">
-    <!-- Theme toggle (global) -->
-    <button id="theme-toggle" class="fixed top-4 right-4 text-indigo-900 dark:text-indigo-100 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 px-3 py-1 rounded-md shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">🌙</button>
-    
-    <!-- Main Card Container -->
-    <div class="flex-1 flex items-center justify-center">
+  <body
+    class="bg-gray-200 dark:bg-gray-900 flex flex-col min-h-dvh transition-colors duration-300"
+  >
+    <button
+      id="theme-toggle"
+      class="fixed top-6 right-6 text-indigo-900 dark:text-indigo-100 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 px-3 py-1 rounded-md shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300 z-10"
+    >
+      🌙
+    </button>
+
+    <main class="flex-1 flex items-center justify-center">
       <div
         class="bg-white dark:bg-gray-800 max-w-sm w-full rounded-3xl shadow-lg overflow-hidden md:max-w-3xl transition-colors duration-300"
       >
-        <!-- Top Section -->
-        <div class="p-8">
-          <!-- Flex container for responsive layout -->
+        <div class="p-5">
           <div class="md:flex md:items-center md:gap-8">
-            <!-- Left side: Text and Buttons -->
             <div class="md:w-1/2">
-              <!-- Greeting Text -->
-              <h1 class="text-4xl font-bold text-gray-800 dark:text-white">မင်္ဂလာပါ</h1>
-              <p class="text-xl text-gray-600 dark:text-gray-300 mt-2" style="line-height:2.0">
+              <h1 class="text-4xl font-bold text-gray-800 dark:text-white">
+                မင်္ဂလာပါ
+              </h1>
+              <p
+                class="text-xl text-gray-600 dark:text-gray-300 mt-2"
+                style="line-height: 2.0"
+              >
                 LannPya Bot (လမ်းပြဘော့) က ကြိုဆိုပါတယ်
               </p>
-
-              <!-- Action Buttons -->
               <div id="action-buttons-container" class="mt-8 space-y-4">
-                <!-- Chat Button -->
                 <a
                   href="{{ url_for('chat_page') }}"
                   class="action-button w-full justify-between items-center bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 transition-colors p-4 rounded-xl"
                 >
-                  <span class="font-semibold text-lg text-gray-800 dark:text-gray-200">ဆွေးနွေး (Chat)</span>
+                  <span
+                    class="font-semibold text-lg text-gray-800 dark:text-gray-200"
+                    >ဆွေးနွေး (Chat)</span
+                  >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-6 w-6 text-gray-600 dark:text-gray-400"
@@ -93,13 +119,12 @@
                     />
                   </svg>
                 </a>
-
-                <!-- Content Checking Button -->
                 <a
                   href="{{ url_for('content_checker_page') }}"
                   class="action-button w-full justify-between items-center bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 transition-colors p-4 rounded-xl"
                 >
-                  <span class="font-semibold text-lg text-gray-800 dark:text-gray-200"
+                  <span
+                    class="font-semibold text-lg text-gray-800 dark:text-gray-200"
                     >စစ်ဆေး (Check)</span
                   >
                   <svg
@@ -117,13 +142,12 @@
                     />
                   </svg>
                 </a>
-
-                <!-- Scenario Simulation Button -->
                 <a
                   href="{{ url_for('scenario_simulation_page') }}"
                   class="action-button w-full justify-between items-center bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 transition-colors p-4 rounded-xl"
                 >
-                  <span class="font-semibold text-lg text-gray-800 dark:text-gray-200"
+                  <span
+                    class="font-semibold text-lg text-gray-800 dark:text-gray-200"
                     >ဆန်းစစ် (Simulation)</span
                   >
                   <svg
@@ -141,13 +165,12 @@
                     />
                   </svg>
                 </a>
-
-                <!-- Interactive Quiz Button -->
                 <a
                   href="{{ url_for('interactive_quiz_page') }}"
                   class="action-button w-full justify-between items-center bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 transition-colors p-4 rounded-xl"
                 >
-                  <span class="font-semibold text-lg text-gray-800 dark:text-gray-200"
+                  <span
+                    class="font-semibold text-lg text-gray-800 dark:text-gray-200"
                     >လေ့လာ (Quiz)</span
                   >
                   <svg
@@ -168,23 +191,22 @@
               </div>
             </div>
 
-            <!-- Right side: Robot Image and Tip -->
             <div class="md:w-1/2">
-              <!-- Robot Image -->
-              <div class="flex justify-center mt-8 md:mt-0">
+              <div
+                class="flex justify-center mt-8 md:mt-0"
+              >
                 <img
-                  src="{{ url_for('static', filename='images/logo.jpg') }}"
+                  src="{{ url_for('static', filename='images/logo.png') }}"
                   alt="Friendly Robot Mascot"
                   class="h-48 w-auto"
                   onerror="this.onerror=null;this.src='https://placehold.co/200x200/FFFFFF/333?text=🤖';"
                 />
               </div>
-
-              <!-- Tip of the Day (moved from bottom) -->
-              <div class="bg-indigo-900 text-white p-6 text-center rounded-2xl mt-8">
+              <div
+                class="bg-indigo-900 text-white p-6 text-center rounded-2xl mt-8"
+              >
                 <h2 class="text-xl font-bold">Tip of the day</h2>
                 <p id="tip-text" class="mt-2 text-indigo-200 text-sm"></p>
-                <!-- Updated button to link to the chat page with a pre-filled query -->
                 <a
                   id="learnMoreButton"
                   href="{{ url_for('chat_page') }}"
@@ -207,115 +229,92 @@
                   </svg>
                 </a>
               </div>
-
-              <!-- Removed separate random tip box; integrated into the card above -->
-              
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </main>
 
-    <!-- Developer Credits Footer -->
-
-    <footer class="mt-10 text-center">
-      <div class="pt-8 border-t border-gray-200 dark:border-gray-700">
-        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">
-          Developed by <span class="text-indigo-600 dark:text-indigo-400 font-semibold">GUSTO College Team</span>
-        </p>
-        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
-          <span class="text-indigo-500 dark:text-indigo-400 font-medium"><br>LannPya Bot<br><br></span> - 
-          Kaung Zaw Hein, Aung Min Myat, Zin Zin Pwint Han
-        </p>
-      </div>
+    <footer class="text-center text-sm text-gray-500 dark:text-gray-400 py-6">
+      <p class="font-semibold text-indigo-600 dark:text-indigo-400">
+        Developed by GUSTO College Team
+      </p>
+      <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">
+        Kaung Zaw Hein, Aung Min Myat, Zin Zin Pwint Han
+      </p>
     </footer>
 
     <script>
-      // Get all the links with the 'action-button' class
+      // SCRIPT UNCHANGED
       const actionButtons = document.querySelectorAll("a.action-button");
-
-      // Function to reset all buttons to their default state
       function resetButtonStyles() {
         actionButtons.forEach((button) => {
           button.classList.remove("active-button");
         });
       }
-
-      // Add a click event listener to each button
       actionButtons.forEach((button) => {
         button.addEventListener("click", () => {
-          // First, reset all buttons
           resetButtonStyles();
-          // Then, add the active class to the clicked button
           button.classList.add("active-button");
         });
       });
-
-      // --- New code for the "Learn More" button ---
-      // Get the tip text element
       const tipTextElement = document.getElementById("tip-text");
-      // Get the learn more button element
       const learnMoreButton = document.getElementById("learnMoreButton");
-
       if (tipTextElement && learnMoreButton) {
-        // Get the text content from the tip
         const tipContent = tipTextElement.textContent.trim();
-        // Construct the message to send to the chat page
         const message = `Tell me more about ${tipContent}`;
-
-        // Encode the message to be safe for a URL
         const encodedMessage = encodeURIComponent(message);
-
-        // Set the href of the learn more button with the encoded message
         learnMoreButton.href = `{{ url_for('chat_page') }}?q=${encodedMessage}`;
       }
-
-    async function loadRandomTip() {
+      async function loadRandomTip() {
         try {
-            const res = await fetch("/random-tip");
-            const data = await res.json();
-            const tipEl = document.getElementById("tip-text");
-            tipEl.textContent = `${data.topic} Tip: ${data.tip}`;
-            // Update Learn More link with the fetched tip
-            const message = `Tell me more about ${tipEl.textContent.trim()}`;
-            const encodedMessage = encodeURIComponent(message);
-            document.getElementById("learnMoreButton").href = `{{ url_for('chat_page') }}?q=${encodedMessage}`;
+          const res = await fetch("/random-tip");
+          const data = await res.json();
+          const tipEl = document.getElementById("tip-text");
+          tipEl.textContent = `${data.topic} Tip: ${data.tip}`;
+          const message = `Tell me more about ${tipEl.textContent.trim()}`;
+          const encodedMessage = encodeURIComponent(message);
+          document.getElementById(
+            "learnMoreButton"
+          ).href = `{{ url_for('chat_page') }}?q=${encodedMessage}`;
         } catch {
-            const tipEl = document.getElementById("tip-text");
-            tipEl.textContent = "Stay safe online! Use unique passwords and enable 2FA.";
+          const tipEl = document.getElementById("tip-text");
+          tipEl.textContent =
+            "Stay safe online! Use unique passwords and enable 2FA.";
         }
-    }
-
-    // Theme toggle logic
-    (function(){
-      const html = document.documentElement;
-      const btn = document.getElementById("theme-toggle");
-      
-      // Check localStorage for saved theme preference or default to dark mode
-      if (localStorage.getItem("theme") === "light") {
-        html.classList.remove("dark");
-        btn.textContent = "🌙";
-      } else {
-        html.classList.add("dark");
-        btn.textContent = "☀️";
       }
-      
-      btn.addEventListener("click", ()=>{
-        const isDark = html.classList.contains("dark");
-        if (isDark) {
+      (function () {
+        const html = document.documentElement;
+        const btn = document.getElementById("theme-toggle");
+        if (localStorage.getItem("theme") === "light") {
           html.classList.remove("dark");
-          localStorage.setItem("theme","light");
           btn.textContent = "🌙";
         } else {
           html.classList.add("dark");
-          localStorage.setItem("theme","dark");
           btn.textContent = "☀️";
         }
-      });
-    })();
-
-    // Load tip on page load
-    loadRandomTip();
+        btn.addEventListener("click", () => {
+          const isDark = html.classList.contains("dark");
+          if (isDark) {
+            html.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+            btn.textContent = "🌙";
+          } else {
+            html.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+            btn.textContent = "☀️";
+          }
+        });
+      })();
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register('{{ url_for("static", filename="service-worker.js") }}')
+          .then((reg) => console.log("Service Worker registered!", reg))
+          .catch((err) =>
+            console.log("Service Worker registration failed!", err)
+          );
+      }
+      loadRandomTip();
     </script>
   </body>
 </html>
