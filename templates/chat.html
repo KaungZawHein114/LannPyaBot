@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet" />
+            rel="stylesheet" />
     <style>
         body {
             font-family: "Inter", sans-serif;
@@ -31,8 +31,6 @@
         #chat-main {
             flex-grow: 1;
             overflow-y: auto;
-            padding-bottom: calc(4rem + 16px);
-            /* padding for the form height */
         }
 
         #chat-form-container {
@@ -192,6 +190,16 @@
         const confirmLeaveBtn = document.getElementById("confirm-leave");
         const chatContainer = document.getElementById("chat-main");
 
+        // FIX START
+        function updateChatLayout() {
+            const headerHeight = document.querySelector('header').offsetHeight;
+            const formContainerHeight = document.getElementById('chat-form-container').offsetHeight;
+            const totalOffset = headerHeight + formContainerHeight;
+            // Set the height of the chat area to fill the remaining space
+            chatContainer.style.height = `${window.innerHeight - totalOffset}px`;
+        }
+        // FIX END
+
         function scrollToBottom() {
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
@@ -234,8 +242,6 @@
 
         const html = document.documentElement;
         const toggleSlider = themeToggle.querySelector('span');
-        const sunEmoji = themeToggle.querySelector('.absolute.right-1');
-        const moonEmoji = themeToggle.querySelector('.absolute.left-1');
 
         function updateThemeUI() {
             if (localStorage.getItem("theme") === "light") {
@@ -259,6 +265,9 @@
         });
 
         window.onload = function () {
+            // FIX START
+            updateChatLayout();
+            // FIX END
             scrollToBottom();
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
@@ -269,6 +278,11 @@
                 chatInput.style.height = `${chatInput.scrollHeight}px`;
             }
         };
+        
+        // FIX START
+        window.addEventListener('resize', updateChatLayout);
+        window.addEventListener('orientationchange', updateChatLayout);
+        // FIX END
 
         chatInput.addEventListener("keydown", function (e) {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -283,9 +297,7 @@
 
         function sanitizeReply(text) {
             // Replace Markdown-style bold (**text**) with HTML bold (<b>text</b>)
-            // The ? makes the match non-greedy, so it finds the smallest match
             const boldedText = text.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
-            // Create a temporary div to sanitize text and convert newlines to <br>
             const div = document.createElement("div");
             div.innerText = boldedText;
             return div.innerHTML.replace(/\n/g, "<br>");
@@ -363,4 +375,5 @@
         });
     </script>
 </body>
+
 </html>
