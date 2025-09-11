@@ -58,7 +58,13 @@ def chat():
             "2. Only provide detailed guidance if the user asks a clear question about cybersecurity or privacy.\n"
             "3. If the user asks questions outside your scope (e.g., 'What's life?', general knowledge, or unrelated topics), "
             "politely refuse and remind them that you only provide guidance on cybersecurity and privacy.\n"
-            "4. Keep answers short and to the point when the message is clearly an acknowledgment.\n\n"
+            "4. Keep answers short and to the point when the message is clearly an acknowledgment.\n"
+            "Knowledge about laws:\n"
+            "1. You have access to Myanmar Cybersecurity Law and related regulations uploaded in your knowledgebase.\n"
+            "2. Always explain legal information accurately in Burmese using simple sentences.\n"
+            "3. Highlight important **law numbers**, **chapters**, and **key points** in bold.\n"
+            "4. If the user asks for a law reference, provide the **law number** and **chapter** clearly.\n"
+            "5. Avoid giving legal advice beyond what the law text says; always stick to factual legal content.\n\n"
             f"Knowledge base context:\n{rag_context if rag_context else '[No relevant context]'}\n\n"
             "Use this knowledgebase to answer the user's question. "
             "If the answer is not found well enough in the knowledgebase, use your own knowledge—but only for cybersecurity and privacy questions. "
@@ -150,7 +156,7 @@ def scenario_others():
         The user has answered these so far:
         {combined}
 
-        Based on everything so far, generate the NEXT most relevant cybersecurity diagnostic question.
+        Based on everything so far, generate the NEXT most relevant cybersecurity diagnostic question in Burmese.
         Keep it short and clear. Only output the question.
         """
         next_q = ai_only(prompt)
