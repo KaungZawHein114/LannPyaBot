@@ -21,15 +21,14 @@
             transition: background-color 0.5s, color 0.5s;
         }
 
-        html,
-        body {
-            height: 100dvh;
+        html, body {
+        height: 100dvh; 
         }
 
         #chat-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
         }
 
 
@@ -71,11 +70,9 @@
 </head>
 
 <body class="bg-gray-200 dark:bg-gray-900 flex flex-col h-screen transition-colors duration-300">
-    <header
-        class="bg-indigo-900 dark:bg-indigo-700 text-white p-4 flex items-center justify-between relative transition-colors duration-300">
+    <header class="bg-indigo-900 dark:bg-indigo-700 text-white p-4 flex items-center justify-between relative transition-colors duration-300">
         <button id="menu-btn" class="focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor" stroke-width="2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
         </button>
@@ -86,29 +83,25 @@
         </div>
 
         <div class="flex items-center gap-2">
-            <a href="{{ url_for('home') }}"
-                class="text-sm bg-white text-indigo-900 font-semibold px-3 py-1 rounded hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-600 transition-colors">
+            <a href="{{ url_for('home') }}" class="text-sm bg-white text-indigo-900 font-semibold px-3 py-1 rounded hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-600 transition-colors">
                 Back
             </a>
         </div>
     </header>
 
-    <div id="side-nav"
-        class="fixed top-0 left-0 h-full w-64 bg-indigo-800 dark:bg-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-50">
+    <div id="side-nav" class="fixed top-0 left-0 h-full w-64 bg-indigo-800 dark:bg-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-50">
         <div class="p-4 text-xl font-bold border-b border-indigo-600 dark:border-indigo-700">Menu</div>
         <nav class="flex flex-col p-4 space-y-4">
             <a href="{{ url_for('home') }}" class="hover:text-gray-300">Home</a>
             <a href="{{ url_for('content_checker_page') }}" class="hover:text-gray-300">Content Checker</a>
             <a href="{{ url_for('scenario_simulation_page') }}" class="hover:text-gray-300">Scenario Simulation</a>
             <a href="{{ url_for('interactive_quiz_page') }}" class="hover:text-gray-300">Interactive Quiz</a>
-
+            
             <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
                 <div class="flex items-center justify-between">
                     <span class="text-sm text-gray-300">Theme</span>
-                    <button id="theme-toggle"
-                        class="relative inline-flex h-8 w-16 items-center rounded-full bg-indigo-600 dark:bg-indigo-400 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-800 dark:focus:ring-offset-indigo-900">
-                        <span
-                            class="inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-300 ease-in-out translate-x-1 dark:translate-x-9"></span>
+                    <button id="theme-toggle" class="relative inline-flex h-8 w-16 items-center rounded-full bg-indigo-600 dark:bg-indigo-400 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-800 dark:focus:ring-offset-indigo-900">
+                        <span class="inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-300 ease-in-out translate-x-1 dark:translate-x-9"></span>
                         <span class="absolute left-1 text-xs">🌙</span>
                         <span class="absolute right-1 text-xs">☀️</span>
                     </button>
@@ -131,33 +124,29 @@
 
     <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
 
-    <div id="confirmation-modal"
-        class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+    <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
         <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md mx-4 transition-colors duration-300">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">⚠️ သတိပေးချက်</h3>
             <p class="text-gray-600 dark:text-gray-300 mb-6" style="line-height:2.0">
-                ဤစာမျက်နှာမှ ထွက်ခွာရန် သေချာပါသလား? <strong>စကားပြောဆိုမှု မှတ်တမ်းအားလုံး အပြီးတိုင်ဖျက်ဆီးခံရမည်</strong>
-                ဖြစ်ပြီး ဆွေးနွေးမှုအကြောင်းအရာ ဆက်စပ်မှုများ ဆုံးရှုံးသွားမည်ဖြစ်သည်။
+                ဤစာမျက်နှာမှ ထွက်ခွာရန် သေချာပါသလား? <strong>စကားပြောဆိုမှု မှတ်တမ်းအားလုံး အပြီးတိုင်ဖျက်ဆီးခံရမည်</strong> ဖြစ်ပြီး ဆွေးနွေးမှုအကြောင်းအရာ ဆက်စပ်မှုများ ဆုံးရှုံးသွားမည်ဖြစ်သည်။
             </p>
             <div class="flex gap-3 justify-end">
-                <button id="cancel-leave"
-                    class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium">
+                <button id="cancel-leave" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium">
                     ဆက်နေမည်
                 </button>
-                <button id="confirm-leave"
-                    class="px-4 py-2 bg-red-600 dark:bg-red-500 text-white rounded hover:bg-red-700 dark:hover:bg-red-600 font-medium">
+                <button id="confirm-leave" class="px-4 py-2 bg-red-600 dark:bg-red-500 text-white rounded hover:bg-red-700 dark:hover:bg-red-600 font-medium">
                     ထွက်မည်
                 </button>
             </div>
         </div>
     </div>
 
-    <main id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 transition-colors duration-300 pb-28">
+        <main id="chat-container" 
+      class="flex-1 overflow-y-auto p-4 space-y-4 transition-colors duration-300 pb-28">
 
         <div class="flex items-start space-x-2">
             <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" />
-            <div
-                class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-4 rounded-3xl max-w-md shadow-md break-words leading-relaxed transition-colors duration-300">
+            <div class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-4 rounded-3xl max-w-md shadow-md break-words leading-relaxed transition-colors duration-300">
                 မင်္ဂလာပါ <b>LannPya Bot (လမ်းပြဘော့)</b> က ကြိုဆိုပါတယ်!<br><br>
                 ဒီနေ့ <b>Cybersecurity (ဆိုက်ဘာလုံခြုံရေး)</b> နှင့် <b>Privacy (ကိုယ်ရေးကိုယ်တာလုံခြုံမှု)</b> နဲ့ပတ်သက်ပြီး
                 ဘာများကူညီဆောင်ရွက်ပေးရမလဲ။
@@ -165,26 +154,30 @@
         </div>
     </main>
 
-    <div id="chat-form-container" class="fixed bottom-0 left-0 w-full transition-transform duration-300 z-30">
+    <div id="chat-form-container" 
+     class="fixed bottom-0 left-0 w-full transition-transform duration-300 z-30">
 
-        <form id="chat-form" class="fixed bottom-0 left-0 right-0 p-4 flex items-end gap-2 bg-gray-200 dark:bg-gray-900">
+    <form id="chat-form" 
+  class="fixed bottom-0 left-0 right-0 p-4 flex items-end gap-2 bg-gray-200 dark:bg-gray-900">
 
-            <textarea id="chat-input" placeholder="ဒီမှာစာရိုက်ပါ..." rows="1"
-                class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-3xl resize-none overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"></textarea>
+    <textarea id="chat-input" 
+              placeholder="ဒီမှာစာရိုက်ပါ..." 
+              rows="1"
+              class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-3xl resize-none overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"></textarea>
 
-            <button type="submit"
-                class="bg-indigo-900 dark:bg-indigo-700 text-white px-4 py-2 mb-1 rounded-full hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors flex items-center justify-center">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                </svg>
-            </button>
-        </form>
+    <button type="submit"
+            class="bg-indigo-900 dark:bg-indigo-700 text-white px-4 py-2 mb-1 rounded-full hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors flex items-center justify-center">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+        </svg>
+    </button>
+    </form>
     </div>
 
 
     <script>
-        //new4
+        //new5
         const chatForm = document.getElementById("chat-form");
         const chatInput = document.getElementById("chat-input");
         const chatContainer = document.getElementById("chat-container");
@@ -196,38 +189,32 @@
         const chatFormContainer = document.getElementById("chat-form-container");
         const input = document.querySelector('#chat-form textarea');
 
-        input.addEventListener('focus', () => {
-            setTimeout(() => {
-                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 300); // wait for keyboard animation
-        });
-
 
         function scrollToBottom() {
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
         function handleLayout() {
-            if (!header || !chatFormContainer) return;
+    if (!header || !chatFormContainer) return;
 
-            const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-            const documentHeight = window.innerHeight;
-            const headerHeight = header.offsetHeight;
-            const formHeight = chatFormContainer.offsetHeight;
+    const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    const documentHeight = window.innerHeight;
+    const headerHeight = header.offsetHeight;
+    const formHeight = chatFormContainer.offsetHeight;
 
-            // Detect if keyboard is open
-            const keyboardOpen = viewportHeight < documentHeight - 100;
-            const keyboardHeight = keyboardOpen ? (documentHeight - viewportHeight) : 0;
+    // Detect if keyboard is open
+    const keyboardOpen = viewportHeight < documentHeight - 100;
+    const keyboardHeight = keyboardOpen ? (documentHeight - viewportHeight) : 0;
 
-            // Move form up above the keyboard
-            chatFormContainer.style.transform = `translateY(-${keyboardHeight}px)`;
+    // Move form up above the keyboard
+    chatFormContainer.style.transform = `translateY(-${keyboardHeight}px)`;
 
-            // Resize chat container so it fills remaining space
-            const chatHeight = viewportHeight - headerHeight - formHeight;
-            chatContainer.style.height = `${chatHeight}px`;
+    // Resize chat container so it fills remaining space
+    const chatHeight = viewportHeight - headerHeight - formHeight;
+    chatContainer.style.height = `${chatHeight}px`;
 
-            scrollToBottom();
-        }
+    scrollToBottom();
+}
 
 
 
@@ -248,21 +235,22 @@
         });
 
 
+        
         function showConfirmationModal() {
             confirmationModal.classList.remove("hidden");
         }
-
+        
         function hideConfirmationModal() {
             confirmationModal.classList.add("hidden");
         }
-
+        
 
         cancelLeaveBtn.addEventListener("click", hideConfirmationModal);
-
+        
         confirmLeaveBtn.addEventListener("click", () => {
             window.location.href = "{{ url_for('home') }}";
         });
-
+        
         document.querySelector('a[href="{{ url_for("home") }}"]').addEventListener('click', (e) => {
             e.preventDefault();
             showConfirmationModal();
@@ -272,20 +260,20 @@
         const sideNav = document.getElementById("side-nav");
         const overlay = document.getElementById("overlay");
         const themeToggle = document.getElementById("theme-toggle");
-
+        
         menuBtn.addEventListener("click", () => {
             sideNav.classList.toggle("-translate-x-full");
             overlay.classList.toggle("hidden");
         });
-
+        
         overlay.addEventListener("click", () => {
             sideNav.classList.add("-translate-x-full");
             overlay.classList.add("hidden");
         });
-
+        
         const html = document.documentElement;
         const toggleSlider = themeToggle.querySelector('span');
-
+        
         if (localStorage.getItem("theme") === "light") {
             html.classList.remove("dark");
             toggleSlider.style.transform = "translateX(0.25rem)";
@@ -293,7 +281,7 @@
             html.classList.add("dark");
             toggleSlider.style.transform = "translateX(2.25rem)";
         }
-
+        
         themeToggle.addEventListener("click", () => {
             if (html.classList.contains("dark")) {
                 html.classList.remove("dark");
@@ -305,20 +293,20 @@
                 toggleSlider.style.transform = "translateX(2.25rem)";
             }
         });
-
+        
         window.onload = function () {
             handleLayout();
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
             const message = urlParams.get("q");
-
+            
             if (message) {
                 chatInput.value = message;
                 chatInput.style.height = "auto";
                 chatInput.style.height = `${chatInput.scrollHeight}px`;
             }
         };
-
+        
         chatInput.addEventListener("keydown", function (e) {
             if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
