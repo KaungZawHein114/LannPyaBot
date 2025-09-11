@@ -14,8 +14,7 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-            rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <style>
         body {
             font-family: "Inter", sans-serif;
@@ -23,23 +22,16 @@
         }
 
         html,
-        body,
-        #app {
+        body {
+            height: 100dvh;
+        }
+
+        #chat-container {
+            display: flex;
+            flex-direction: column;
             height: 100%;
         }
 
-        #chat-main {
-            flex-grow: 1;
-            overflow-y: auto;
-        }
-
-        #chat-form-container {
-            position: sticky;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            z-index: 30;
-        }
 
         ::-webkit-scrollbar {
             width: 6px;
@@ -78,19 +70,21 @@
     </style>
 </head>
 
-<body class="bg-gray-200 dark:bg-gray-900 flex flex-col h-screen transition-colors duration-300" id="app">
+<body class="bg-gray-200 dark:bg-gray-900 flex flex-col h-screen transition-colors duration-300">
     <header
         class="bg-indigo-900 dark:bg-indigo-700 text-white p-4 flex items-center justify-between relative transition-colors duration-300">
-        <button id="menu-btn" aria-label="Open menu" class="focus:outline-none">
+        <button id="menu-btn" class="focus:outline-none">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
         </button>
+
         <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
-            <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" alt="Bot Icon" />
+            <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" />
             <h1 class="text-lg font-bold">LannPya Bot</h1>
         </div>
+
         <div class="flex items-center gap-2">
             <a href="{{ url_for('home') }}"
                 class="text-sm bg-white text-indigo-900 font-semibold px-3 py-1 rounded hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-600 transition-colors">
@@ -107,10 +101,11 @@
             <a href="{{ url_for('content_checker_page') }}" class="hover:text-gray-300">Content Checker</a>
             <a href="{{ url_for('scenario_simulation_page') }}" class="hover:text-gray-300">Scenario Simulation</a>
             <a href="{{ url_for('interactive_quiz_page') }}" class="hover:text-gray-300">Interactive Quiz</a>
+
             <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
                 <div class="flex items-center justify-between">
                     <span class="text-sm text-gray-300">Theme</span>
-                    <button id="theme-toggle" aria-label="Toggle dark/light theme"
+                    <button id="theme-toggle"
                         class="relative inline-flex h-8 w-16 items-center rounded-full bg-indigo-600 dark:bg-indigo-400 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-800 dark:focus:ring-offset-indigo-900">
                         <span
                             class="inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-300 ease-in-out translate-x-1 dark:translate-x-9"></span>
@@ -119,14 +114,17 @@
                     </button>
                 </div>
             </div>
-            <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700 text-center">
-                <p class="text-xs text-gray-300 font-medium">
-                    Developed by <span class="text-indigo-300 font-semibold">GUSTO College Team</span>
-                </p>
-                <p class="text-xs text-gray-400 mt-1 leading-tight">
-                    <span class="text-indigo-300 font-medium"><br>LannPya Bot</span><br><br>
-                    Kaung Zaw Hein <br><br>Aung Min Myat<br><br>Zin Zin Pwint Han
-                </p>
+
+            <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
+                <div class="text-center">
+                    <p class="text-xs text-gray-300 font-medium">
+                        Developed by <span class="text-indigo-300 font-semibold">GUSTO College Team</span>
+                    </p>
+                    <p class="text-xs text-gray-400 mt-1 leading-tight">
+                        <span class="text-indigo-300 font-medium"><br>LannPya Bot</span><br><br>
+                        Kaung Zaw Hein <br><br>Aung Min Myat<br><br>Zin Zin Pwint Han
+                    </p>
+                </div>
             </div>
         </nav>
     </div>
@@ -154,56 +152,101 @@
         </div>
     </div>
 
-    <div id="chat-main" class="p-4 space-y-4 transition-colors duration-300">
+    <main id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 transition-colors duration-300 pb-28">
+
         <div class="flex items-start space-x-2">
-            <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" alt="Bot Icon" />
+            <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" />
             <div
                 class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-4 rounded-3xl max-w-md shadow-md break-words leading-relaxed transition-colors duration-300">
-                <p>မင်္ဂလာပါ <b>LannPya Bot (လမ်းပြဘော့)</b> က ကြိုဆိုပါတယ်!</p>
-                <p class="mt-2">
-                    ဒီနေ့ <b>Cybersecurity (ဆိုက်ဘာလုံခြုံရေး)</b> နှင့် <b>Privacy
-                        (ကိုယ်ရေးကိုယ်တာလုံခြုံမှု)</b> နဲ့ပတ်သက်ပြီး
-                    ဘာများကူညီဆောင်ရွက်ပေးရမလဲ။
-                </p>
+                မင်္ဂလာပါ <b>LannPya Bot (လမ်းပြဘော့)</b> က ကြိုဆိုပါတယ်!<br><br>
+                ဒီနေ့ <b>Cybersecurity (ဆိုက်ဘာလုံခြုံရေး)</b> နှင့် <b>Privacy (ကိုယ်ရေးကိုယ်တာလုံခြုံမှု)</b> နဲ့ပတ်သက်ပြီး
+                ဘာများကူညီဆောင်ရွက်ပေးရမလဲ။
             </div>
         </div>
-    </div>
+    </main>
 
-    <div id="chat-form-container" class="bg-gray-200 dark:bg-gray-900">
-        <form id="chat-form" class="p-4 flex items-end gap-2">
+    <div id="chat-form-container" class="fixed bottom-0 left-0 w-full transition-transform duration-300 z-30">
+
+        <form id="chat-form" class="fixed bottom-0 left-0 right-0 p-4 flex items-end gap-2 bg-gray-200 dark:bg-gray-900">
+
             <textarea id="chat-input" placeholder="ဒီမှာစာရိုက်ပါ..." rows="1"
                 class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-3xl resize-none overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"></textarea>
-            <button type="submit" aria-label="Send message"
+
+            <button type="submit"
                 class="bg-indigo-900 dark:bg-indigo-700 text-white px-4 py-2 mb-1 rounded-full hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors flex items-center justify-center">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
-                    </path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                 </svg>
             </button>
         </form>
     </div>
+
+
     <script>
-        //manifesting the functional code
+        //new4
         const chatForm = document.getElementById("chat-form");
         const chatInput = document.getElementById("chat-input");
+        const chatContainer = document.getElementById("chat-container");
         const confirmationModal = document.getElementById("confirmation-modal");
         const cancelLeaveBtn = document.getElementById("cancel-leave");
         const confirmLeaveBtn = document.getElementById("confirm-leave");
-        const chatContainer = document.getElementById("chat-main");
 
-        // Dynamically sets the height of the chat window to prevent layout issues with the mobile keyboard.
-        // This function is the core of the fix.
-        function updateChatLayout() {
-            const headerHeight = document.querySelector('header').offsetHeight;
-            const formContainerHeight = document.getElementById('chat-form-container').offsetHeight;
-            const totalOffset = headerHeight + formContainerHeight;
-            // Set the height of the chat area to fill the remaining space
-            chatContainer.style.height = `${window.innerHeight - totalOffset}px`;
-        }
+        const header = document.querySelector("header");
+        const chatFormContainer = document.getElementById("chat-form-container");
+        const input = document.querySelector('#chat-form textarea');
+
+        input.addEventListener('focus', () => {
+            setTimeout(() => {
+                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300); // wait for keyboard animation
+        });
+
 
         function scrollToBottom() {
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
+
+        function handleLayout() {
+            if (!header || !chatFormContainer) return;
+
+            const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+            const documentHeight = window.innerHeight;
+            const headerHeight = header.offsetHeight;
+            const formHeight = chatFormContainer.offsetHeight;
+
+            // Detect if keyboard is open
+            const keyboardOpen = viewportHeight < documentHeight - 100;
+            const keyboardHeight = keyboardOpen ? (documentHeight - viewportHeight) : 0;
+
+            // Move form up above the keyboard
+            chatFormContainer.style.transform = `translateY(-${keyboardHeight}px)`;
+
+            // Resize chat container so it fills remaining space
+            const chatHeight = viewportHeight - headerHeight - formHeight;
+            chatContainer.style.height = `${chatHeight}px`;
+
+            scrollToBottom();
+        }
+
+
+
+        // Attach listeners
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener("resize", handleLayout);
+            window.visualViewport.addEventListener("scroll", handleLayout); // iOS Safari
+        }
+        window.addEventListener("orientationchange", handleLayout);
+        window.addEventListener("load", handleLayout);
+        window.addEventListener("resize", handleLayout);
+
+        // Auto-resize textarea
+        chatInput.addEventListener("input", () => {
+            chatInput.style.height = "auto";
+            chatInput.style.height = `${chatInput.scrollHeight}px`;
+            handleLayout();
+        });
+
 
         function showConfirmationModal() {
             confirmationModal.classList.remove("hidden");
@@ -213,16 +256,16 @@
             confirmationModal.classList.add("hidden");
         }
 
+
         cancelLeaveBtn.addEventListener("click", hideConfirmationModal);
+
         confirmLeaveBtn.addEventListener("click", () => {
             window.location.href = "{{ url_for('home') }}";
         });
 
-        document.querySelectorAll('a[href="{{ url_for("home") }}"]').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                showConfirmationModal();
-            });
+        document.querySelector('a[href="{{ url_for("home") }}"]').addEventListener('click', (e) => {
+            e.preventDefault();
+            showConfirmationModal();
         });
 
         const menuBtn = document.getElementById("menu-btn");
@@ -243,139 +286,106 @@
         const html = document.documentElement;
         const toggleSlider = themeToggle.querySelector('span');
 
-        function updateThemeUI() {
-            if (localStorage.getItem("theme") === "light") {
-                html.classList.remove("dark");
-                toggleSlider.style.transform = "translateX(0.25rem)";
-            } else {
-                html.classList.add("dark");
-                toggleSlider.style.transform = "translateX(2.25rem)";
-            }
+        if (localStorage.getItem("theme") === "light") {
+            html.classList.remove("dark");
+            toggleSlider.style.transform = "translateX(0.25rem)";
+        } else {
+            html.classList.add("dark");
+            toggleSlider.style.transform = "translateX(2.25rem)";
         }
-
-        updateThemeUI();
 
         themeToggle.addEventListener("click", () => {
             if (html.classList.contains("dark")) {
+                html.classList.remove("dark");
                 localStorage.setItem("theme", "light");
+                toggleSlider.style.transform = "translateX(0.25rem)";
             } else {
+                html.classList.add("dark");
                 localStorage.setItem("theme", "dark");
+                toggleSlider.style.transform = "translateX(2.25rem)";
             }
-            updateThemeUI();
-        });
-
-        // Event listener for when the textarea gains focus (user taps on it)
-        // This is the key change to immediately fix the layout.
-        chatInput.addEventListener('focus', () => {
-            setTimeout(updateChatLayout, 100); // Small delay to allow keyboard to render
-        });
-
-        // Event listener for when the textarea loses focus (keyboard is dismissed)
-        chatInput.addEventListener('blur', () => {
-            updateChatLayout();
         });
 
         window.onload = function () {
-            updateChatLayout();
-            scrollToBottom();
+            handleLayout();
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
             const message = urlParams.get("q");
+
             if (message) {
                 chatInput.value = message;
                 chatInput.style.height = "auto";
                 chatInput.style.height = `${chatInput.scrollHeight}px`;
             }
         };
-        
-        // Use `resize` as a fallback for other devices or events
-        window.addEventListener('resize', updateChatLayout);
-        window.addEventListener('orientationchange', updateChatLayout);
 
         chatInput.addEventListener("keydown", function (e) {
             if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                chatForm.dispatchEvent(new Event("submit", {
-                    cancelable: true
-                }));
+                chatForm.dispatchEvent(new Event("submit", { cancelable: true }));
             }
         });
 
         let conversation = [];
-
-        function sanitizeReply(text) {
-            const boldedText = text.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
-            const div = document.createElement("div");
-            div.innerText = boldedText;
-            return div.innerHTML.replace(/\n/g, "<br>");
-        }
-
         chatForm.addEventListener("submit", async function (e) {
             e.preventDefault();
             const message = chatInput.value.trim();
             if (!message) return;
 
-            conversation.push({
-                role: "user",
-                content: message
-            });
+            conversation.push({ role: "user", content: message });
 
             const userMsg = document.createElement("div");
             userMsg.className = "flex items-start justify-end space-x-2";
             userMsg.innerHTML = `
-                <div class="bg-indigo-900 dark:bg-indigo-700 text-white p-3 rounded-2xl max-w-xs transition-colors duration-300">${message}</div>
-                <img src="{{ url_for('static', filename='images/myanmarFlag.png') }}" class="w-10 h-10 rounded-full" alt="User Icon">
+            <div class="bg-indigo-900 dark:bg-indigo-700 text-white p-3 rounded-2xl max-w-xs">${message}</div>
+            <img src="{{ url_for('static', filename='images/myanmarFlag.png') }}" class="w-10 h-10 rounded-full">
             `;
             chatContainer.appendChild(userMsg);
             scrollToBottom();
+
             chatInput.value = "";
             chatInput.style.height = "auto";
 
             const typingIndicator = document.createElement("div");
             typingIndicator.className = "flex items-start space-x-2 bot-typing";
             typingIndicator.innerHTML = `
-                <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" alt="Bot Icon">
-                <div class="bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 p-3 rounded-2xl max-w-xs flex space-x-1 transition-colors duration-300">
-                    <span class="dot">•</span><span class="dot">•</span><span class="dot">•</span>
-                </div>`;
+            <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6">
+            <div class="bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 p-3 rounded-2xl max-w-xs flex space-x-1 transition-colors duration-300">
+                <span class="dot">•</span><span class="dot">•</span><span class="dot">•</span>
+            </div>`;
             chatContainer.appendChild(typingIndicator);
             scrollToBottom();
 
             try {
                 const response = await fetch("/chat", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        message: message
-                    })
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: message })
                 });
                 const data = await response.json();
+
                 typingIndicator.remove();
+
                 const botMsg = document.createElement("div");
                 botMsg.className = "flex items-start space-x-2";
                 botMsg.innerHTML = `
-                    <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" alt="Bot Icon">
-                    <div class="bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 p-3 rounded-2xl max-w-xs transition-colors duration-300">
-                        ${sanitizeReply(data.reply)}
-                    </div>`;
+                <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6">
+                <div class="bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 p-3 rounded-2xl max-w-xs transition-colors duration-300">
+                ${data.reply.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")}</div>`;
                 chatContainer.appendChild(botMsg);
                 scrollToBottom();
-                conversation.push({
-                    role: "assistant",
-                    content: data.reply
-                });
+
+                conversation.push({ role: "assistant", content: data.reply });
             } catch (error) {
                 typingIndicator.remove();
                 console.error(error);
                 const errorMsg = document.createElement("div");
                 errorMsg.className = "flex items-start space-x-2";
                 errorMsg.innerHTML = `
-                    <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" alt="Bot Icon">
-                    <div class="bg-red-300 dark:bg-red-900 text-red-800 dark:text-red-200 p-3 rounded-2xl max-w-xs transition-colors duration-300">
-                        Sorry, I encountered an error. Please try again.
-                    </div>`;
+                <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6">
+                <div class="bg-red-300 dark:bg-red-900 text-red-800 dark:text-red-200 p-3 rounded-2xl max-w-xs transition-colors duration-300">
+                    Sorry, I encountered an error. Please try again.
+                </div>`;
                 chatContainer.appendChild(errorMsg);
                 scrollToBottom();
             }
