@@ -1,271 +1,417 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Chat</title>
-  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/bot.png') }}" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: "class",
-    };
-  </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      font-family: "Inter", sans-serif;
-      transition: background-color 0.5s, color 0.5s;
-    }
-    
-    /* --- FIX: ADD PADDING FOR PWA SAFE AREAS --- */
-    /* Applying padding to the body is a more robust fix for PWA safe areas */
-    body {
-      padding-top: env(safe-area-inset-top);
-      padding-bottom: env(safe-area-inset-bottom);
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Checker</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/bot.png') }}" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        transition: background-color 0.5s, color 0.5s;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+      }
 
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 3px;
-    }
-    .dot { animation: blink 1.4s infinite both; }
-    .dot:nth-child(2) { animation-delay: 0.2s; }
-    .dot:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes blink { 0%, 80%, 100% { opacity: 0; } 40% { opacity: 1; } }
-  </style>
-</head>
+      html {
+      overflow: hidden; 
+      }
+      main {
+        -webkit-overflow-scrolling: touch; 
+        will-change: transform; 
+      }
 
-<body class="bg-gray-200 dark:bg-gray-900 flex flex-col h-dvh transition-colors duration-300">
-  <header class="bg-indigo-900 dark:bg-indigo-900 text-white p-4 flex items-center justify-between relative transition-colors duration-300">
-    <button id="menu-btn" class="focus:outline-none">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </button>
-    <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
-      <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" />
-      <h1 class="text-lg font-bold">LannPya Bot</h1>
+      /* Result message styles */
+      .bot-msg {
+        background-color: #e5e7eb;
+        color: #1f2937;
+        padding: 1rem;
+        border-radius: 1.25rem;
+        max-width: 100%;
+        white-space: pre-wrap; /* preserve line breaks */
+        word-break: break-word;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .bot-msg b {
+        font-weight: 700;
+        color: #111827;
+      }
+
+      .dark .bot-msg {
+        background-color: #374151;
+        color: #e5e7eb;
+      }
+
+      .dark .bot-msg b {
+        color: #f9fafb;
+      }
+
+      .user-msg {
+        background-color: #4f46e5;
+        color: #fff;
+        padding: 1rem;
+        border-radius: 1.25rem;
+        max-width: 100%;
+        word-break: break-word;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gray-200 dark:bg-gray-900 flex flex-col h-screen transition-colors duration-300"
+  >
+    <!-- Header -->
+    <header
+      class="bg-indigo-900 dark:bg-indigo-900 text-white p-4 flex items-center justify-between relative transition-colors duration-300"
+    >
+      <button id="menu-btn" class="focus:outline-none">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+      </button>
+
+      <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
+        <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" />
+        <h1 class="text-lg font-bold">LannPya Bot</h1>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a
+          href="{{ url_for('home') }}"
+          class="text-sm bg-white text-indigo-900 font-semibold px-3 py-1 rounded hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-600 transition-colors"
+        >
+          Back
+        </a>
+      </div>
+    </header>
+
+    <!-- Side Nav -->
+    <div
+      id="side-nav"
+      class="fixed top-0 left-0 h-full w-64 bg-indigo-900 dark:bg-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-50"
+    >
+      <div class="p-4 text-xl font-bold border-b border-indigo-600 dark:border-indigo-700">
+        Menu
+      </div>
+      <nav class="flex flex-col p-4 space-y-4">
+        <a href="{{ url_for('home') }}" class="hover:text-gray-300">Home</a>
+        <a href="{{ url_for('chat_page') }}" class="hover:text-gray-300">Chat</a>
+        <a href="{{ url_for('scenario_simulation_page') }}" class="hover:text-gray-300">Scenario Simulation</a>
+        <a href="{{ url_for('interactive_quiz_page') }}" class="hover:text-gray-300">Interactive Quiz</a>
+        
+                 <!-- Theme Toggle Section -->
+         <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
+           <div class="flex items-center justify-between">
+             <span class="text-sm text-gray-300">Theme</span>
+             <button
+               id="theme-toggle"
+               class="relative inline-flex h-8 w-16 items-center rounded-full bg-indigo-600 dark:bg-indigo-400 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-800 dark:focus:ring-offset-indigo-900"
+             >
+               <span
+                 class="inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-300 ease-in-out translate-x-1 dark:translate-x-9"
+               ></span>
+               <span class="absolute left-1 text-xs">🌙</span>
+               <span class="absolute right-1 text-xs">☀️</span>
+             </button>
+           </div>
+         </div>
+
+        <!-- Developer Credits -->
+        <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
+          <div class="text-center">
+            <p class="text-xs text-gray-300 font-medium">
+              Developed by <span class="text-indigo-300 font-semibold">GUSTO College Team</span>
+            </p>
+            <p class="text-xs text-gray-400 mt-1 leading-tight">
+              <span class="text-indigo-300 font-medium"><br>LannPya Bot</span><br><br>
+              Kaung Zaw Hein <br><br>Aung Min Myat<br><br>Zin Zin Pwint Han
+            </p>
+          </div>
+        </div>
+      </nav>
     </div>
-    <div class="flex items-center gap-2">
-      <a href="{{ url_for('home') }}" class="text-sm bg-white text-indigo-900 font-semibold px-3 py-1 rounded hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-600 transition-colors">
-        Back
-      </a>
-    </div>
-  </header>
 
-  <div id="side-nav" class="fixed top-0 left-0 h-full w-64 bg-indigo-900 dark:bg-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-50">
-    <div class="p-4 text-xl font-bold border-b border-indigo-600 dark:border-indigo-700">Menu</div>
-    <nav class="flex flex-col p-4 space-y-4">
-      <a href="{{ url_for('home') }}" class="hover:text-gray-300">Home</a>
-      <a href="{{ url_for('content_checker_page') }}" class="hover:text-gray-300">Content Checker</a>
-      <a href="{{ url_for('scenario_simulation_page') }}" class="hover:text-gray-300">Scenario Simulation</a>
-      <a href="{{ url_for('interactive_quiz_page') }}" class="hover:text-gray-300">Interactive Quiz</a>
-      <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
-        <div class="flex items-center justify-between">
-          <span class="text-sm text-gray-300">Theme</span>
-          <button id="theme-toggle" class="relative inline-flex h-8 w-16 items-center rounded-full bg-indigo-600 dark:bg-indigo-400 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-800 dark:focus:ring-offset-indigo-900">
-            <span class="inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-300 ease-in-out translate-x-1 dark:translate-x-9"></span>
-            <span class="absolute left-1 text-xs">🌙</span>
-            <span class="absolute right-1 text-xs">☀️</span>
-          </button>
+    <!-- Overlay -->
+    <div
+      id="overlay"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"
+    ></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 overflow-y-auto transition-colors duration-300">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">Content Checker</h2>
+        <p class="text-gray-600 dark:text-gray-300 mb-4" style="line-height: 2.0">စာသားကို ကူးထည့်ပြီး အန္တရာယ်နှင့် ယုံကြည်စိတ်ချရမှုကို ဆန်းစစ်နိုင်ရန် အသေးစိတ်အချက်အလက်များ ထည့်သွင်းပါ။</p>
+        <div id="errorBanner" class="hidden mb-4 p-3 rounded-lg border-2 border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-900/30 dark:text-red-200">ကျေးဇူးပြု၍ အနီရောင်ဖြစ်နေသော အချက်အလက်များကို ဖြည့်ပေးပါ။</div>
+      </div>
+      <div class="relative w-full mb-4 max-w-4xl mx-auto">
+        <!-- Watermark -->
+        <div
+          id="watermark"
+          class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-gray-400 dark:text-gray-500 transition-colors"
+        >
+          <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-20 opacity-40 mb-2" />
+          <p class="text-center">ဤနေရာတွင် စာသားကိုဖော်ပြပါ။ အကောင်းဆုံးစစ်ဆေးပေးပါမယ် ✨</p>
+        </div>
+
+        <!-- Textarea -->
+        <textarea
+          id="contentInput"
+          rows="10"
+          class="w-full border-2 border-gray-300 dark:border-gray-600 rounded-lg p-4 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none transition-colors"
+        ></textarea>
+      </div>
+
+      <!-- Extra metadata fields -->
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+        <!-- Poster -->
+        <div>
+          <label for="posterSelect" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">တင်ပြသူ</label>
+          <div class="relative">
+            <select id="posterSelect" class="appearance-none w-full border-2 border-gray-200 dark:border-gray-700 rounded-xl p-3 pr-10 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400">
+              <option value="" disabled selected hidden>Choose…</option>
+              <option value="Person">လူပုဂ္ဂိုလ်</option>
+              <option value="News Organization">သတင်းဌာန</option>
+              <option value="Government">အစိုးရအဖွဲ့အစည်း</option>
+              <option value="Celebrity">အနုပညာရှင်</option>
+              <option value="Other">အခြား</option>
+            </select>
+            <svg class="pointer-events-none w-5 h-5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+          </div>
+          <input id="posterOther" type="text" placeholder="အတိအကျဖော်ပြနိုင်" class="mt-2 w-full border-2 border-gray-300 dark:border-gray-600 rounded-lg p-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hidden" />
+        </div>
+
+        <!-- Date -->
+        <div>
+          <label for="dateInput" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+            အချိန်နေ့ရက်
+          </label>
+
+                     <!-- Wrapper with placeholder-like text -->
+           <div class="relative">
+             <input 
+               id="dateInput" 
+               type="datetime-local" 
+               class="peer w-full border-2 border-gray-200 dark:border-gray-700 rounded-xl p-3 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400"
+             />
+           </div>
+        </div>
+
+
+        <!-- Platform -->
+        <div>
+          <label for="platformSelect" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Platform</label>
+          <div class="relative">
+            <select id="platformSelect" class="appearance-none w-full border-2 border-gray-200 dark:border-gray-700 rounded-xl p-3 pr-10 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400">
+              <option value="" disabled selected hidden>Choose…</option>
+              <option value="Facebook">Facebook</option>
+              <option value="Twitter">Twitter</option>
+              <option value="Telegram">Telegram</option>
+              <option value="Viber">Viber</option>
+              <option value="News Website">Website</option>
+              <option value="Other">အခြား</option>
+            </select>
+            <svg class="pointer-events-none w-5 h-5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+          </div>
+          <input id="platformOther" type="text" placeholder="အတိအကျဖော်ပြနိုင်" class="mt-2 w-full border-2 border-gray-300 dark:border-gray-600 rounded-lg p-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hidden" />
         </div>
       </div>
-      <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
-        <div class="text-center">
-          <p class="text-xs text-gray-300 font-medium">
-            Developed by <span class="text-indigo-300 font-semibold">GUSTO College Team</span>
-          </p>
-          <p class="text-xs text-gray-400 mt-1 leading-tight">
-            <span class="text-indigo-300 font-medium"><br>LannPya Bot</span><br><br>
-            Kaung Zaw Hein <br><br>Aung Min Myat<br><br>Zin Zin Pwint Han
-          </p>
+
+      <!-- Button -->
+      <div class="flex justify-center items-center gap-3">
+        <button
+          id="checkBtn"
+          class="mt-4 bg-indigo-900 dark:bg-indigo-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors"
+        >
+          စစ်ဆေးပါ
+        </button>
+        <!-- Loading Spinner -->
+        <div id="loading-spinner" class="hidden text-center mt-4">
+          <svg class="animate-spin h-6 w-6 text-indigo-600 dark:text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
         </div>
       </div>
-    </nav>
-  </div>
-  <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
-  <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md mx-4 transition-colors duration-300">
-      <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">⚠️ သတိပေးချက်</h3>
-      <p class="text-gray-600 dark:text-gray-300 mb-6" style="line-height:2.0">
-        ဤစာမျက်နှာမှ ထွက်ခွာရန် သေချာပါသလား? <strong>စကားပြောဆိုမှု မှတ်တမ်းအားလုံး အပြီးတိုင်ဖျက်ဆီးခံရမည်</strong> ဖြစ်ပြီး ဆွေးနွေးမှုအကြောင်းအရာ ဆက်စပ်မှုများ ဆုံးရှုံးသွားမည်ဖြစ်သည်။
-      </p>
-      <div class="flex gap-3 justify-end">
-        <button id="cancel-leave" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium">ဆက်နေမည်</button>
-        <button id="confirm-leave" class="px-4 py-2 bg-red-600 dark:bg-red-500 text-white rounded hover:bg-red-700 dark:hover:bg-red-600 font-medium">ထွက်မည်</button>
+
+      <!-- Results -->
+      <div id="results" class="mt-6 hidden max-w-4xl mx-auto transition-colors">
+        <div class="rounded-2xl border-2 border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 shadow p-5 transition-colors duration-300">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-lg font-bold text-gray-800 dark:text-gray-200">AI Analysis</h2>
+          </div>
+          <div id="resultText" class="bot-msg dark:bg-gray-700 dark:text-gray-200"></div>
+        </div>
       </div>
-    </div>
-  </div>
+    </main>
 
-  <main id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 transition-colors duration-300">
-    <div class="flex items-start space-x-2">
-      <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6" />
-      <div class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-4 rounded-3xl max-w-md shadow-md break-words leading-relaxed transition-colors duration-300">
-        မင်္ဂလာပါ <b>LannPya Bot (လမ်းပြဘော့)</b> က ကြိုဆိုပါတယ်!<br><br>
-        ဒီနေ့ <b>Cybersecurity (ဆိုက်ဘာလုံခြုံရေး)</b> နှင့် <b>Privacy (ကိုယ်ရေးကိုယ်တာလုံခြုံမှု)</b> နဲ့ပတ်သက်ပြီး ဘာများကူညီဆောင်ရွက်ပေးရမလဲ။
-      </div>
-    </div>
-  </main>
+    <script>
+      // Sidebar toggle
+      const menuBtn = document.getElementById("menu-btn");
+      const sideNav = document.getElementById("side-nav");
+      const overlay = document.getElementById("overlay");
+      menuBtn.addEventListener("click", () => {
+        sideNav.classList.toggle("-translate-x-full");
+        overlay.classList.toggle("hidden");
+      });
+      overlay.addEventListener("click", () => {
+        sideNav.classList.add("-translate-x-full");
+        overlay.classList.add("hidden");
+      });
 
-  <form id="chat-form" class="p-4 flex items-end gap-2">
-    <textarea id="chat-input" placeholder="ဒီမှာစာရိုက်ပါ..." rows="1" class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-3xl resize-none overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"></textarea>
-    <button type="submit" class="bg-indigo-900 dark:bg-indigo-700 text-white px-4 py-2 mb-1 rounded-full hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors flex items-center justify-center">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-      </svg>
-    </button>
-  </form>
+      // Watermark logic
+      const textarea = document.getElementById("contentInput");
+      const watermark = document.getElementById("watermark");
+      textarea.addEventListener("input", () => {
+        watermark.classList.toggle("hidden", textarea.value.trim().length > 0);
+      });
 
-  <script>
-    const chatForm = document.getElementById("chat-form");
-    const chatInput = document.getElementById("chat-input");
-    const chatContainer = document.getElementById("chat-container");
-    const confirmationModal = document.getElementById("confirmation-modal");
-    const cancelLeaveBtn = document.getElementById("cancel-leave");
-    const confirmLeaveBtn = document.getElementById("confirm-leave");
+      const checkBtn = document.getElementById("checkBtn");
+      const results = document.getElementById("results");
+      const resultText = document.getElementById("resultText");
+      const loadingSpinner = document.getElementById("loading-spinner");
+      const posterSelect = document.getElementById("posterSelect");
+      const posterOther = document.getElementById("posterOther");
+      const dateInput = document.getElementById("dateInput");
+      const datePlaceholder = document.getElementById("datePlaceholder");
+      const platformSelect = document.getElementById("platformSelect");
+      const platformOther = document.getElementById("platformOther");
+      const errorBanner = document.getElementById("errorBanner");
 
-    function scrollToBottom() {
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-    chatInput.addEventListener("input", () => {
-      chatInput.style.height = "auto";
-      chatInput.style.height = `${chatInput.scrollHeight}px`;
-    });
-    function showConfirmationModal() {
-      confirmationModal.classList.remove("hidden");
-    }
-    function hideConfirmationModal() {
-      confirmationModal.classList.add("hidden");
-    }
-    cancelLeaveBtn.addEventListener("click", hideConfirmationModal);
-    confirmLeaveBtn.addEventListener("click", () => {
-      window.location.href = "{{ url_for('home') }}";
-    });
-    document.querySelector('a[href="{{ url_for("home") }}"]').addEventListener('click', (e) => {
-      e.preventDefault();
-      showConfirmationModal();
-    });
-    
+      checkBtn.addEventListener("click", async () => {
+        const content = textarea.value.trim();
 
-    const menuBtn = document.getElementById("menu-btn");
-    const sideNav = document.getElementById("side-nav");
-    const overlay = document.getElementById("overlay");
-    const themeToggle = document.getElementById("theme-toggle");
-    menuBtn.addEventListener("click", () => {
-      sideNav.classList.toggle("-translate-x-full");
-      overlay.classList.toggle("hidden");
-    });
-    overlay.addEventListener("click", () => {
-      sideNav.classList.add("-translate-x-full");
-      overlay.classList.add("hidden");
-    });
-    const html = document.documentElement;
-    const toggleSlider = themeToggle.querySelector('span');
-    if (localStorage.getItem("theme") === "light") {
-      html.classList.remove("dark");
-      toggleSlider.style.transform = "translateX(0.25rem)";
-    } else {
-      html.classList.add("dark");
-      toggleSlider.style.transform = "translateX(2.25rem)";
-    }
-    themeToggle.addEventListener("click", () => {
-      if (html.classList.contains("dark")) {
+        // Reset previous highlights
+        [posterSelect, dateInput, platformSelect, posterOther, platformOther, textarea].forEach(el=>{ if(!el) return; el.classList.remove("ring-2","ring-red-500","border-red-400"); });
+
+        // Resolve values and validate required fields
+        const poster = posterSelect.value === "Other" ? posterOther.value.trim() : posterSelect.value;
+        const date = dateInput.value;
+        const platform = platformSelect.value === "Other" ? platformOther.value.trim() : platformSelect.value;
+
+        let missing = [];
+        if (!content) missing.push(textarea);
+        if (!poster) missing.push(posterSelect);
+        if (posterSelect.value === "Other" && !posterOther.value.trim()) missing.push(posterOther);
+        if (!date) missing.push(dateInput);
+        if (!platform) missing.push(platformSelect);
+        if (platformSelect.value === "Other" && !platformOther.value.trim()) missing.push(platformOther);
+
+        if (missing.length) {
+          missing.forEach(el=>{ if(!el) return; el.classList.add("ring-2","ring-red-500","border-red-400"); });
+          errorBanner.classList.remove("hidden");
+          errorBanner.scrollIntoView({ behavior:'smooth', block:'center' });
+          return;
+        } else {
+          errorBanner.classList.add("hidden");
+        }
+
+        checkBtn.textContent = "စစ်ဆေးနေသည်";
+        checkBtn.disabled = true;
+        loadingSpinner.classList.remove("hidden");
+        resultText.textContent = "Analyzing content...";
+
+        try {
+          const response = await fetch('/content-check', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content, poster, date, platform })
+          });
+
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+          const data = await response.json();
+
+          // Render line breaks and bold
+          resultText.innerHTML = data.result
+            .replace(/\n/g, "<br>")
+            .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+          results.classList.remove("hidden");
+
+        } catch (err) {
+          console.error(err);
+          resultText.textContent = "Sorry, an error occurred while checking the content. Please try again.";
+          results.classList.remove("hidden");
+        } finally {
+          checkBtn.textContent = "စစ်ဆေးပါ";
+          checkBtn.disabled = false;
+          loadingSpinner.classList.add("hidden");
+        }
+      });
+
+      function toggleOther(selectEl, otherInputEl) {
+        if (selectEl.value === "Other") {
+          otherInputEl.classList.remove("hidden");
+          otherInputEl.focus();
+        } else {
+          otherInputEl.classList.add("hidden");
+          otherInputEl.value = "";
+        }
+      }
+      posterSelect.addEventListener("change", () => toggleOther(posterSelect, posterOther));
+      platformSelect.addEventListener("change", () => toggleOther(platformSelect, platformOther));
+
+      // Handle date input placeholder visibility
+      dateInput.addEventListener("input", () => {
+        if (dateInput.value) {
+          datePlaceholder.classList.add("hidden");
+        } else {
+          datePlaceholder.classList.remove("hidden");
+        }
+      });
+
+      // Theme toggle
+      const themeToggle = document.getElementById("theme-toggle");
+      const html = document.documentElement;
+      const toggleSlider = themeToggle.querySelector('span');
+      
+      if (localStorage.getItem("theme") === "light") {
         html.classList.remove("dark");
-        localStorage.setItem("theme", "light");
         toggleSlider.style.transform = "translateX(0.25rem)";
       } else {
         html.classList.add("dark");
-        localStorage.setItem("theme", "dark");
         toggleSlider.style.transform = "translateX(2.25rem)";
       }
-    });
-    window.onload = function () {
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      const message = urlParams.get("q");
-      if (message) {
-        chatInput.value = message;
-        chatInput.style.height = "auto";
-        chatInput.style.height = `${chatInput.scrollHeight}px`;
-      }
-    };
-    chatInput.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        chatForm.dispatchEvent(new Event("submit", { cancelable: true }));
-      }
-    });
-
-    let conversation = [];
-    chatForm.addEventListener("submit", async function (e) {
-      e.preventDefault();
-      const message = chatInput.value.trim();
-      if (!message) return;
       
-      conversation.push({ role: "user", content: message });
-      
-      const userMsg = document.createElement("div");
-      userMsg.className = "flex items-start justify-end space-x-2";
-      userMsg.innerHTML = `
-        <div class="bg-indigo-900 dark:bg-indigo-700 text-white p-3 rounded-2xl max-w-xs">${message}</div>
-        <img src="{{ url_for('static', filename='images/myanmarFlag.png') }}" class="w-10 h-10 rounded-full">
-      `;
-      chatContainer.appendChild(userMsg);
-      scrollToBottom();
-      
-      chatInput.value = "";
-      chatInput.style.height = "auto";
-      
-      const typingIndicator = document.createElement("div");
-      typingIndicator.className = "flex items-start space-x-2 bot-typing";
-      typingIndicator.innerHTML = `
-        <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6">
-        <div class="bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 p-3 rounded-2xl max-w-xs flex space-x-1 transition-colors duration-300">
-          <span class="dot">•</span><span class="dot">•</span><span class="dot">•</span>
-        </div>`;
-      chatContainer.appendChild(typingIndicator);
-      scrollToBottom();
-      
-      try {
-        const response = await fetch("/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: message })
-        });
-        const data = await response.json();
-        
-        typingIndicator.remove();
-        
-        const botMsg = document.createElement("div");
-        botMsg.className = "flex items-start space-x-2";
-        botMsg.innerHTML = `
-          <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6">
-          <div class="bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 p-3 rounded-2xl max-w-xs transition-colors duration-300">
-          ${data.reply.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")}</div>`;
-        chatContainer.appendChild(botMsg);
-        scrollToBottom();
-        
-        conversation.push({ role: "assistant", content: data.reply });
-      } catch (error) {
-        typingIndicator.remove();
-        console.error(error);
-        const errorMsg = document.createElement("div");
-        errorMsg.className = "flex items-start space-x-2";
-        errorMsg.innerHTML = `
-          <img src="{{ url_for('static', filename='images/bot.png') }}" class="w-6 h-6">
-          <div class="bg-red-300 dark:bg-red-900 text-red-800 dark:text-red-200 p-3 rounded-2xl max-w-xs transition-colors duration-300">
-            Sorry, I encountered an error. Please try again.
-          </div>`;
-        chatContainer.appendChild(errorMsg);
-        scrollToBottom();
-      }
-    });
-  </script>
-</body>
+      themeToggle.addEventListener("click", () => {
+        if (html.classList.contains("dark")) {
+          html.classList.remove("dark");
+          localStorage.setItem("theme", "light");
+          toggleSlider.style.transform = "translateX(0.25rem)";
+        } else {
+          html.classList.add("dark");
+          localStorage.setItem("theme", "dark");
+          toggleSlider.style.transform = "translateX(2.25rem)";
+        }
+      });
+    </script>
+  </body>
 </html>
