@@ -30,6 +30,14 @@
         border-radius: 3px;
       }
 
+      html {
+      overflow: hidden; 
+      }
+      main {
+        -webkit-overflow-scrolling: touch; 
+        will-change: transform; 
+      }
+
       /* Result message styles */
       .bot-msg {
         background-color: #e5e7eb;
@@ -71,7 +79,7 @@
   >
     <!-- Header -->
     <header
-      class="bg-indigo-900 dark:bg-indigo-700 text-white p-4 flex items-center justify-between relative transition-colors duration-300"
+      class="bg-indigo-900 dark:bg-indigo-900 text-white p-4 flex items-center justify-between relative transition-colors duration-300"
     >
       <button id="menu-btn" class="focus:outline-none">
         <svg
@@ -108,7 +116,7 @@
     <!-- Side Nav -->
     <div
       id="side-nav"
-      class="fixed top-0 left-0 h-full w-64 bg-indigo-800 dark:bg-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-50"
+      class="fixed top-0 left-0 h-full w-64 bg-indigo-900 dark:bg-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-50"
     >
       <div class="p-4 text-xl font-bold border-b border-indigo-600 dark:border-indigo-700">
         Menu
