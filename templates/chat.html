@@ -22,14 +22,28 @@
         }
 
         html, body {
-        height: 100dvh; 
-        }
+    height: 100dvh; 
+    display: flex;
+    flex-direction: column;
+    }
 
-        #chat-container {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        }
+    #chat-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    padding-bottom: 7rem;
+    }
+
+    #chat-form-container {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--your-background-color); /* Use tailwind colors or variables */
+    }
+
+    #chat-form-container {
+        transform: none !important;
+    }
 
 
         ::-webkit-scrollbar {
@@ -177,7 +191,7 @@
 
 
     <script>
-        //new5
+        //new6
         const chatForm = document.getElementById("chat-form");
         const chatInput = document.getElementById("chat-input");
         const chatContainer = document.getElementById("chat-container");
@@ -194,45 +208,6 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
-        function handleLayout() {
-    if (!header || !chatFormContainer) return;
-
-    const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-    const documentHeight = window.innerHeight;
-    const headerHeight = header.offsetHeight;
-    const formHeight = chatFormContainer.offsetHeight;
-
-    // Detect if keyboard is open
-    const keyboardOpen = viewportHeight < documentHeight - 100;
-    const keyboardHeight = keyboardOpen ? (documentHeight - viewportHeight) : 0;
-
-    // Move form up above the keyboard
-    chatFormContainer.style.transform = `translateY(-${keyboardHeight}px)`;
-
-    // Resize chat container so it fills remaining space
-    const chatHeight = viewportHeight - headerHeight - formHeight;
-    chatContainer.style.height = `${chatHeight}px`;
-
-    scrollToBottom();
-}
-
-
-
-        // Attach listeners
-        if (window.visualViewport) {
-            window.visualViewport.addEventListener("resize", handleLayout);
-            window.visualViewport.addEventListener("scroll", handleLayout); // iOS Safari
-        }
-        window.addEventListener("orientationchange", handleLayout);
-        window.addEventListener("load", handleLayout);
-        window.addEventListener("resize", handleLayout);
-
-        // Auto-resize textarea
-        chatInput.addEventListener("input", () => {
-            chatInput.style.height = "auto";
-            chatInput.style.height = `${chatInput.scrollHeight}px`;
-            handleLayout();
-        });
 
 
         
