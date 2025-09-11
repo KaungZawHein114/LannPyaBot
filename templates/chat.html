@@ -177,7 +177,7 @@
 
 
     <script>
-        //new3
+        //new5
         const chatForm = document.getElementById("chat-form");
         const chatInput = document.getElementById("chat-input");
         const chatContainer = document.getElementById("chat-container");
@@ -188,12 +188,6 @@
         const header = document.querySelector("header");
         const chatFormContainer = document.getElementById("chat-form-container");
         const input = document.querySelector('#chat-form textarea');
-
-        input.addEventListener('focus', () => {
-        setTimeout(() => {
-            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 300); // wait for keyboard animation
-        });
 
 
         function scrollToBottom() {
