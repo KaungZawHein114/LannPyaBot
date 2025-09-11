@@ -111,7 +111,7 @@
 
         <div class="flex items-center gap-3 mb-6">
           <button id="startScenario" onclick="startScenario()" class="bg-indigo-900 dark:bg-indigo-900 text-white px-6 py-3 rounded-lg hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors">စတင် ဆန်းစစ်ပါ</button>
-          <button id="anotherScenario" onclick="restartScenario()" style="display:none;" class="bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-100 px-6 py-3 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">အသစ် လုပ်ပါ</button>
+          <button id="anotherScenario" onclick="restartScenario()" style="display:none;" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 px-6 py-3 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">အသစ် လုပ်ပါ</button>
         </div>
         <div id="errorBanner" class="hidden mb-4 p-3 rounded-lg border-2 border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-900/30 dark:text-red-200">ကျေးဇူးပြု၍ အနီရောင်မေးခွန်းအားလုံးဖြေဆိုပေးပါ။</div>
         <div id="scenarioQuestions" class="space-y-4 mb-6"></div>
@@ -178,21 +178,21 @@
                     
                     <div>
                       <input type="radio" name="answer_${idx}" id="answer_${idx}_yes" value="Yes" class="sr-only peer">
-                      <label for="answer_${idx}_yes" class="block w-full text-center p-3 rounded-lg border-2 border-gray-200 dark:border-gray-600 dark:text-gray-200 cursor-pointer transition-colors font-medium hover:bg-gray-50 dark:hover:bg-gray-700 peer-checked:bg-indigo-800 peer-checked:text-white peer-checked:border-indigo-800">
+                      <label for="answer_${idx}_yes" class="block w-full text-center p-3 rounded-lg border-2 border-gray-200 dark:border-gray-600 dark:text-white cursor-pointer transition-colors font-medium hover:bg-gray-50 dark:hover:bg-gray-700 peer-checked:bg-indigo-800 peer-checked:text-white peer-checked:border-indigo-800">
                         ဟုတ်ပါတယ်
                       </label>
                     </div>
 
                     <div>
                       <input type="radio" name="answer_${idx}" id="answer_${idx}_no" value="No" class="sr-only peer">
-                      <label for="answer_${idx}_no" class="block w-full text-center p-3 rounded-lg border-2 border-gray-200 dark:border-gray-600 dark:text-gray-200 cursor-pointer transition-colors font-medium hover:bg-gray-50 dark:hover:bg-gray-700 peer-checked:bg-indigo-800 peer-checked:text-white peer-checked:border-indigo-800">
+                      <label for="answer_${idx}_no" class="block w-full text-center p-3 rounded-lg border-2 border-gray-200 dark:border-gray-600 dark:text-white cursor-pointer transition-colors font-medium hover:bg-gray-50 dark:hover:bg-gray-700 peer-checked:bg-indigo-800 peer-checked:text-white peer-checked:border-indigo-800">
                         မဟုတ်ပါ
                       </label>
                     </div>
 
                     <div>
                       <input type="radio" name="answer_${idx}" id="answer_${idx}_notsure" value="Not Sure" class="sr-only peer">
-                      <label for="answer_${idx}_notsure" class="block w-full text-center p-3 rounded-lg border-2 border-gray-200 dark:border-gray-600 dark:text-gray-200 cursor-pointer transition-colors font-medium hover:bg-gray-50 dark:hover:bg-gray-700 peer-checked:bg-indigo-800 peer-checked:text-white peer-checked:border-indigo-800">
+                      <label for="answer_${idx}_notsure" class="block w-full text-center p-3 rounded-lg border-2 border-gray-200 dark:border-gray-600 dark:text-white cursor-pointer transition-colors font-medium hover:bg-gray-50 dark:hover:bg-gray-700 peer-checked:bg-indigo-800 peer-checked:text-white peer-checked:border-indigo-800">
                         မသေချာဘူး
                       </label>
                     </div>
