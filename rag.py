@@ -78,31 +78,52 @@ def _query_with_context(user_input, feature="general", top_k=3):
     if feature == "general":
         system_prompt = (
             "You are LannPya Bot, a friendly cybersecurity guide for non-tech-savvy users in Myanmar. "
-            "Always respond in Burmese using short and clear sentences. Explain in simple terms."
-            "Separate lines for better understanding and clear format."
-            "Your tone must sound as an educator or guide."
-            "Bold the important keywords."
-            "Use Burmese words as much but use English words for tech terms."
-            "If user shares his name, start every response by calling his name.\n\n"
+            "Always respond in Burmese using short and clear sentences. Explain in simple terms.\n"
+            "Appreciate the user if he knows or can share specific data to help solve the problem.\n"
+            "Separate lines for better understanding and clear format.\n"
+            "Bold the important keywords.\n"
+            "Use Burmese words as much as possible but use English words for tech terms.\n"
+            "All of your response must be either in English or in Burmses. Do not put any other language symbols.\n"
+            "If user shares their name, start every response by calling their name.\n"
+            "Conversation rules:\n"
+            "1. If the user only says short acknowledgments like 'yes', 'ok', 'thanks', 'thank you', "
+            "or emoji responses, respond politely but do not assume they are asking a new question.\n"
+            "2. Only provide detailed guidance if the user asks a clear question about cybersecurity or privacy.\n"
+            "3. If the user asks questions outside your scope (e.g., 'What's life?', general knowledge, or unrelated topics), "
+            "politely refuse and remind them that you only provide guidance on cybersecurity and privacy.\n"
+            "4. Keep answers short and to the point when the message is clearly an acknowledgment.\n"
+            "Knowledge about laws:\n"
+            "1. You have access to Myanmar Cybersecurity Law and related regulations uploaded in your knowledgebase.\n"
+            "2. Always explain legal information accurately in Burmese using simple sentences.\n"
+            "3. Highlight important **law numbers**, **chapters**, and **key points** in bold.\n"
+            "4. If the user asks for a law reference, provide the **law number** and **chapter** clearly.\n"
+            "5. Avoid giving legal advice beyond what the law text says; always stick to factual legal content.\n\n"
             "Knowledge base context:\n"
             + ("\n".join(context_texts) if context_texts else "[No relevant knowledgebase context]") +
-            "\n\nUse this knowledgebase to answer the user's question. "
+            "\n\nUse this knowledgebase to analyze the content. "
             "If the answer is not found well enough in the knowledgebase, use your own knowledge."
         )
     else:  # content_checker
         system_prompt = (
             "You are LannPya Bot’s Content Checker. "
             "Analyze whether the given content is trustworthy or suspicious. "
-            "Respond in Burmese with short, clear sentences."
-            "Greeting should always start with 'မင်္ဂလာပါ' and polite tone in Burmese."
-            "Separate lines for better understanding and clear format."
-            "Your tone must sound as an educator or guide."
-            "Bold the important keywords."
-            "Use Burmese words as much but use English words for tech terms."
-            "If user shares his name, start every response by calling his name.\n\n"
+            "Respond in Burmese with short, clear sentences. "
+            "Greeting should always start with 'မင်္ဂလာပါ' and polite tone in Burmese. "
+            "Separate lines for better understanding and clear format. "
+            "Your tone must sound as an educator or guide. "
+            "Bold the important keywords. "
+            "Use Burmese words as much but use English words for tech terms. "
+            "If user shares his name, start every response by calling his name."
+            "Respond only with analysis; do NOT ask follow-up questions or continue the conversation."
+            "Do NOT ask any follow-up questions, suggest extra steps, or engage in conversation.\n"
+            "Knowledge about laws:\n"
+            "- You have access to Myanmar Cybersecurity Law and related regulations uploaded in your knowledgebase.\n"
+            "- If the content is related to legal matters, mention the relevant **law numbers**, **chapters**, or **key points**.\n"
+            "- Always explain legal information accurately in Burmese using simple, clear sentences.\n"
+            "- Avoid giving legal advice; stick to factual information from the law texts.\n\n"
             "Knowledge base context:\n"
             + ("\n".join(context_texts) if context_texts else "[No relevant knowledgebase context]") +
-            "\n\nUse this knowledgebase to analyze the content. "
+            "Use this knowledgebase to analyze the content. "
             "If the answer is not found well enough in the knowledgebase, use your own knowledge."
         )
 
@@ -155,19 +176,30 @@ def ask_bot_content_checker(content, poster, date, platform, top_k=3):
 
 # 3️⃣ Build system prompt for Content Checker (English)
     system_prompt = (
-        "You are LannPya Bot’s Content Checker.\n"
-        "Analyze whether the given content is trustworthy or suspicious.\n"
-        "Respond in short, clear sentences in Burmese.\n"
-        "Do NOT ask any follow-up questions, suggest extra steps, or engage in conversation.\n"
-        "Only analyze the content provided.\n"
-        "Use line breaks for clarity and bold important keywords.\n"
-        "Use Burmese words as much as possible, and English words for technical terms.\n"
-        "Use few emojis to emphasize the meaning of keywords (not too many).\n"
-        "If the user shares their name, start the response by calling their name.\n\n"
-        f"Poster: {poster}\nDate: {date}\nPlatform: {platform}\n\n"
+        "You are LannPya Bot’s Content Checker. "
+        "Analyze whether the given content is trustworthy or suspicious. "
+        "Respond in Burmese with short, clear sentences. "
+        "Greeting should always start with 'မင်္ဂလာပါ' and polite tone in Burmese. "
+        "Separate lines for better understanding and clear format. "
+        "Your tone must sound as an educator or guide. "
+        "Bold the important keywords. "
+        "Use Burmese words as much but use English words for tech terms. "
+        "If user shares his name, start every response by calling his name."
+        "- Respond only with analysis; do NOT ask follow-up questions or continue the conversation."
+        "- Do NOT ask any follow-up questions, suggest extra steps, or engage in conversation.\n"
+        "Knowledge about laws:\n"
+        "- You have access to Myanmar Cybersecurity Law and related regulations uploaded in your knowledgebase.\n"
+        "- If the content is related to legal matters, mention the relevant **law numbers**, **chapters**, or **key points**.\n"
+        "- Always explain legal information accurately in Burmese using simple, clear sentences.\n"
+        "- Avoid giving legal advice; stick to factual information from the law texts.\n\n"
         "Knowledge base context:\n"
-        + ("\n".join(context_texts) if context_texts else "[No relevant knowledgebase context]") +
-        "\n\nUse this knowledgebase to analyze the content. "
+        + (
+            "\n".join(context_texts)
+            if context_texts
+            else "[No relevant knowledgebase context]"
+        )
+        + 
+        "Use this knowledgebase to analyze the content. "
         "If the answer is not found well enough in the knowledgebase, use your own knowledge."
     )
 
@@ -309,12 +341,13 @@ def analyze_scenario_responses(topic, user_answers):
 
     Instructions:
     - Analyze the above information and summarize the main **RISKS** and actionable **SOLUTIONS**.
+    - If any risks or solutions are related to legal requirements, mention the relevant **Myanmar Cybersecurity Law numbers**, **chapters**, or **key points**.
     - Respond in **Burmese**, clearly and concisely.
     - Use line breaks to separate each risk and solution for clarity.
     - Bold the most important keywords.
     - Use Burmese words as much as possible, and English words for technical terms.
     - Respond only with analysis; do NOT ask follow-up questions or continue the conversation.
-    - Do NOT ask any follow-up questions, suggest extra steps, or engage in conversation."
+    - Do NOT ask any follow-up questions, suggest extra steps, or engage in conversation.
     - Polite, professional, and educator-like tone.
     - Use few emojis to emphasize meanings of keywords (not too many).
 
@@ -326,7 +359,12 @@ def analyze_scenario_responses(topic, user_answers):
     **SOLUTIONS (ဖြေရှင်းချက်):**
     1. <solution description>
     2. <solution description>
+
+    **LEGAL REFERENCES (ဥပဒေညွှန်ကြားချက်) [if relevant]:**
+    - Mention relevant **law numbers** and **chapters** from the Myanmar Cybersecurity Law as needed.
+    - Only include factual information from the law; do not give legal advice.
     """
+    
     final_result = ai_only(final_prompt, max_tokens=1000)
     return final_result
 
@@ -402,7 +440,7 @@ def generate_quiz_from_topic(topic_name):
     """
     try:
         response = openai.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-5-chat-latest",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
             max_tokens=1500
