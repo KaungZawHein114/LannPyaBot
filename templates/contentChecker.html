@@ -30,19 +30,6 @@
         border-radius: 3px;
       }
 
-      .safe-area-bottom {
-        padding-bottom: env(safe-area-inset-bottom, 16px);
-      }
-
-    
-      html {
-        overflow: auto; 
-      }
-      main {
-        -webkit-overflow-scrolling: touch; /* Enables momentum scrolling on iOS */
-        will-change: transform; /* Optimizes the element for smoother scrolling */
-      }
-
       /* Result message styles */
       .bot-msg {
         background-color: #e5e7eb;
@@ -77,20 +64,15 @@
         max-width: 100%;
         word-break: break-word;
       }
-
-      @supports(padding: max(0px)) {
-      .safe-area-bottom {
-        padding-bottom: max(env(safe-area-inset-bottom), 1rem);
-      }
-    }
-
     </style>
   </head>
   <body
     class="bg-gray-200 dark:bg-gray-900 flex flex-col h-screen transition-colors duration-300"
   >
-    <header class="fixed top-0 left-0 w-full bg-indigo-900 dark:bg-indigo-900 text-white p-4 flex items-center justify-between z-50 transition-colors duration-300">
-
+    <!-- Header -->
+    <header
+      class="bg-indigo-900 dark:bg-indigo-900 text-white p-4 flex items-center justify-between relative transition-colors duration-300"
+    >
       <button id="menu-btn" class="focus:outline-none">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -123,9 +105,10 @@
       </div>
     </header>
 
+    <!-- Side Nav -->
     <div
       id="side-nav"
-      class="fixed top-0 left-0 h-full w-64 bg-indigo-900 dark:bg-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-50"
+      class="fixed top-0 left-0 h-full w-64 bg-indigo-800 dark:bg-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-50"
     >
       <div class="p-4 text-xl font-bold border-b border-indigo-600 dark:border-indigo-700">
         Menu
@@ -136,22 +119,24 @@
         <a href="{{ url_for('scenario_simulation_page') }}" class="hover:text-gray-300">Scenario Simulation</a>
         <a href="{{ url_for('interactive_quiz_page') }}" class="hover:text-gray-300">Interactive Quiz</a>
         
-              <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
-          <div class="flex items-center justify-between">
-            <span class="text-sm text-gray-300">Theme</span>
-            <button
-              id="theme-toggle"
-              class="relative inline-flex h-8 w-16 items-center rounded-full bg-indigo-600 dark:bg-indigo-400 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-800 dark:focus:ring-offset-indigo-900"
-            >
-              <span
-                class="inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-300 ease-in-out translate-x-1 dark:translate-x-9"
-              ></span>
-              <span class="absolute left-1 text-xs">🌙</span>
-              <span class="absolute right-1 text-xs">☀️</span>
-            </button>
-          </div>
-        </div>
+                 <!-- Theme Toggle Section -->
+         <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
+           <div class="flex items-center justify-between">
+             <span class="text-sm text-gray-300">Theme</span>
+             <button
+               id="theme-toggle"
+               class="relative inline-flex h-8 w-16 items-center rounded-full bg-indigo-600 dark:bg-indigo-400 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-800 dark:focus:ring-offset-indigo-900"
+             >
+               <span
+                 class="inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-300 ease-in-out translate-x-1 dark:translate-x-9"
+               ></span>
+               <span class="absolute left-1 text-xs">🌙</span>
+               <span class="absolute right-1 text-xs">☀️</span>
+             </button>
+           </div>
+         </div>
 
+        <!-- Developer Credits -->
         <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
           <div class="text-center">
             <p class="text-xs text-gray-300 font-medium">
@@ -166,18 +151,21 @@
       </nav>
     </div>
 
+    <!-- Overlay -->
     <div
       id="overlay"
       class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"
     ></div>
 
-  <main class="flex-1 p-6 overflow-y-auto transition-colors duration-300 pt-16 pb-28">
+    <!-- Main Content -->
+    <main class="flex-1 p-6 overflow-y-auto transition-colors duration-300">
       <div class="max-w-4xl mx-auto">
         <h2 class="text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">Content Checker</h2>
         <p class="text-gray-600 dark:text-gray-300 mb-4" style="line-height: 2.0">စာသားကို ကူးထည့်ပြီး အန္တရာယ်နှင့် ယုံကြည်စိတ်ချရမှုကို ဆန်းစစ်နိုင်ရန် အသေးစိတ်အချက်အလက်များ ထည့်သွင်းပါ။</p>
         <div id="errorBanner" class="hidden mb-4 p-3 rounded-lg border-2 border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-900/30 dark:text-red-200">ကျေးဇူးပြု၍ အနီရောင်ဖြစ်နေသော အချက်အလက်များကို ဖြည့်ပေးပါ။</div>
       </div>
       <div class="relative w-full mb-4 max-w-4xl mx-auto">
+        <!-- Watermark -->
         <div
           id="watermark"
           class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-gray-400 dark:text-gray-500 transition-colors"
@@ -186,6 +174,7 @@
           <p class="text-center">ဤနေရာတွင် စာသားကိုဖော်ပြပါ။ အကောင်းဆုံးစစ်ဆေးပေးပါမယ် ✨</p>
         </div>
 
+        <!-- Textarea -->
         <textarea
           id="contentInput"
           rows="10"
@@ -193,7 +182,9 @@
         ></textarea>
       </div>
 
+      <!-- Extra metadata fields -->
       <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+        <!-- Poster -->
         <div>
           <label for="posterSelect" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">တင်ပြသူ</label>
           <div class="relative">
@@ -210,21 +201,24 @@
           <input id="posterOther" type="text" placeholder="အတိအကျဖော်ပြနိုင်" class="mt-2 w-full border-2 border-gray-300 dark:border-gray-600 rounded-lg p-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hidden" />
         </div>
 
+        <!-- Date -->
         <div>
           <label for="dateInput" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
             အချိန်နေ့ရက်
           </label>
 
-                  <div class="relative">
-            <input 
-              id="dateInput" 
-              type="datetime-local" 
-              class="peer w-full border-2 border-gray-200 dark:border-gray-700 rounded-xl p-3 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400"
-            />
-          </div>
+                     <!-- Wrapper with placeholder-like text -->
+           <div class="relative">
+             <input 
+               id="dateInput" 
+               type="datetime-local" 
+               class="peer w-full border-2 border-gray-200 dark:border-gray-700 rounded-xl p-3 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400"
+             />
+           </div>
         </div>
 
 
+        <!-- Platform -->
         <div>
           <label for="platformSelect" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Platform</label>
           <div class="relative">
@@ -243,22 +237,24 @@
         </div>
       </div>
 
-      <div class="fixed bottom-0 left-0 w-full bg-gray-200 dark:bg-gray-900 p-4 flex justify-center items-center gap-3 z-50 safe-area-bottom">
-      <button
-        id="checkBtn"
-        class="bg-indigo-900 dark:bg-indigo-900 text-white px-4 py-2 rounded-lg hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors w-full max-w-md"
-      >
-        စစ်ဆေးပါ
-      </button>
-      <div id="loading-spinner" class="hidden text-center">
-        <svg class="animate-spin h-6 w-6 text-indigo-600 dark:text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
+      <!-- Button -->
+      <div class="flex justify-center items-center gap-3">
+        <button
+          id="checkBtn"
+          class="mt-4 bg-indigo-900 dark:bg-indigo-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-800 dark:hover:bg-indigo-600 transition-colors"
+        >
+          စစ်ဆေးပါ
+        </button>
+        <!-- Loading Spinner -->
+        <div id="loading-spinner" class="hidden text-center mt-4">
+          <svg class="animate-spin h-6 w-6 text-indigo-600 dark:text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </div>
       </div>
-    </div>
 
-
+      <!-- Results -->
       <div id="results" class="mt-6 hidden max-w-4xl mx-auto transition-colors">
         <div class="rounded-2xl border-2 border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 shadow p-5 transition-colors duration-300">
           <div class="flex items-center justify-between mb-3">
@@ -408,8 +404,6 @@
           toggleSlider.style.transform = "translateX(2.25rem)";
         }
       });
-
-      
     </script>
   </body>
 </html>

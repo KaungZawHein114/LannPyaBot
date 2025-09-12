@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,12 +7,14 @@
     <title>Interactive Cybersecurity Quiz</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/bot.png') }}" />
 
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         darkMode: "class",
       };
     </script>
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -29,37 +32,16 @@
       .answer-option {
         transition: background-color 0.2s ease, border-color 0.2s ease;
       }
-      /* --- MODIFIED: Bolder light-mode feedback --- */
       .correct-answer {
-        background-color: #bbf7d0; /* green-200 */
-        border-color: #16a34a; /* green-600 */
-        color: #14532d; /* green-900 */
-        font-weight: 700;
+        background-color: #dcfce7; /* green-100 */
+        border-color: #22c55e; /* green-500 */
+        color: #166534; /* green-800 */
       }
       .incorrect-answer {
-        background-color: #fecaca; /* red-200 */
-        border-color: #dc2626; /* red-600 */
+        background-color: #fee2e2; /* red-100 */
+        border-color: #ef4444; /* red-500 */
         color: #991b1b; /* red-800 */
-        font-weight: 700;
       }
-
-      /* --- ADDED: Disable hover after answering --- */
-      .answered {
-        pointer-events: none;
-      }
-      /* --- END ADDITION --- */
-
-      .dark .correct-answer {
-        background-color: #166534; /* green-800 */
-        border-color: #4ade80; /* green-400 */
-        color: #dcfce7; /* green-100 */
-      }
-      .dark .incorrect-answer {
-        background-color: #991b1b; /* red-800 */
-        border-color: #f87171; /* red-400 */
-        color: #fee2e2; /* red-100 */
-      }
-      
       /* Make containers take full height and center content */
       .view-container {
         width: 100vw;
@@ -78,6 +60,7 @@
     </style>
   </head>
   <body class="bg-gray-200 dark:bg-gray-900 flex flex-col h-screen transition-colors duration-300">
+    <!-- Header -->
     <header class="bg-indigo-900 dark:bg-indigo-900 text-white p-4 flex items-center justify-between relative transition-colors duration-300">
       <button id="menu-btn" class="focus:outline-none">
         <svg
@@ -111,9 +94,10 @@
       </div>
     </header>
 
+    <!-- Side Nav -->
     <div
       id="side-nav"
-      class="fixed top-0 left-0 h-full w-64 bg-indigo-900 dark:bg-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-50"
+      class="fixed top-0 left-0 h-full w-64 bg-indigo-800 dark:bg-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-50"
     >
       <div class="p-4 text-xl font-bold border-b border-indigo-600 dark:border-indigo-700">
         Menu
@@ -124,6 +108,7 @@
         <a href="{{ url_for('content_checker_page') }}" class="hover:text-gray-300">Content Checker</a>
         <a href="{{ url_for('scenario_simulation_page') }}" class="hover:text-gray-300">Scenario Simulation</a>
         
+        <!-- Theme Toggle Section -->
         <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
           <div class="flex items-center justify-between">
             <span class="text-sm text-gray-300">Theme</span>
@@ -140,6 +125,7 @@
           </div>
         </div>
 
+        <!-- Developer Credits -->
         <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
           <div class="text-center">
             <p class="text-xs text-gray-300 font-medium">
@@ -154,14 +140,18 @@
       </nav>
     </div>
 
+    <!-- Overlay -->
     <div
       id="overlay"
       class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"
     ></div>
 
+    <!-- Main Content -->
     <main class="flex-1 overflow-y-auto transition-colors duration-300">
+      <!-- Quiz View Container -->
       <div id="quiz-view" class="view-container">
         <div class="bg-white dark:bg-gray-800 w-full max-w-4xl rounded-2xl shadow-xl overflow-hidden m-4 p-8 md:p-12 transition-colors duration-300">
+          <!-- Topic Selection -->
           <div id="topic-selection">
             <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Interactive Quiz</h2>
             <p class="text-gray-600 dark:text-gray-300 mt-1 mb-6" style="line-height:2.0" >
@@ -173,6 +163,7 @@
             ></div>
           </div>
 
+          <!-- Difficulty Selection -->
           <div id="difficulty-selection" class="hidden-section">
             <div class="flex items-center gap-4 mb-6">
               <button
@@ -211,6 +202,7 @@
             </div>
           </div>
 
+          <!-- Quiz Area -->
           <div id="quiz-area" class="hidden-section">
             <div class="flex items-center justify-between mb-6">
               <button
@@ -237,12 +229,13 @@
             </div>
             <button
               id="next-question-btn"
-              class="hidden-section mt-6 w-full bg-indigo-900 dark:bg-indigo-900 text-white font-bold py-3 px-6 rounded-xl hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+              class="hidden-section mt-6 w-full bg-indigo-600 dark:bg-indigo-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
             >
               Next Question
             </button>
           </div>
 
+          <!-- Loading Spinner -->
           <div id="loading-spinner" class="hidden-section text-center py-10">
             <svg
               class="animate-spin h-10 w-10 text-indigo-600 dark:text-indigo-400 mx-auto"
@@ -269,6 +262,7 @@
             </p>
           </div>
 
+          <!-- Feedback/Results -->
           <div id="results-screen" class="hidden-section text-center">
             <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">ဉာဏ်စမ်းပြီးဆုံးပါပြီ</h2>
             <p class="text-xl mt-2 text-gray-700 dark:text-gray-300">မိတ်ဆွေရဲ့ စုစုပေါင်းရမှတ်ကတော့</p>
@@ -296,6 +290,7 @@
       </div>
     </main>
 
+    <!-- Confirmation Modal -->
     <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
       <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md mx-4 transition-colors duration-300">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Confirm Quiz Start</h3>
@@ -341,18 +336,18 @@
       const finalScoreEl = document.getElementById("final-score");
       const feedbackMessageEl = document.getElementById("feedback-message");
       const playAgainBtn = document.getElementById("play-again-btn");
-    
+      
       // Back buttons
       const backToTopicsBtn = document.getElementById("back-to-topics");
       const backToDifficultyBtn = document.getElementById("back-to-difficulty");
       const backToTopicsFromResultsBtn = document.getElementById("back-to-topics-from-results");
-    
+      
       // Modal elements
       const modalTopic = document.getElementById("modal-topic");
       const modalDifficulty = document.getElementById("modal-difficulty");
       const cancelQuizBtn = document.getElementById("cancel-quiz");
       const confirmQuizBtn = document.getElementById("confirm-quiz");
-    
+      
       // Sidebar elements
       const menuBtn = document.getElementById("menu-btn");
       const sideNav = document.getElementById("side-nav");
@@ -469,13 +464,13 @@
         chosenTopicEl.textContent = topicObj.display; // Show Burmese text to user
         showQuizSection(difficultySelection);
       }
-    
+      
       function showConfirmationModal(topic, difficulty) {
         modalTopic.textContent = topic;
         modalDifficulty.textContent = difficulty;
         confirmationModal.classList.remove("hidden");
       }
-    
+      
       function hideConfirmationModal() {
         confirmationModal.classList.add("hidden");
       }
@@ -533,38 +528,28 @@
         });
       }
     
-      // --- MODIFIED: selectAnswer function ---
       function selectAnswer(button, selectedOption, correctAnswer) {
         if (answerSelected) return;
         answerSelected = true;
     
         const allOptionButtons =
           answerOptionsEl.querySelectorAll(".answer-option");
-
-        // Use .trim() for more robust string comparison
-        const cleanCorrectAnswer = correctAnswer.trim();
-    
         allOptionButtons.forEach((btn) => {
-          btn.disabled = true; // Disable all buttons
-          btn.classList.add("answered"); // ADDED: Add class to disable hover via CSS
-          // If this button holds the correct answer, always highlight it green
-          if (btn.textContent.trim() === cleanCorrectAnswer) {
+          btn.disabled = true;
+          if (btn.textContent === correctAnswer) {
             btn.classList.add("correct-answer");
           }
         });
     
-        // Check if the user's clicked button was correct
-        if (selectedOption.trim() === cleanCorrectAnswer) {
-          score++; // Increment score
+        if (selectedOption === correctAnswer) {
+          score++;
           scoreEl.textContent = score;
         } else {
-          // If the selected answer was wrong, highlight the user's choice in red
           button.classList.add("incorrect-answer");
         }
     
         nextQuestionBtn.classList.remove("hidden-section");
       }
-      // --- END MODIFICATION ---
     
       function handleNextQuestion() {
         currentQuestionIndex++;
@@ -599,7 +584,7 @@
         populateTopics();
         showQuizSection(topicSelection);
       }
-    
+      
       // --- Event Listeners ---
       difficultyBtns.forEach((btn) => {
         btn.addEventListener("click", () => {
@@ -607,20 +592,20 @@
           showConfirmationModal(currentTopic, currentDifficulty);
         });
       });
-    
+      
       // Back button handlers
       backToTopicsBtn.addEventListener("click", () => {
         showQuizSection(topicSelection);
       });
-    
+      
       backToDifficultyBtn.addEventListener("click", () => {
         showQuizSection(difficultySelection);
       });
-    
+      
       backToTopicsFromResultsBtn.addEventListener("click", () => {
         resetQuiz();
       });
-    
+      
       // Modal handlers
       cancelQuizBtn.addEventListener("click", hideConfirmationModal);
       confirmQuizBtn.addEventListener("click", () => {
@@ -629,41 +614,41 @@
     
       nextQuestionBtn.addEventListener("click", handleNextQuestion);
       playAgainBtn.addEventListener("click", resetQuiz);
-    
+      
       // Sidebar toggle
       menuBtn.addEventListener("click", () => {
         sideNav.classList.toggle("-translate-x-full");
         overlay.classList.toggle("hidden");
       });
-    
+      
       overlay.addEventListener("click", () => {
         sideNav.classList.add("-translate-x-full");
         overlay.classList.add("hidden");
       });
-    
-              // Theme toggle
-      const html = document.documentElement;
-      const toggleSlider = themeToggle.querySelector('span');
-    
-      if (localStorage.getItem("theme") === "light") {
-        html.classList.remove("dark");
-        toggleSlider.style.transform = "translateX(0.25rem)";
-      } else {
-        html.classList.add("dark");
-        toggleSlider.style.transform = "translateX(2.25rem)";
-      }
-    
-      themeToggle.addEventListener("click", () => {
-        if (html.classList.contains("dark")) {
-          html.classList.remove("dark");
-          localStorage.setItem("theme", "light");
-          toggleSlider.style.transform = "translateX(0.25rem)";
-        } else {
-          html.classList.add("dark");
-          localStorage.setItem("theme", "dark");
-          toggleSlider.style.transform = "translateX(2.25rem)";
-        }
-      });
+      
+             // Theme toggle
+       const html = document.documentElement;
+       const toggleSlider = themeToggle.querySelector('span');
+       
+       if (localStorage.getItem("theme") === "light") {
+         html.classList.remove("dark");
+         toggleSlider.style.transform = "translateX(0.25rem)";
+       } else {
+         html.classList.add("dark");
+         toggleSlider.style.transform = "translateX(2.25rem)";
+       }
+       
+       themeToggle.addEventListener("click", () => {
+         if (html.classList.contains("dark")) {
+           html.classList.remove("dark");
+           localStorage.setItem("theme", "light");
+           toggleSlider.style.transform = "translateX(0.25rem)";
+         } else {
+           html.classList.add("dark");
+           localStorage.setItem("theme", "dark");
+           toggleSlider.style.transform = "translateX(2.25rem)";
+         }
+       });
     
       // --- Initial Setup ---
       populateTopics();
