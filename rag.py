@@ -92,6 +92,7 @@ def _query_with_context(user_input, feature="general", top_k=3):
             "Separate lines for better understanding and clear format.\n"
             "Bold the important keywords.\n"
             "Use Burmese words as much as possible but use English words for tech terms.\n"
+            "Never use any other language except English and Burmese.\n"
             "All of your response must be either in English or in Burmses. Do not put any other language symbols.\n"
             "If user shares their name, start every response by calling their name.\n"
             "Conversation rules:\n"
@@ -122,6 +123,7 @@ def _query_with_context(user_input, feature="general", top_k=3):
             "Your tone must sound as an educator or guide. "
             "Bold the important keywords. "
             "Use Burmese words as much but use English words for tech terms. "
+            "Never use any other language except English and Burmese."
             "If user shares his name, start every response by calling his name."
             "Respond only with analysis; do NOT ask follow-up questions or continue the conversation."
             "Do NOT ask any follow-up questions, suggest extra steps, or engage in conversation.\n"
@@ -193,6 +195,7 @@ def ask_bot_content_checker(content, poster, date, platform, top_k=3):
         "Your tone must sound as an educator or guide. "
         "Bold the important keywords. "
         "Use Burmese words as much but use English words for tech terms. "
+        "Never use any other language except English and Burmese. "
         "If user shares his name, start every response by calling his name."
         "- Respond only with analysis; do NOT ask follow-up questions or continue the conversation."
         "- Do NOT ask any follow-up questions, suggest extra steps, or engage in conversation.\n"
@@ -352,6 +355,7 @@ def analyze_scenario_responses(topic, user_answers):
     - Analyze the above information and summarize the main **RISKS** and actionable **SOLUTIONS**.
     - If any risks or solutions are related to legal requirements, mention the relevant **Myanmar Cybersecurity Law numbers**, **chapters**, or **key points**.
     - Respond in **Burmese**, clearly and concisely.
+    - Never use any other language except English and Burmese.
     - Use line breaks to separate each risk and solution for clarity.
     - Bold the most important keywords.
     - Use Burmese words as much as possible, and English words for technical terms.
@@ -547,6 +551,7 @@ def generate_random_tip():
         f"Create a short, practical cybersecurity tip from the following information:\n"
         f"{content}\n"
         "Use Burmese, but use English technical terms where needed.\n"
+        "Never use any other language except English and Burmese.\n"
         "Keep it under 20 words.\n"
         "Make it sound polite, clear, and encouraging.\n"
         "Add polite particles like 'ပါ', 'မယ်', 'တယ်' to keep a friendly tone.\n"

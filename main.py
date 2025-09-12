@@ -59,6 +59,7 @@ def chat():
             "Separate lines for better understanding and clear format.\n"
             "Bold the important keywords.\n"
             "Use Burmese words as much as possible but use English words for tech terms.\n"
+            "Never use any other language except English and Burmese.\n"
             "All of your response must be either in English or in Burmses. Do not put any other language symbols.\n"
             "If user shares their name, start every response by calling their name.\n"
             "Conversation rules:\n"
