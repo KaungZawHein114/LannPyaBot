@@ -20,17 +20,20 @@
       .solution { color: #16a34a; font-weight: bold; }
       .preformatted { white-space: pre-line; }
       
+      /* Dark mode improvements for AI analysis results */
       .dark .preformatted {
-        color: #e5e7eb;
+        color: #e5e7eb; /* light gray text for better visibility */
       }
       
+      /* Ensure strong tags are visible in dark mode */
       .dark .preformatted strong {
-        color: #f3f4f6;
+        color: #f3f4f6; /* lighter text for strong elements */
       }
       
+      /* Mobile-friendly improvements */
       @media (max-width: 640px) {
         .preformatted {
-          font-size: 0.875rem;
+          font-size: 0.875rem; /* slightly smaller text on mobile */
           line-height: 1.5;
         }
       }
@@ -52,7 +55,7 @@
       </div>
     </header>
 
-    <div id="side-nav" class="fixed top-0 left-0 h-full w-64 bg-indigo-900 dark:bg-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-50">
+    <div id="side-nav" class="fixed top-0 left-0 h-full w-64 bg-indigo-800 dark:bg-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-50">
       <div class="p-4 text-xl font-bold border-b border-indigo-600 dark:border-indigo-700">Menu</div>
       <nav class="flex flex-col p-4 space-y-4">
         <a href="{{ url_for('home') }}" class="hover:text-gray-300">Home</a>
@@ -60,7 +63,7 @@
         <a href="{{ url_for('content_checker_page') }}" class="hover:text-gray-300">Content Checker</a>
         <a href="{{ url_for('interactive_quiz_page') }}" class="hover:text-gray-300">Interactive Quiz</a>
         
-        <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
+                      <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
           <div class="flex items-center justify-between">
             <span class="text-sm text-gray-300">Theme</span>
             <button
@@ -77,16 +80,16 @@
         </div>
 
         <div class="pt-4 mt-4 border-t border-indigo-600 dark:border-indigo-700">
-          <div class="text-center">
-            <p class="text-xs text-gray-300 font-medium">
-              Developed by <span class="text-indigo-300 font-semibold">GUSTO College Team</span>
-            </p>
-            <p class="text-xs text-gray-400 mt-1 leading-tight">
-              <span class="text-indigo-300 font-medium"><br>LannPya Bot</span><br><br>
-              Kaung Zaw Hein <br><br>Aung Min Myat<br><br>Zin Zin Pwint Han
-            </p>
+            <div class="text-center">
+              <p class="text-xs text-gray-300 font-medium">
+                Developed by <span class="text-indigo-300 font-semibold">GUSTO College Team</span>
+              </p>
+              <p class="text-xs text-gray-400 mt-1 leading-tight">
+                <span class="text-indigo-300 font-medium"><br>LannPya Bot</span><br><br>
+                Kaung Zaw Hein <br><br>Aung Min Myat<br><br>Zin Zin Pwint Han
+              </p>
+            </div>
           </div>
-        </div>
       </nav>
     </div>
     <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
@@ -129,7 +132,6 @@
     </main>
 
     <script>
-      //newer
       let scenarioAnswers = {}, scenarioQuestions = [], currentStage = 1, currentTopic = "";
       let othersHistory = [], othersStep = 0, lastQuestion = "";
 
@@ -140,6 +142,7 @@
       menuBtn.addEventListener("click", () => { sideNav.classList.toggle("-translate-x-full"); overlay.classList.toggle("hidden"); });
       overlay.addEventListener("click", () => { sideNav.classList.add("-translate-x-full"); overlay.classList.add("hidden"); });
 
+      // Helper: Convert **bold** to <strong>
       function markdownToHTML(text) {
         return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
       }
@@ -147,8 +150,6 @@
       async function startScenario() {
         currentTopic = document.getElementById("topicSelect").value;
         scenarioAnswers = {}; currentStage = 1;
-        document.getElementById("anotherScenario").style.display = "none";
-        document.getElementById("errorBanner").classList.add("hidden");
         if (currentTopic === "others") { othersHistory=[]; othersStep=0; document.getElementById("scenarioResult").innerText=""; askOthers(""); }
         else {
           try {
@@ -159,6 +160,7 @@
       }
 
       function restartScenario(){
+        // Clear UI and state, then start again with current topic
         scenarioAnswers = {}; scenarioQuestions = []; currentStage = 1;
         document.getElementById("scenarioQuestions").innerHTML = "";
         const resultEl = document.getElementById("scenarioResult");
@@ -167,95 +169,77 @@
         startScenario();
       }
 
-      // --- MODIFIED FUNCTION ---
       function renderQuestions() {
-        const container = document.getElementById("scenarioQuestions");
-        let htmlContent = ""; // Build the HTML in a variable first
-
-        scenarioQuestions.forEach((qObj, idx) => {
-          if (qObj.type === "mcq_text") {
-            htmlContent += `
-              <div class="question-container p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm">
-                <p class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">${qObj.question}</p>
-                
-                <fieldset id="answer_group_${idx}" class="mb-3">
-                  <legend class="sr-only">Options for: ${qObj.question}</legend>
-                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    
-                    <div>
-                      <input type="radio" name="answer_${idx}" id="answer_${idx}_yes" value="Yes" class="sr-only peer">
-                      <label for="answer_${idx}_yes" class="block w-full text-center p-3 rounded-lg border-2 border-gray-200 dark:border-gray-600 cursor-pointer transition-colors font-medium dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 peer-checked:bg-indigo-600 peer-checked:text-white peer-checked:border-indigo-600">
-                        ဟုတ်ပါတယ်
-                      </label>
-                    </div>
-
-                    <div>
-                      <input type="radio" name="answer_${idx}" id="answer_${idx}_no" value="No" class="sr-only peer">
-                      <label for="answer_${idx}_no" class="block w-full text-center p-3 rounded-lg border-2 border-gray-200 dark:border-gray-600 cursor-pointer transition-colors font-medium dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 peer-checked:bg-indigo-600 peer-checked:text-white peer-checked:border-indigo-600">
-                        မဟုတ်ပါ
-                      </label>
-                    </div>
-
-                    <div>
-                      <input type="radio" name="answer_${idx}" id="answer_${idx}_notsure" value="Not Sure" class="sr-only peer">
-                      <label for="answer_${idx}_notsure" class="block w-full text-center p-3 rounded-lg border-2 border-gray-200 dark:border-gray-600 cursor-pointer transition-colors font-medium dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 peer-checked:bg-indigo-600 peer-checked:text-white peer-checked:border-indigo-600">
-                        မသေချာဘူး
-                      </label>
-                    </div>
-
-                  </div>
-                </fieldset>
-                
-                <input type="text" id="extra_${idx}" placeholder="အသေးစိတ်ဖြေဆိုရန် (optional)" class="w-full p-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400" />
-              </div>`;
-          } else {
-            htmlContent += `
-              <div class="question-container p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm">
-                <label for="answer_${idx}" class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">${qObj.question} <span class="text-gray-400 dark:text-gray-500 font-normal">(optional)</span></label>
-                <input type="text" id="answer_${idx}" class="w-full p-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400" />
-              </div>`;
-          }
+        const container = document.getElementById("scenarioQuestions"); container.innerHTML = "";
+        scenarioQuestions.forEach((qObj,idx)=>{
+          if(qObj.type==="mcq_text") container.innerHTML += `
+            <div class="p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm">
+              <label class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">${qObj.question}</label>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div id="answer_container_${idx}" class="flex items-center space-x-2 rounded-xl p-1 bg-gray-100 dark:bg-gray-900 border-2 border-transparent">
+                  <label class="flex-1 text-center cursor-pointer text-sm font-semibold text-gray-600 dark:text-gray-300">
+                    <input type="radio" name="answer_${idx}" value="ဟုတ်ပါတယ်" class="hidden peer">
+                    <span class="block w-full py-2 px-3 rounded-lg transition-colors duration-200 ease-in-out peer-checked:bg-indigo-600 peer-checked:text-white hover:bg-gray-200 dark:hover:bg-gray-700">ဟုတ်ပါတယ်</span>
+                  </label>
+                  <label class="flex-1 text-center cursor-pointer text-sm font-semibold text-gray-600 dark:text-gray-300">
+                    <input type="radio" name="answer_${idx}" value="မဟုတ်ပါ" class="hidden peer">
+                    <span class="block w-full py-2 px-3 rounded-lg transition-colors duration-200 ease-in-out peer-checked:bg-indigo-600 peer-checked:text-white hover:bg-gray-200 dark:hover:bg-gray-700">မဟုတ်ပါ</span>
+                  </label>
+                  <label class="flex-1 text-center cursor-pointer text-sm font-semibold text-gray-600 dark:text-gray-300">
+                    <input type="radio" name="answer_${idx}" value="မသေချာဘူး" class="hidden peer">
+                    <span class="block w-full py-2 px-3 rounded-lg transition-colors duration-200 ease-in-out peer-checked:bg-indigo-600 peer-checked:text-white hover:bg-gray-200 dark:hover:bg-gray-700">မသေချာဘူး</span>
+                  </label>
+                </div>
+                <input type="text" id="extra_${idx}" placeholder="အသေးစိတ်ဖြေဆိုရန် (optional)" class="w-full p-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400 min-w-0" />
+              </div>
+            </div>`;
+          else container.innerHTML += `
+            <div class="p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm">
+              <label class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">${qObj.question} <span class="text-gray-400 dark:text-gray-500 font-normal">(optional)</span></label>
+              <input type="text" id="answer_${idx}" class="w-full p-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400" />
+            </div>`;
         });
-
-        container.innerHTML = htmlContent; // Update the DOM only once
         document.getElementById("submitScenario").style.display="inline-block";
         document.getElementById("scenarioResult").innerText="";
       }
 
-      // --- MODIFIED FUNCTION ---
       async function submitScenario() {
         let missing = [];
         const errorBanner = document.getElementById("errorBanner");
         
-        // Clear previous error highlights from all question containers
-        document.querySelectorAll('.question-container').forEach(el => el.classList.remove("ring-2", "ring-red-500"));
+        // Clear previous error highlights
+        scenarioQuestions.forEach((qObj, idx) => {
+          if (qObj.type === "mcq_text") {
+            const el = document.getElementById(`answer_container_${idx}`);
+            if (el) el.classList.remove("ring-2", "ring-red-500", "border-red-400");
+          }
+        });
 
         scenarioAnswers = {};
         scenarioQuestions.forEach((qObj, idx) => {
           if (qObj.type === "mcq_text") {
             const checkedRadio = document.querySelector(`input[name="answer_${idx}"]:checked`);
-            const mainAnswer = checkedRadio ? checkedRadio.value : "";
-            if (!mainAnswer) {
-              missing.push(idx); // Main radio answer is required
+            const ans = checkedRadio ? checkedRadio.value : "";
+            if (!ans) {
+              missing.push(idx); // This is a required question
             }
-            const extraAnswer = document.getElementById(`extra_${idx}`).value.trim();
-            // Combine the main answer and the optional extra info into one string
-            scenarioAnswers[qObj.question] = extraAnswer ? `${mainAnswer} (${extraAnswer})` : mainAnswer;
+            scenarioAnswers[qObj.question] = ans;
           } else {
-            const textAnswer = document.getElementById(`answer_${idx}`).value.trim();
-            scenarioAnswers[qObj.question] = textAnswer;
+            // This is for optional text inputs
+            const inputEl = document.getElementById(`answer_${idx}`);
+            scenarioAnswers[qObj.question] = inputEl ? inputEl.value.trim() : "";
           }
         });
 
-        if (missing.length > 0) {
+        if (missing.length) {
           missing.forEach(i => {
-            const groupEl = document.getElementById(`answer_group_${i}`);
-            if (groupEl) {
-              // Add red ring to the entire question card for better visibility
-              groupEl.closest('.question-container').classList.add("ring-2", "ring-red-500");
+            const el = document.getElementById(`answer_container_${i}`);
+            if (el) {
+              el.classList.add("ring-2", "ring-red-500", "border-red-400");
             }
           });
           errorBanner.classList.remove("hidden");
+          errorBanner.textContent = "ကျေးဇူးပြု၍ အနီရောင်မေးခွန်းအားလုံးဖြေဆိုပေးပါ။";
           errorBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
           return;
         } else {
@@ -267,18 +251,18 @@
 
         if (currentStage === 1 && currentTopic !== "others") {
           try {
-            const res = await fetch("/scenario/next", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({topic:currentTopic, answers:scenarioAnswers})});
+            const res = await fetch("/scenario/next", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ topic: currentTopic, answers: scenarioAnswers }) });
             const data = await res.json(); scenarioQuestions = data.questions; currentStage = 2; renderQuestions();
-          } catch(e) { console.error(e); alert('Error getting next questions.'); }
+          } catch (e) { console.error(e); alert('Error getting next questions.'); }
         } else {
           try {
-            const res = await fetch("/scenario/analyze", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({topic:currentTopic, answers:scenarioAnswers})});
+            const res = await fetch("/scenario/analyze", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ topic: currentTopic, answers: scenarioAnswers }) });
             const data = await res.json();
             document.getElementById("scenarioResult").innerHTML = markdownToHTML(data.result);
             document.getElementById("scenarioResult").classList.remove("hidden");
-            document.getElementById("submitScenario").style.display="none";
+            document.getElementById("submitScenario").style.display = "none";
             document.getElementById("anotherScenario").style.display = "inline-block";
-          } catch(e) { console.error(e); alert('Error analyzing scenario.'); }
+          } catch (e) { console.error(e); alert('Error analyzing scenario.'); }
         }
         spinner.classList.add("hidden");
       }
@@ -294,9 +278,11 @@
             let historyHTML = othersHistory.map(h=>`<div class="p-3 bg-gray-100 dark:bg-gray-700 rounded mb-2 break-words"><strong class="text-gray-800 dark:text-gray-200">${h.q}</strong><br><span class="text-gray-700 dark:text-gray-300">${h.a}</span></div>`).join("");
             container.innerHTML = historyHTML + "<div class='p-4 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 rounded-lg'><strong>✅ မေးခွန်း (၁၀)ခုလုံး ဖြေပြီးပါပြီ</strong></div>";
             
+            // Show loading spinner while waiting for AI analysis
             const spinner = document.getElementById("loading-spinner");
             spinner.classList.remove("hidden");
             
+            // Wait a moment to show the completion message, then get AI analysis
             setTimeout(async () => {
               try {
                 const res = await fetch("/scenario/analyze", {
