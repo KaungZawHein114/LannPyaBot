@@ -34,7 +34,6 @@
     "Facebook Help Center (www.facebook.com/hacked) မှ တိုင်ကြားနိုင်သည်။"
   ],
 
-
   "Passwords & 2FA": [
     "ခိုင်မာတဲ့ စကားဝှက်တစ်ခုမှာ စာလုံးကြီး (A-Z), စာလုံးသေး (a-z), နံပါတ် (0-9), သင်္ကေတ (!@#$) တွေ ပါဝင်သင့်ပြီး အနည်းဆုံး ၁၂ လုံးထက်မနည်းသင့်ပါဘူး။",
     "စကားဝှက်တစ်ခုတည်းကို အကောင့်အားလုံးမှာ ထပ်တလဲလဲ မသုံးသင့်ပါဘူး။",
@@ -64,8 +63,6 @@
     "mmCERT (www.mmcert.org) သို့ အချက်အလက်ပေးနိုင်သည်။",
     "Gmail / Outlook မှ account recovery form ကို သုံးပါ။",
     "Bank account ခိုးယူခံရပါက KBZ / AYA / CB Bank Fraud Dept ကို ခေါ်ပါ။"
-
-
   ],
 
   "Social Media Safety": [
@@ -88,7 +85,6 @@
     "Twitter/X → https://help.twitter.com/forms သုံးပါ။",
     "မြန်မာရဲတပ်ဖွဲ့ Cyber Crime Division (199) သို့ Online Harassment တိုင်ကြားနိုင်သည်။",
     "mmCERT (www.mmcert.org) သို့ Social Media Scam သတင်းပေးနိုင်သည်။"
-
   ],
 
   "Device & Network Security": [
@@ -108,7 +104,6 @@
     "📌 ဥပဒေ — Electronic Transactions Law (2004/2014/2021) အရ Malware / Unauthorized Access မှာ တရားမဝင် ဖြစ်နိုင်တယ်။",
     "📌 ဥပဒေ — Cybersecurity Law (2025) အရ Network Security လုံခြုံရေး ထိန်းချုပ်မှုလိုအပ်တယ်။",
     "📞 တိုင်ကြားရန် — Myanmar Police Cyber Crime Unit (199), mmCERT (www.mmcert.org.mm)"
-
   ],
 
   "Personal Data & Privacy": [
@@ -133,7 +128,6 @@
     "Facebook / TikTok / Gmail Security Help Center တွင် account recovery လုပ်နိုင်သည်။",
     "မမှန်ကန်သတင်း (Fake News) တင်ထားသူကို Myanmar Fact Checker သို့ တိုက်ရိုက် တင်သွင်းနိုင်သည်။"
   ],
-
 
   "How to Spot Fake Websites/Apps": [
     "အတုဝက်ဘ်ဆိုက်တွေဟာ အစစ်နဲ့တူအောင် အတုခိုးပြီး ကိုယ်ရေးအချက်အလက်/စကားဝှက်တွေ ခိုးယူဖို့ ကြိုးစားပါတယ်။",
@@ -166,7 +160,6 @@
     "📌 ဥပဒေ — Electronic Transactions Law (2004/2014/2021) အရ Public Wi-Fi မှာ အချက်အလက် ခိုးယူခြင်း/မမှန်ကန်စွာအသုံးပြုခြင်း သည် တရားမဝင် ဖြစ်သည်။",
     "📌 ဥပဒေ — Cybersecurity Law (2025) အရ VPN နှင့် Digital Platform အသုံးပြုမှုကို ထိန်းချုပ်ထားသည်။",
     "📞 တိုင်ကြားရန် — Myanmar Police Cyber Crime Unit (199), mmCERT (www.mmcert.org.mm)"
-
   ],
 
   "Wi-Fi Safety": [
@@ -189,7 +182,6 @@
     "📞 တိုင်ကြားရန် — Wi-Fi hack သို့မဟုတ် Man-in-the-Middle Attack တွေ တိုင်ကြားရန် mmCERT (www.mmcert.org) ကို ဆက်သွယ်ပါ။",
     "အကောင့် ခိုးယူခံရပါက မြန်မာရဲတပ်ဖွဲ့ Cyber Crime Division 199 ကို ခေါ်ပါ။",
     "ဘဏ်စာရင်း အဆင်မပြေပါက တိုက်ရိုက် Bank Fraud Dept ကို ခေါ်ပါ။"
-
   ],
 
   "IoT & Device Safety": [
@@ -253,7 +245,6 @@
     "📞 တိုင်ကြားရန် — App တစ်ခုထဲက malware သို့မဟုတ် virus တွေ သံသယရှိပါက mmCERT (www.mmcert.org) ကို သတင်းပေးပါ။",
     "Google Play Store / Apple App Store မှ တိုက်ရိုက် App ကို Report လုပ်ပါ။",
     "Banking App ခိုးယူခံရပါက KBZ / AYA / CB Bank Fraud Dept ကို ခေါ်ပါ။"
-
   ],
 
   "Fake Accounts": [

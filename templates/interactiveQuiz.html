@@ -185,7 +185,7 @@
                 Back to Topics
               </button>
             </div>
-            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Select Difficulty</h2>
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">အခက်အခဲအဆင့်ကို ရွေးချယ်ပါ</h2>
             <p class="text-gray-600 dark:text-gray-300 mt-1 mb-6">
               Chosen Topic: <span id="chosen-topic" class="font-semibold text-indigo-600 dark:text-indigo-400"></span>
             </p>
@@ -194,19 +194,19 @@
                 data-difficulty="easy"
                 class="difficulty-btn w-full text-lg font-semibold p-4 rounded-xl border-2 border-green-500 text-green-600 hover:bg-green-500 hover:text-white transition-colors dark:border-green-400 dark:text-green-400 dark:hover:bg-green-400 dark:hover:text-green-900"
               >
-                Easy
+                လွယ်ကူ (Easy)
               </button>
               <button
                 data-difficulty="medium"
                 class="difficulty-btn w-full text-lg font-semibold p-4 rounded-xl border-2 border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors dark:border-yellow-400 dark:text-yellow-400 dark:hover:bg-yellow-400 dark:hover:text-yellow-900"
               >
-                Medium
+                အလယ်အလတ် (Medium)
               </button>
               <button
                 data-difficulty="hard"
                 class="difficulty-btn w-full text-lg font-semibold p-4 rounded-xl border-2 border-red-500 text-red-600 hover:bg-red-500 hover:text-white transition-colors dark:border-red-400 dark:text-red-400 dark:hover:bg-red-400 dark:hover:text-red-900"
               >
-                Hard
+                ခက်ခဲ (Hard)
               </button>
             </div>
           </div>
@@ -298,9 +298,9 @@
 
     <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
       <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md mx-4 transition-colors duration-300">
-        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Confirm Quiz Start</h3>
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">စတင်ရန် အတည်ပြုပါ</h3>
         <p class="text-gray-600 dark:text-gray-300 mb-6">
-          Are you ready to start the <span id="modal-topic" class="font-semibold"></span> quiz on <span id="modal-difficulty" class="font-semibold"></span> difficulty?
+          သင် သည် <span id="modal-topic" class="font-semibold"></span> ကို <span id="modal-difficulty" class="font-semibold"></span> အဆင့်မေးခွန်း စတင်ရန် အဆင်သင့်ဖြစ်ပါသလား။
         </p>
         <div class="flex gap-3 justify-end">
           <button
@@ -628,7 +628,15 @@
       });
     
       nextQuestionBtn.addEventListener("click", handleNextQuestion);
-      playAgainBtn.addEventListener("click", resetQuiz);
+      playAgainBtn.addEventListener("click", () => {
+        // If we still have the last used topic and difficulty, regenerate for the same settings
+        if (currentTopic && currentDifficulty) {
+          fetchQuizQuestions(currentTopic, currentDifficulty);
+        } else {
+          // Fallback: go back to topics if state is missing
+          resetQuiz();
+        }
+      });
     
       // Sidebar toggle
       menuBtn.addEventListener("click", () => {

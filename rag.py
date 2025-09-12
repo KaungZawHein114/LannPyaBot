@@ -388,27 +388,83 @@ def parse_quiz_text(ai_text):
        d) Option4
        Answer: a
     """
+    import re
     questions = []
+    if not ai_text or not ai_text.strip():
+        return questions
+
     try:
-        blocks = ai_text.strip().split("\n\n")
-        for block in blocks:
-            lines = block.strip().split("\n")
-            if len(lines) < 6:  # question + 4 options + answer
-                continue
-            question_text = lines[0].strip()
-            options = [line[3:].strip() for line in lines[1:5]]  # remove "a) "
-            answer_line = lines[5].strip()
-            correct_index = ord(answer_line[-1].lower()) - ord("a")  # "Answer: a"
-            questions.append({
-                "question": question_text,
-                "options": options,
-                "answer": options[correct_index]
-            })
+        text = ai_text.replace("\r\n", "\n").replace("\r", "\n").strip()
+
+        # Primary split by blank lines or lines of dashes
+        raw_blocks = [b for b in re.split(r"\n\s*(?:\n|[-=]{3,,}\n)+", text) if b.strip()]
+        for block in raw_blocks:
+            try:
+                lines = [ln.strip() for ln in block.split("\n") if ln.strip()]
+                if not lines:
+                    continue
+
+                q_line = re.sub(r"^\s*\d+[\.)]\s*", "", lines[0]).strip()
+                question_text = q_line
+
+                option_pattern = re.compile(r"^([a-dA-D])\s*[\)\.:\-]\s*(.+)$")
+                label_to_option = {}
+                answer_letter = None
+                answer_text = None
+
+                for ln in lines[1:]:
+                    if re.match(r"(?i)^answer\s*[:\-]", ln):
+                        m_ans_letter = re.search(r"(?i)answer\s*[:\-]\s*([a-dA-D])\b", ln)
+                        if m_ans_letter:
+                            answer_letter = m_ans_letter.group(1).lower()
+                        else:
+                            m_ans_text = re.search(r"(?i)answer\s*[:\-]\s*(.+)$", ln)
+                            if m_ans_text:
+                                answer_text = m_ans_text.group(1).strip()
+                        continue
+
+                    m = option_pattern.match(ln)
+                    if m:
+                        label = m.group(1).lower()
+                        text_val = m.group(2).strip()
+                        if label not in label_to_option:
+                            label_to_option[label] = text_val
+
+                if not all(k in label_to_option for k in ["a", "b", "c", "d"]):
+                    continue
+
+                if answer_letter and answer_letter in label_to_option:
+                    correct_option_text = label_to_option[answer_letter]
+                elif answer_text:
+                    norm = answer_text.strip().lower()
+                    correct_option_text = next((opt for opt in label_to_option.values() if opt.strip().lower() == norm), None)
+                else:
+                    correct_option_text = None
+
+                if not correct_option_text:
+                    for opt_txt in label_to_option.values():
+                        if re.search(r"(?i)\b(correct|true|right)\b", opt_txt):
+                            correct_option_text = opt_txt
+                            break
+
+                if not correct_option_text:
+                    continue
+
+                ordered_options = [label_to_option[k] for k in ["a", "b", "c", "d"]]
+                questions.append({
+                    "question": question_text,
+                    "options": ordered_options,
+                    "answer": correct_option_text
+                })
+            except Exception as inner_e:
+                print("Warning: Skipping malformed quiz block:", inner_e)
+
     except Exception as e:
         print("Error parsing AI quiz text:", e)
-    return questions
 
-def generate_quiz_from_topic(topic_name):
+    return questions[:10]
+
+def generate_quiz_from_topic(topic_name, difficulty: str | None = None):
     """
     Generate quiz from JSON topic using OpenAI.
     """
@@ -420,37 +476,52 @@ def generate_quiz_from_topic(topic_name):
         return []
 
     topic_text = "\n".join(quiz_data[topic_name])  # all lines for that topic
-    prompt = f"""
+    diff_text = (difficulty or "medium").lower()
+    if diff_text not in {"easy", "medium", "hard"}:
+        diff_text = "medium"
+
+    base_prompt = f"""
     You are an expert quiz creator.
     Create 10 multiple-choice questions (1 correct + 3 wrong answers each) from the following text:
 
     {topic_text}
 
-    Return questions in the format:
-    1. Question?
-       a) Option1
-       b) Option2
-       c) Option3
-       d) Option4
+    Difficulty: {diff_text}
+
+    Return questions in EXACTLY this format, with a blank line between questions, no extra commentary:
+    1. Question text in Burmese?
+       a) Option 1
+       b) Option 2
+       c) Option 3
+       d) Option 4
        Answer: a
-    
-    However, if the user chose "Random", create a general cybersecurity quiz instead.
-    Keep questions clear and concise.
-    All texts must be in Burmese but you can use English technical terms where needed.
     """
-    try:
-        response = openai.chat.completions.create(
-            model="gpt-5-chat-latest",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.7,
-            max_tokens=1500
-        )
-        ai_text = response.choices[0].message.content.strip()
-        questions = parse_quiz_text(ai_text)
-        return questions
-    except Exception as e:
-        print("Error generating quiz:", e)
-        return []
+
+    prompts = [
+        base_prompt,
+        base_prompt + "\nOnly output the items in the specified format. Do not add explanations, headings, or anything else.",
+        base_prompt + "\nAbsolutely do not include any text outside the 10 questions in the specified format.",
+    ]
+
+    for attempt, prompt in enumerate(prompts, start=1):
+        try:
+            response = openai.chat.completions.create(
+                model="gpt-5-chat-latest",
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.5,
+                max_tokens=1500
+            )
+            ai_text = response.choices[0].message.content.strip()
+            questions = parse_quiz_text(ai_text)
+            if questions:
+                return questions
+            else:
+                print(f"Warning: attempt {attempt} parsed 0 questions.")
+        except Exception as e:
+            print(f"Error generating quiz on attempt {attempt}:", e)
+
+    # If still nothing, return empty list (caller may decide how to handle)
+    return []
 
 def generate_random_tip():
     """
