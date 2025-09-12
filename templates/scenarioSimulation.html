@@ -177,19 +177,34 @@
               <label class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">${qObj.question}</label>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div id="answer_container_${idx}" class="flex items-center space-x-2 rounded-xl p-1 bg-gray-100 dark:bg-gray-900 border-2 border-transparent">
-                  <label class="flex-1 text-center cursor-pointer text-sm font-semibold text-gray-600 dark:text-gray-300">
-                    <input type="radio" name="answer_${idx}" value="ဟုတ်ပါတယ်" class="hidden peer">
-                    <span class="block w-full py-2 px-3 rounded-lg transition-colors duration-200 ease-in-out peer-checked:bg-indigo-600 peer-checked:text-white hover:bg-gray-200 dark:hover:bg-gray-700">ဟုတ်ပါတယ်</span>
-                  </label>
-                  <label class="flex-1 text-center cursor-pointer text-sm font-semibold text-gray-600 dark:text-gray-300">
-                    <input type="radio" name="answer_${idx}" value="မဟုတ်ပါ" class="hidden peer">
-                    <span class="block w-full py-2 px-3 rounded-lg transition-colors duration-200 ease-in-out peer-checked:bg-indigo-600 peer-checked:text-white hover:bg-gray-200 dark:hover:bg-gray-700">မဟုတ်ပါ</span>
-                  </label>
-                  <label class="flex-1 text-center cursor-pointer text-sm font-semibold text-gray-600 dark:text-gray-300">
-                    <input type="radio" name="answer_${idx}" value="မသေချာဘူး" class="hidden peer">
-                    <span class="block w-full py-2 px-3 rounded-lg transition-colors duration-200 ease-in-out peer-checked:bg-indigo-600 peer-checked:text-white hover:bg-gray-200 dark:hover:bg-gray-700">မသေချာဘူး</span>
-                  </label>
-                </div>
+                <label class="flex-1 text-center cursor-pointer text-sm font-semibold text-gray-600 dark:text-gray-300">
+                  <input type="radio" name="answer_${idx}" value="ဟုတ်ပါတယ်" class="peer hidden" />
+                  <span class="block w-full py-2 px-3 rounded-lg transition-colors duration-200 ease-in-out 
+                              peer-checked:bg-indigo-600 peer-checked:text-white 
+                              hover:bg-gray-200 dark:hover:bg-gray-700">
+                    ဟုတ်ပါတယ်
+                  </span>
+                </label>
+
+                <label class="flex-1 text-center cursor-pointer text-sm font-semibold text-gray-600 dark:text-gray-300">
+                  <input type="radio" name="answer_${idx}" value="မဟုတ်ပါ" class="peer hidden" />
+                  <span class="block w-full py-2 px-3 rounded-lg transition-colors duration-200 ease-in-out 
+                              peer-checked:bg-indigo-600 peer-checked:text-white 
+                              hover:bg-gray-200 dark:hover:bg-gray-700">
+                    မဟုတ်ပါ
+                  </span>
+                </label>
+
+                <label class="flex-1 text-center cursor-pointer text-sm font-semibold text-gray-600 dark:text-gray-300">
+                  <input type="radio" name="answer_${idx}" value="မသေချာဘူး" class="peer hidden" />
+                  <span class="block w-full py-2 px-3 rounded-lg transition-colors duration-200 ease-in-out 
+                              peer-checked:bg-indigo-600 peer-checked:text-white 
+                              hover:bg-gray-200 dark:hover:bg-gray-700">
+                    မသေချာဘူး
+                  </span>
+                </label>
+              </div>
+
                 <input type="text" id="extra_${idx}" placeholder="အသေးစိတ်ဖြေဆိုရန် (optional)" class="w-full p-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400 min-w-0" />
               </div>
             </div>`;
