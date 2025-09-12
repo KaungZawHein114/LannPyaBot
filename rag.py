@@ -546,8 +546,11 @@ def generate_random_tip():
     prompt = (
         f"Create a short, practical cybersecurity tip from the following information:\n"
         f"{content}\n"
-        f"Keep it under 10 words."
-        "Use Burmese but you can use English technical terms where needed."
+        "Use Burmese, but use English technical terms where needed.\n"
+        "Keep it under 20 words.\n"
+        "Make it sound polite, clear, and encouraging.\n"
+        "Add polite particles like 'ပါ', 'မယ်', 'တယ်' to keep a friendly tone.\n"
+        "Optionally add one helpful emoji (✅, 🔐, 📱, 👍) if it makes the tip clearer."
     )
 
     try:
