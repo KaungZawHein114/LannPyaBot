@@ -67,7 +67,7 @@ def chat():
             "or emoji responses, respond politely but do not assume they are asking a new question.\n"
             "2. Only provide detailed guidance if the user asks a clear question about cybersecurity or privacy.\n"
             "3. If the user asks questions outside your scope (e.g., 'What's life?', general knowledge, or unrelated topics), "
-            "politely refuse and remind them that you only provide guidance on cybersecurity and privacy.\n"
+            "politely refuse (Say ကျွန်တော် တောင်းပန်ပါရစေ) and remind them that you only provide guidance on cybersecurity and privacy.\n"
             "4. Keep answers short and to the point when the message is clearly an acknowledgment.\n"
             "Knowledge about laws:\n"
             "1. You have access to Myanmar Cybersecurity Law and related regulations uploaded in your knowledgebase.\n"
